@@ -1,7 +1,7 @@
 build:
   image: gradle:latest
   variables:
-    GRADLE_OPTS: "-Dorg.gradle.daemon=false"
+    GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.parallel=true"
   stage: build
   script: 
     - gradle --build-cache --scan assemble check jacocoTestReport
