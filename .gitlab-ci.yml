@@ -6,7 +6,7 @@ before_script:
 
 build:
   stage: build
-  script: gradle --build-cache assemble jacocoTestReport
+  script: ./gradlew --build-cache assemble jacocoTestReport
   cache:
     key: "$CI_COMMIT_REF_NAME"
     policy: push
