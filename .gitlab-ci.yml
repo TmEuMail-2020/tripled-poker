@@ -1,10 +1,10 @@
 stages:
-  - app-build
   - build
+  - docker
   - deploy
 
 gradle build:
-  stage: app-build
+  stage: build
   image: gradle:latest
   variables:
     GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.parallel=true"
@@ -12,14 +12,16 @@ gradle build:
     - gradle --build-cache --scan assemble check jacocoTestReport
     - cat build/reports/jacoco/test/html/index.html | grep Total # coverage
   coverage: /Total.*?([0-9]{1,3})%/
+  artifacts:
+    - build/libs/*.jar
   cache:
     key: "gonzalez"
     paths:
       - build
       - .gradle
 
-build:
-  stage: build
+docker build:
+  stage: docker
   image:
     name: gcr.io/kaniko-project/executor:debug
     entrypoint: [""]
