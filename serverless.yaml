@@ -1,0 +1,14 @@
+service: functions
+description: "Deploying functions from GitLab using Knative"
+
+provider:
+  name: triggermesh
+  registry-secret: gitlab-registry
+  environment:
+    FOO: BAR
+
+functions:
+  echo:
+    handler: poker
+    runtime: service.yaml
+    description: "spring boot poker app"
