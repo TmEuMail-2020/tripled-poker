@@ -1,3 +1,10 @@
+## Status
+[![pipeline status](https://gitlab.rotate-it.be/tripled/poker/badges/master/pipeline.svg)](https://gitlab.rotate-it.be/tripled/poker/commits/master)
+[![coverage report](https://gitlab.rotate-it.be/tripled/poker/badges/master/coverage.svg)](https://gitlab.rotate-it.be/tripled/poker/commits/master)
+[![Awesome Kotlin Badge](https://kotlin.link/awesome-kotlin.svg)](https://github.com/KotlinBy/awesome-kotlin)
+[![Slack Widget](https://img.shields.io/badge/Slack-Opentripled-blue.svg?style=flat-square)](https://tripled-io.slack.com/messages/opentripled)
+
+
 ## Initial setup
 
 https://start.spring.io
