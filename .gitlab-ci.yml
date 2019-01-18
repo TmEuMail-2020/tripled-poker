@@ -1,12 +1,9 @@
-variables:
-  GRADLE_OPTS: "-Dorg.gradle.daemon=false"
-
-before_script:
-  - export GRADLE_USER_HOME=`pwd`/.gradle
-
 build:
+  image: gradle:latest
+  variables:
+    GRADLE_OPTS: "-Dorg.gradle.daemon=false"
   stage: build
-  script: ./gradlew --build-cache assemble jacocoTestReport
+  script: GRADLE_USER_HOME=`pwd`/.gradle ./gradlew --build-cache assemble jacocoTestReport
   cache:
     key: "$CI_COMMIT_REF_NAME"
     policy: push
