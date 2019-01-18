@@ -13,7 +13,8 @@ gradle build:
     - cat build/reports/jacoco/test/html/index.html | grep Total # coverage
   coverage: /Total.*?([0-9]{1,3})%/
   artifacts:
-    - build/libs/*.jar
+    paths:
+      - build/libs/*.jar
   cache:
     key: "gonzalez"
     paths:
