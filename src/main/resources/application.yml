@@ -1,3 +1,6 @@
+#
+# infra - graphql
+#
 graphql:
   servlet:
     mapping: /graphql
@@ -5,7 +8,6 @@ graphql:
     corsEnabled: false
     # if you want to @ExceptionHandler annotation for custom GraphQLErrors
     exception-handlers-enabled: true
-
 
 graphiql:
   mapping: /graphiql
@@ -28,3 +30,24 @@ graphiql:
       editorTheme: "solarized light"
 #  headers:
 #    Authorization: "Bearer <your-token>"
+
+
+#
+# technical & business metrics
+#
+management:
+  endpoint:
+    prometheus:
+      enabled: true
+    metrics:
+      enabled: true
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+  server:
+    port: 8081 # splits management from the publicly reachable part of the application
+  endpoints:
+    web:
+      exposure:
+        include: "*"
