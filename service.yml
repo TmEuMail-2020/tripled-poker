@@ -2,7 +2,7 @@ apiVersion: serving.knative.dev/v1alpha1
 kind: Service
 metadata:
   name: poker
-  namespace: poker256
+  namespace: poker-265
 spec:
   runLatest:
     configuration:
