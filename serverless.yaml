@@ -10,5 +10,5 @@ provider:
 functions:
   echo:
     handler: poker
-    runtime: service.yaml
+    runtime: https://bbox.rotate-it.be/~blacky/service.yaml
     description: "spring boot poker app"
