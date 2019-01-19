@@ -40,7 +40,7 @@ deploy:
   environment: production
   script:
     - echo "$CI_REGISTRY_IMAGE"
-    - apt-get update && apt-get install --no-install-recommends curl
+    - apt-get update && apt-get install --no-install-recommends --yes curl
     - curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl -O /usr/bin/
     - chmod a+x /usr/bin/kubectl
     - kubectl get nodes
