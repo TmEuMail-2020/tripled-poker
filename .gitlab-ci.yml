@@ -40,6 +40,11 @@ deploy:
   environment: production
   script:
     - echo "$CI_REGISTRY_IMAGE"
+    - apt-get update && apt-get install --no-install-recommends curl
+    - curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl -O /usr/bin/
+    - chmod a+x /usr/bin/kubectl
+    - kubectl get nodes
+    - kubectl get sa default
     - tm -n "$KUBE_NAMESPACE" set registry-auth gitlab-registry --registry "$CI_REGISTRY" --username "$CI_REGISTRY_USER" --password "$CI_JOB_TOKEN"
     - tm -n "$KUBE_NAMESPACE" --registry-host "$CI_REGISTRY_IMAGE" deploy --wait
     - tm -n "$KUBE_NAMESPACE" --config "$KUBECONFIG" deploy service "$CI_PROJECT_NAME" --from-image "$CI_REGISTRY_IMAGE" --wait
