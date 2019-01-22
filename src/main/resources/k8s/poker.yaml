@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: poker
+spec:
+  selector:
+    matchLabels:
+      app: poker
+  template:
+    metadata:
+      labels:
+        app: poker
+        release: poker
+      annotations:
+        prometheus.io/path: "/actuator/prometheus"
+        prometheus.io/port: "8081"
+        prometheus.io/scrape: "true"
+    spec:
+      imagePullSecrets:
+        - name: gitlab-registry
+      containers:
+        - name: poker-server
+          image: "registry.gitlab.rotate-it.be/tripled/poker:latest"
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+              name: web
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: poker-svc
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8080
+      targetPort: 8080
+  selector:
+    app: poker
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: poker-ing
+spec:
+  rules:
+    - host: poker.otd.rotate-it.be
+      http:
+        paths:
+          - backend:
+              serviceName: poker-svc
+              servicePort: 8080
+            path: /
