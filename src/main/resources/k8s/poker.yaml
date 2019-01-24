@@ -11,6 +11,7 @@ spec:
       labels:
         app: production
         release: production
+        track: stable
       annotations:
         prometheus.io/path: "/actuator/prometheus"
         prometheus.io/port: "8081"
