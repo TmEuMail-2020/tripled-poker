@@ -2,6 +2,10 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: poker
+  labels:
+    app: production
+    release: production
+    track: stable
 spec:
   selector:
     matchLabels:
