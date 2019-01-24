@@ -5,12 +5,12 @@ metadata:
 spec:
   selector:
     matchLabels:
-      app: poker
+      app: production
   template:
     metadata:
       labels:
-        app: poker
-        release: poker
+        app: production
+        release: production
       annotations:
         prometheus.io/path: "/actuator/prometheus"
         prometheus.io/port: "8081"
@@ -36,12 +36,14 @@ spec:
     - port: 8080
       targetPort: 8080
   selector:
-    app: poker
+    app: production
 ---
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   name: poker-ing
+  labels:
+    app: production
 spec:
   rules:
     - host: poker.otd.rotate-it.be

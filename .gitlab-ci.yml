@@ -37,7 +37,9 @@ deploy:
   image: gcr.io/triggermesh/tm:v0.0.8
   only:
     - master
-  environment: production
+  environment: 
+    name: production
+    url: https://poker.otd.rotate-it.be
   script:
     - echo "$CI_REGISTRY_IMAGE"
     - apt-get update && apt-get install --no-install-recommends --yes curl
