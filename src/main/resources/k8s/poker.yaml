@@ -6,6 +6,7 @@ metadata:
     app: production
     release: production
     track: stable
+    commit: commithash
 spec:
   selector:
     matchLabels:
