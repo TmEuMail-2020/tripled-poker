@@ -6,8 +6,8 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-class BusinessMetricController(registry: MeterRegistry) {
-    val counter= registry.counter("business.metric")
+internal class BusinessMetricController(registry: MeterRegistry) {
+    val counter = registry.counter("business.metric")
 
     @GetMapping("/api/businessMetric")
     @Timed

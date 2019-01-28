@@ -6,12 +6,17 @@ buildscript {
 	}
 	repositories {
 		mavenCentral()
+		jcenter()
 	}
 	dependencies {
 		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
 		classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlinVersion}")
 		classpath("org.jetbrains.kotlin:kotlin-allopen:${kotlinVersion}")
 	}
+}
+
+plugins {
+	id("io.gitlab.arturbosch.detekt").version("1.0.0-RC12")
 }
 
 apply plugin: 'kotlin'
@@ -28,6 +33,24 @@ jacocoTestReport {
 	reports {
 		xml.enabled true
 		html.enabled true
+	}
+}
+
+detekt {
+	toolVersion = "1.0.0-RC12"
+	input = files("src/main/kotlin")
+	filters = ".*/resources/.*,.*/build/.*"
+	config = files("./src/main/resources/quality/detekt.yml")
+
+	reports {
+		xml {
+			enabled = true
+			destination = file("build/reports/detekt-report.xml")
+		}
+		html {
+			enabled = true
+			destination = file("build/reports/detekt-report.html")
+		}
 	}
 }
 

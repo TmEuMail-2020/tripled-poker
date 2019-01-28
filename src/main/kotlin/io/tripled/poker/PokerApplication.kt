@@ -4,9 +4,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 
 @SpringBootApplication
-class PokerApplication
+internal class PokerApplication
 
-fun main(args: Array<String>) {
-	runApplication<PokerApplication>(*args)
+fun main(vararg args: String) {
+    runApplication<PokerApplication>(*args)
 }
 

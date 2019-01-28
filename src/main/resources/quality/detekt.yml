@@ -1,0 +1,53 @@
+# turn on ALL checks
+failFast: true
+
+build:
+  weights:
+    comments: 0   # missing comments should not fail the build
+
+test-pattern: # Configure exclusions for test sources
+  active: true
+  patterns: # Test file regexes
+    - '.*/test/.*'
+    - '.*\\test\\.*'
+    - '.*Test.kt'
+    - '.*Spec.kt'
+    - '.*IT.kt'
+    - '.*TestConfiguration.kt'
+  exclude-rule-sets:
+    - 'comments'
+  exclude-rules:
+    - 'SpreadOperator'
+
+comments:
+  EndOfSentenceFormat:
+    active: false
+  CommentOverPrivateFunction:
+    active: false
+  UndocumentedPublicClass:
+    active: false
+  UndocumentedPublicFunction:
+    active: false
+
+complexity:
+  LongParameterList:
+    threshold: 10
+    active: true
+  TooManyFunctions:
+    thresholdInInterfaces: 15
+    thresholdInClasses: 15
+    thresholdInFiles: 15
+  ComplexInterface:
+    threshold: 15
+
+performance:
+  SpreadOperator:
+    active: false
+
+style:
+  MagicNumber:
+    ignoreEnums: true
+  MaxLineLength:
+    maxLineLength: 200
+  ReturnCount:
+    active: false
