@@ -1,7 +1,5 @@
 package io.tripled.poker.graphql.directives
 
-import com.expedia.graphql.sample.directives.DirectiveWiring
-import com.expedia.graphql.sample.directives.getDirectiveName
 import graphql.schema.DataFetcher
 import graphql.schema.DataFetchingEnvironmentBuilder
 import graphql.schema.GraphQLArgument

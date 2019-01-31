@@ -4,6 +4,8 @@ import graphql.schema.DataFetcher
 import graphql.schema.GraphQLFieldDefinition
 import graphql.schema.idl.SchemaDirectiveWiringEnvironment
 import io.tripled.poker.graphql.directives.CakeOnly
+import io.tripled.poker.graphql.directives.DirectiveWiring
+import io.tripled.poker.graphql.directives.getDirectiveName
 
 class CakeOnlyDirectiveWiring : DirectiveWiring {
 

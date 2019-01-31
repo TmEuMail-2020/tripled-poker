@@ -51,3 +51,7 @@ style:
     maxLineLength: 200
   ReturnCount:
     active: false
+  NewLineAtEndOfFile:
+    active: false
+  FunctionOnlyReturningConstant:
+    active: false

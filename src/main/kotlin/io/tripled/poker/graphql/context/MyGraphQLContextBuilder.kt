@@ -12,13 +12,13 @@ import javax.websocket.server.HandshakeRequest
  */
 class MyGraphQLContextBuilder: GraphQLContextBuilder {
     override fun build(httpServletRequest: HttpServletRequest, httpServletResponse: HttpServletResponse): GraphQLContext {
-        val myValue = httpServletRequest.getHeader("MyHeader") ?: "context_from_servlet"
-        return MyGraphQLContext(myValue, httpServletRequest = httpServletRequest)
+        //val myValue = httpServletRequest.getHeader("MyHeader") ?: "context_from_servlet"
+        return MyGraphQLContext(httpServletRequest)
     }
 
     override fun build(session: Session, handshakeRequest: HandshakeRequest): GraphQLContext {
-        return MyGraphQLContext("context_from_handshake", handshakeRequest = handshakeRequest)
+        return MyGraphQLContext() /* add context here */
     }
 
-    override fun build(): GraphQLContext = MyGraphQLContext("default_context")
+    override fun build(): GraphQLContext = MyGraphQLContext()
 }

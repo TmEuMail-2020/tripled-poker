@@ -1,4 +1,4 @@
-package com.expedia.graphql.sample.directives
+package io.tripled.poker.graphql.directives
 
 import com.google.common.base.CaseFormat
 import graphql.schema.idl.SchemaDirectiveWiring

@@ -13,6 +13,11 @@ import java.util.Random
 @Component
 class SimpleQuery: Query {
 
+    data class Shizzle(val a: String, val b: String, val c: Int)
+
+    @GraphQLDescription("new query that always returns true")
+    fun shizzleDemo(@GraphQLDescription("this field is optional") optionalValue: Int = 1): Shizzle = Shizzle("Gert", "Yves", 42 * optionalValue)
+
     @Deprecated(message = "this query is deprecated", replaceWith = ReplaceWith("shinyNewQuery"))
     @GraphQLDescription("old query that should not be used always returns false")
     fun simpleDeprecatedQuery(): Boolean = false
@@ -22,8 +27,6 @@ class SimpleQuery: Query {
 
     @GraphQLIgnore
     fun notPartOfSchema() = "ignore me!"
-
-    private fun privateFunctionsAreNotVisible() = "ignored private function"
 
     @GraphQLDescription("performs some operation")
     @CustomDirective

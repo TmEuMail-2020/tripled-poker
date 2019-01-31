@@ -19,10 +19,8 @@ import io.tripled.poker.graphql.datafetchers.SpringDataFetcherFactory
 import io.tripled.poker.graphql.exceptions.CustomDataFetcherExceptionHandler
 import io.tripled.poker.graphql.extension.CustomSchemaGeneratorHooks
 import org.slf4j.LoggerFactory
-import org.springframework.boot.web.servlet.ServletRegistrationBean
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import javax.servlet.http.HttpServlet
 import javax.validation.Validator
 
 @Configuration
@@ -42,7 +40,7 @@ class CustomGraphqlConfiguration {
 
     @Bean
     fun schemaConfig(hooks: SchemaGeneratorHooks, dataFetcherFactoryProvider: KotlinDataFetcherFactoryProvider): SchemaGeneratorConfig = SchemaGeneratorConfig(
-            supportedPackages = listOf("com.expedia"),
+            supportedPackages = listOf("io.tripled.poker.graphql.test"),
             hooks = hooks,
             dataFetcherFactoryProvider = dataFetcherFactoryProvider
     )
