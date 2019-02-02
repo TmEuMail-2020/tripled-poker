@@ -47,6 +47,7 @@ performance:
 style:
   MagicNumber:
     ignoreEnums: true
+    ignoreNumbers: '-1,0,1,2,10,100'
   MaxLineLength:
     maxLineLength: 200
   ReturnCount:

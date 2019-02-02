@@ -2,7 +2,6 @@ package io.tripled.poker.graphql.test
 
 import com.expedia.graphql.annotations.GraphQLDescription
 import com.expedia.graphql.annotations.GraphQLIgnore
-import com.expedia.graphql.sample.directives.CustomDirective
 import io.tripled.poker.graphql.Query
 import org.springframework.stereotype.Component
 import java.util.Random
@@ -16,7 +15,7 @@ class SimpleQuery: Query {
     data class Shizzle(val a: String, val b: String, val c: Int)
 
     @GraphQLDescription("new query that always returns true")
-    fun shizzleDemo(@GraphQLDescription("this field is optional") optionalValue: Int = 1): Shizzle = Shizzle("Gert", "Yves", 42 * optionalValue)
+    fun shizzleDemo(@GraphQLDescription("this field is optional") optionalValue: Int = 1): Shizzle = Shizzle("Gert", "Yves", 2 * optionalValue)
 
     @Deprecated(message = "this query is deprecated", replaceWith = ReplaceWith("shinyNewQuery"))
     @GraphQLDescription("old query that should not be used always returns false")
@@ -29,14 +28,12 @@ class SimpleQuery: Query {
     fun notPartOfSchema() = "ignore me!"
 
     @GraphQLDescription("performs some operation")
-    @CustomDirective
-    fun doSomething(@GraphQLDescription("super important value")
-                    value: Int): Boolean = true
+    fun doSomething(@GraphQLDescription("super important value") value: Int): Boolean = value == 100
 
     @GraphQLDescription("generates pseudo random int and returns it if it is less than 50")
     fun generateNullableNumber(): Int? {
         val num = Random().nextInt(100)
-        return if (num < 50) num else null
+        return if (num < 100/2) num else null
     }
 
     @GraphQLDescription("generates pseudo random int")
@@ -60,6 +57,6 @@ class SimpleQuery: Query {
     @GraphQLDescription("query with optional input")
     fun doSomethingWithOptionalInput(
             @GraphQLDescription("this field is required") requiredValue: Int,
-            @GraphQLDescription("this field is optional") optionalValue: Int? = null)
-            = "required value=$requiredValue, optional value=$optionalValue"
+            @GraphQLDescription("this field is optional") optionalValue: Int? = null) =
+            "required value=$requiredValue, optional value=$optionalValue"
 }

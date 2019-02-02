@@ -9,13 +9,11 @@ import org.springframework.beans.factory.BeanFactoryAware
 import org.springframework.stereotype.Component
 
 @Component
-class SpringDataFetcherFactory: DataFetcherFactory<Any>, BeanFactoryAware {
-    private lateinit var beanFactory: BeanFactory
+class SpringDataFetcherFactory(private val beanFactory: BeanFactory): DataFetcherFactory<Any>, BeanFactoryAware {
 
-    override fun setBeanFactory(beanFactory: BeanFactory) {
-        this.beanFactory = beanFactory
-    }
+    override fun setBeanFactory(beanFactory: BeanFactory) = Unit
 
+    @Suppress("UnsafeCast")
     override fun get(environment: DataFetcherFactoryEnvironment?): DataFetcher<Any> {
         //Strip out possible `Input` and `!` suffixes added to by the SchemaGenerator
         val targetedTypeName = environment?.fieldDefinition?.type?.deepName?.removeSuffix("!")?.removeSuffix("Input")

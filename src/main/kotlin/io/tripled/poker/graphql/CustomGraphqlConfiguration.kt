@@ -1,48 +1,31 @@
 package io.tripled.poker.graphql
 
-import com.expedia.graphql.DirectiveWiringHelper
 import com.expedia.graphql.SchemaGeneratorConfig
 import com.expedia.graphql.TopLevelObject
-import com.expedia.graphql.execution.KotlinDataFetcherFactoryProvider
-import com.expedia.graphql.hooks.SchemaGeneratorHooks
-import com.expedia.graphql.sample.directives.DirectiveWiringFactory
-import com.expedia.graphql.sample.directives.LowercaseDirectiveWiring
 import com.expedia.graphql.toSchema
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import graphql.execution.AsyncExecutionStrategy
 import graphql.schema.GraphQLSchema
 import graphql.schema.idl.SchemaPrinter
-import graphql.servlet.*
+import graphql.servlet.DefaultExecutionStrategyProvider
+import graphql.servlet.GraphQLErrorHandler
+import graphql.servlet.GraphQLInvocationInputFactory
+import graphql.servlet.GraphQLObjectMapper
+import graphql.servlet.GraphQLQueryInvoker
+import graphql.servlet.ObjectMapperConfigurer
 import io.tripled.poker.graphql.context.MyGraphQLContextBuilder
-import io.tripled.poker.graphql.datafetchers.CustomDataFetcherFactoryProvider
-import io.tripled.poker.graphql.datafetchers.SpringDataFetcherFactory
 import io.tripled.poker.graphql.exceptions.CustomDataFetcherExceptionHandler
-import io.tripled.poker.graphql.extension.CustomSchemaGeneratorHooks
 import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import javax.validation.Validator
 
 @Configuration
 class CustomGraphqlConfiguration {
     private val logger = LoggerFactory.getLogger(CustomGraphqlConfiguration::class.java)
 
     @Bean
-    fun wiringFactory() = DirectiveWiringFactory()
-
-    @Bean
-    fun hooks(validator: Validator, wiringFactory: DirectiveWiringFactory) =
-            CustomSchemaGeneratorHooks(validator, DirectiveWiringHelper(wiringFactory, mapOf("lowercase" to LowercaseDirectiveWiring())))
-
-    @Bean
-    fun dataFetcherFactoryProvider(springDataFetcherFactory: SpringDataFetcherFactory, hooks: SchemaGeneratorHooks) =
-            CustomDataFetcherFactoryProvider(springDataFetcherFactory, hooks)
-
-    @Bean
-    fun schemaConfig(hooks: SchemaGeneratorHooks, dataFetcherFactoryProvider: KotlinDataFetcherFactoryProvider): SchemaGeneratorConfig = SchemaGeneratorConfig(
-            supportedPackages = listOf("io.tripled.poker.graphql.test"),
-            hooks = hooks,
-            dataFetcherFactoryProvider = dataFetcherFactoryProvider
+    fun schemaConfig(): SchemaGeneratorConfig = SchemaGeneratorConfig(
+            supportedPackages = listOf("io.tripled.poker.graphql.test")
     )
 
     @Bean
