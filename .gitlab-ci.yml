@@ -50,7 +50,7 @@ deploy:
     - sed -i "s|commithash|$CI_COMMIT_SHA|" src/main/resources/k8s/poker.yaml
     - kubectl --namespace="$KUBE_NAMESPACE" apply -f src/main/resources/k8s/poker.yaml
     - echo "hacky redeploy force tricky"
-    - kubectl --namespace=poker-265 scale deployment.apps/poker --replicas=0
-    - kubectl --namespace=poker-265 scale deployment.apps/poker --replicas=1
+    - kubectl --namespace="$KUBE_NAMESPACE" scale deployment.apps/poker --replicas=0
+    - kubectl --namespace="$KUBE_NAMESPACE" scale deployment.apps/poker --replicas=1
 #    - tm -n "$KUBE_NAMESPACE" --registry-host "$CI_REGISTRY_IMAGE" deploy --wait
 #    - tm -n "$KUBE_NAMESPACE" --config "$KUBECONFIG" deploy service "$CI_PROJECT_NAME" --from-image "$CI_REGISTRY_IMAGE" --wait
