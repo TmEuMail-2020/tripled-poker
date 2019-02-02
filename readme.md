@@ -5,6 +5,15 @@
 [![Slack Widget](https://img.shields.io/badge/Slack-Opentripled-blue.svg?style=flat-square)](https://tripled-io.slack.com/messages/opentripled)
 
 
+## Functional
+
+We assume most people are familiar with texas holdem, poker, here's an eventstorming overview of what it looks like:
+
+![alt text](eventstorming.jpg "poker eventstorming")
+
+There is also a video on how to play:
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/GAoR9ji8D6A/0.jpg)](https://www.youtube.com/watch?v=GAoR9ji8D6A)
+
 ## Initial setup
 
 https://start.spring.io
