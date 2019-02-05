@@ -1,13 +1,13 @@
 package io.tripled.poker
 
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
-import org.springframework.boot.test.context.SpringBootTest
 
-@SpringBootTest
 class PokerApplicationTests {
 
-	@Test
-	fun contextLoads() {
-	}
+    @Test
+    internal fun `lets just see that regular tests work too`() {
+        assertEquals(1, 1)
+    }
 
 }
