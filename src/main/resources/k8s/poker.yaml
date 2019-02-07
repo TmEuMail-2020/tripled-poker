@@ -6,7 +6,6 @@ metadata:
     app: production
     release: production
     track: stable
-    commit: commithash
 spec:
   selector:
     matchLabels:
@@ -17,6 +16,7 @@ spec:
         app: production
         release: production
         track: stable
+        commit: commithash
       annotations:
         prometheus.io/path: "/actuator/prometheus"
         prometheus.io/port: "8081"
