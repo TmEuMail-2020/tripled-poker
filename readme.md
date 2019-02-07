@@ -26,3 +26,13 @@ https://github.com/graphql-java-kickstart/graphql-spring-boot
 https://docs.spring.io/spring-metrics/docs/current/public/prometheus
 * business & technical metrics
 * grafana spring boot dashboard: https://grafana.com/dashboards/4701
+
+## getting started
+
+### build it
+* ./gradlew build
+* ./gradlew bootRun
+
+### Serve to 
+* localhost:8080/graphiql
+* localhost:8080/api/businessMetric
