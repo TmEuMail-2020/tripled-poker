@@ -30,6 +30,7 @@ https://docs.spring.io/spring-metrics/docs/current/public/prometheus
 ## getting started
 
 ### build it
+* ./gradlew assemble check jacocoTestReport detekt
 * ./gradlew build
 * ./gradlew bootRun
 
