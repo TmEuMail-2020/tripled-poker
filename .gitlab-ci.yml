@@ -47,7 +47,7 @@ deploy:
     - kubectl get nodes
     - kubectl get sa default
     - tm -n "$KUBE_NAMESPACE" set registry-auth gitlab-registry --registry "$CI_REGISTRY" --username "$DEPLOY_USER" --password "$DEPLOY_KEY"
-    - sed -i "s|commithash|$CI_COMMIT_SHA|" src/main/resources/k8s/poker.yaml
-    - kubectl --namespace="$KUBE_NAMESPACE" apply -f src/main/resources/k8s/poker.yaml
+    - sed -i "s|commithash|$CI_COMMIT_SHA|" main/src/main/resources/k8s/poker.yaml
+    - kubectl --namespace="$KUBE_NAMESPACE" apply -f main/src/main/resources/k8s/poker.yaml
 #    - tm -n "$KUBE_NAMESPACE" --registry-host "$CI_REGISTRY_IMAGE" deploy --wait
 #    - tm -n "$KUBE_NAMESPACE" --config "$KUBECONFIG" deploy service "$CI_PROJECT_NAME" --from-image "$CI_REGISTRY_IMAGE" --wait
