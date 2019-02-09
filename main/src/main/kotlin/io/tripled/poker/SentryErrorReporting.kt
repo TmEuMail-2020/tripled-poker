@@ -12,18 +12,17 @@ import org.springframework.web.servlet.HandlerExceptionResolver
 @Configuration
 class SentryErrorReporting {
     @Bean
-    fun sentryExceptionResolver(): HandlerExceptionResolver {
-        return SentryExceptionResolver()
-    }
+    fun sentryExceptionResolver(): HandlerExceptionResolver = SentryExceptionResolver()
 
     @Bean
-    fun sentryServletContextInitializer(): ServletContextInitializer {
-        return SentryServletContextInitializer()
-    }
-
-    @RestController
-    class ErrorTest {
-        @GetMapping("generateError")
-        fun generateError(): Nothing = throw RuntimeException("errors happening")
-    }
+    @Suppress("FunctionMaxLength")
+    fun sentryServletContextInitializer(): ServletContextInitializer = SentryServletContextInitializer()
 }
+
+@RestController
+class ErrorTest {
+    @GetMapping("/test/generateError")
+    fun generateError(): Nothing = throw ShizzleException("errors happening")
+}
+
+class ShizzleException(message: String) : RuntimeException(message)
