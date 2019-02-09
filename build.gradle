@@ -1,12 +1,13 @@
 buildscript {
 	ext {
-		kotlinVersion = '1.3.20'
+		kotlinVersion = '1.3.21'
 		springBootVersion = '2.1.2.RELEASE'
 		junitVersion = '5.3.2'
 	}
 	repositories {
 		mavenCentral()
 		jcenter()
+
 	}
 	dependencies {
 		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
@@ -16,88 +17,194 @@ buildscript {
 }
 
 plugins {
+	id 'jacoco'
 	id("io.gitlab.arturbosch.detekt").version("1.0.0-RC12")
+	id 'com.gradle.build-scan' version '2.1'
 }
 
-apply plugin: 'kotlin'
-apply plugin: 'kotlin-spring'
-apply plugin: 'org.springframework.boot'
-apply plugin: 'io.spring.dependency-management'
-apply plugin: 'jacoco'
+buildScan { termsOfServiceUrl = "https://gradle.com/terms-of-service"; termsOfServiceAgree = "yes" }
 
-group = 'io.tripled'
-version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '1.8'
-
-jacocoTestReport {
-	reports {
-		xml.enabled true
-		html.enabled true
-	}
+def kotlinModules = subprojects.findAll {
+	!(it.path in [
+			':docker'
+	])
 }
 
-detekt {
-	toolVersion = "1.0.0-RC12"
-	input = files("src/main/kotlin")
-	filters = ".*/resources/.*,.*/build/.*"
-	config = files("./src/main/resources/quality/detekt.yml")
+configure(kotlinModules) {
+	apply plugin: 'java'
+	apply plugin: 'kotlin'
+	apply plugin: 'kotlin-spring'
+	apply plugin: 'idea'
+	apply plugin: 'io.spring.dependency-management'
+	apply plugin: 'jacoco'
 
-	reports {
-		xml {
-			enabled = true
-			destination = file("build/reports/detekt-report.xml")
-		}
-		html {
-			enabled = true
-			destination = file("build/reports/detekt-report.html")
+	group = "io.tripled"
+	version = "0.0.1-SNAPSHOT"
+	sourceCompatibility = 1.8
+
+	compileKotlin {
+		kotlinOptions {
+			freeCompilerArgs = ['-Xjsr305=strict']
+			jvmTarget = '1.8'
 		}
 	}
-}
+	compileTestKotlin {
+		kotlinOptions {
+			freeCompilerArgs = ['-Xjsr305=strict']
+			jvmTarget = '1.8'
+		}
+	}
 
-//buildScan { termsOfServiceUrl = "https://gradle.com/terms-of-service"; termsOfServiceAgree = "yes" }
+	sourceSets {
+		main.java.srcDirs = ['src/main/kotlin']
+		test.java.srcDirs = ['src/test/kotlin']
+		main.kotlin.srcDirs = ['src/main/kotlin']
+		test.kotlin.srcDirs = ['src/test/kotlin']
+	}
+
+	configurations {
+		all*.exclude group: "junit"
+		detekt
+
+		developmentOnly
+		runtimeClasspath {
+			extendsFrom developmentOnly
+		}
+	}
+
+	test {
+		useJUnitPlatform()
+	}
+
+	detekt {
+		toolVersion = "1.0.0-RC12"
+		input = files("src/main/kotlin")
+		filters = ".*/resources/.*,.*/build/.*"
+		config = files("./src/main/resources/quality/detekt.yml")
+
+		reports {
+			xml {
+				enabled = true
+				destination = file("build/reports/detekt-report.xml")
+			}
+			html {
+				enabled = true
+				destination = file("build/reports/detekt-report.html")
+			}
+		}
+	}
+	
+	repositories {
+		mavenCentral()
+		jcenter()
+	}
+
+	ext {
+		springBootVersion = '2.1.2.RELEASE'
+		junitVersion = '5.3.2'
+	}
+
+	dependencies {
+		implementation 'com.fasterxml.jackson.module:jackson-module-kotlin'
+
+		implementation "org.jetbrains.kotlin:kotlin-stdlib"
+		implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7"
+		implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+		implementation "org.jetbrains.kotlin:kotlin-reflect"
+
+		// testing facilities
+		testCompile("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
+		testCompile("org.junit.jupiter:junit-jupiter-params:${junitVersion}")
+		testRuntime("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
+	}
+
+	dependencyManagement {
+		imports {
+			mavenBom("org.springframework.boot:spring-boot-dependencies:${springBootVersion}")
+		}
+	}
+}
 
 repositories {
 	mavenCentral()
 	jcenter()
 }
 
-configurations.all {
-	exclude group: 'junit'
-}
+task coverage(type: JacocoReport, group: 'Coverage reports') {
+	description = 'Generates an aggregate report from all subprojects'
 
-dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-actuator'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
-	implementation 'com.fasterxml.jackson.module:jackson-module-kotlin'
-	implementation 'io.micrometer:micrometer-registry-prometheus'
-	implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
-	implementation "org.jetbrains.kotlin:kotlin-reflect"
-	implementation 'com.graphql-java-kickstart:graphql-spring-boot-starter:5.4.1'
-	implementation 'com.graphql-java-kickstart:graphiql-spring-boot-starter:5.4.1'
-	implementation 'com.graphql-java-kickstart:voyager-spring-boot-starter:5.4.1'
-	implementation 'com.expedia:graphql-kotlin:0.1.0'
-	implementation 'de.flapdoodle.embed:de.flapdoodle.embed.mongo'
-	
-	// testing facilities
-	testImplementation 'com.graphql-java-kickstart:graphql-spring-boot-starter-test:5.4.1'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	def coverageModules = kotlinModules.findAll {
+		!it.path.contains("test") && !it.path.contains('api')
+	}
 
-	testCompile("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
-	testCompile("org.junit.jupiter:junit-jupiter-params:${junitVersion}")
-	testRuntime("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
-}
+	dependsOn(coverageModules.test)
+	additionalSourceDirs = files(coverageModules.sourceSets.main.allSource.srcDirs)
+	sourceDirectories = files(coverageModules.sourceSets.main.allSource.srcDirs)
+	classDirectories = files(coverageModules.sourceSets.main.output)
+	executionData = files(coverageModules.stream()
+			.map { it.file('./build/jacoco/test.exec') }
+			.toArray())
 
-compileKotlin {
-	kotlinOptions {
-		freeCompilerArgs = ['-Xjsr305=strict']
-		jvmTarget = '1.8'
+	reports {
+		html.enabled = true
+		xml.enabled = true
+	}
+
+	doFirst {
+		executionData = files(executionData.findAll { it.exists() })
 	}
 }
 
-compileTestKotlin {
-	kotlinOptions {
-		freeCompilerArgs = ['-Xjsr305=strict']
-		jvmTarget = '1.8'
+project(':infra-businessmetrics') {
+	dependencies {
+		implementation 'org.springframework.boot:spring-boot-starter-web'
+		implementation 'org.springframework.boot:spring-boot-starter-actuator'
+		implementation 'io.micrometer:micrometer-registry-prometheus'
+
+		implementation project(':app')
+
+		testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	}
+}
+
+project(':infra-graphql') {
+	dependencies {
+		implementation 'com.graphql-java-kickstart:graphql-spring-boot-starter:5.4.1'
+		implementation 'com.graphql-java-kickstart:graphiql-spring-boot-starter:5.4.1'
+		implementation 'com.graphql-java-kickstart:voyager-spring-boot-starter:5.4.1'
+		implementation 'com.expedia:graphql-kotlin:0.1.0'
+
+		implementation project(':app')
+
+		testImplementation 'org.springframework.boot:spring-boot-starter-test'
+		testImplementation 'com.graphql-java-kickstart:graphql-spring-boot-starter-test:5.4.1'
+	}
+}
+
+project(':infra-mongostore') {
+	dependencies {
+		implementation 'org.springframework.boot:spring-boot-starter-web'
+		implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+		implementation 'de.flapdoodle.embed:de.flapdoodle.embed.mongo'
+
+		implementation project(':app')
+
+		testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	}
+}
+
+project(':main') {
+	apply plugin: 'org.springframework.boot'
+
+	dependencies {
+		implementation 'org.springframework.boot:spring-boot-starter-web'
+		developmentOnly("org.springframework.boot:spring-boot-devtools")
+
+		implementation project(':app')
+		implementation project(':infra-businessmetrics')
+		implementation project(':infra-mongostore')
+        implementation project(":infra-graphql")
+
+		testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	}
 }

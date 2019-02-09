@@ -19,8 +19,8 @@ graphiql:
   enabled: true
   pageTitle: GraphiQL
   cdn:
-    enabled: false
-    version: 0.11.11
+    enabled: true
+    version: 0.12.0
   props:
     resources:
 #      query: query.graphql
