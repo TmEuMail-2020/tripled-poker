@@ -198,6 +198,7 @@ project(':main') {
 
 	dependencies {
 		implementation 'org.springframework.boot:spring-boot-starter-web'
+		implementation 'io.sentry:sentry-spring:1.7.16'
 		developmentOnly("org.springframework.boot:spring-boot-devtools")
 
 		implementation project(':app')
