@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.servlet.HandlerExceptionResolver
 
 @Configuration
-class SentryErrorReporting {
+class SentryErrorReportingConfiguration {
     @Bean
     fun sentryExceptionResolver(): HandlerExceptionResolver = SentryExceptionResolver()
 

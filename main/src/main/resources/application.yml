@@ -1,3 +1,5 @@
+
+
 #
 # infra - graphql
 #
@@ -51,3 +53,24 @@ management:
     web:
       exposure:
         include: "*"
+
+#
+# tracing
+#
+opentracing:
+  jaeger:
+    const-sampler:
+      decision: true
+    http-sender:
+      url: https://jaeger-collect.otd.rotate-it.be/api/traces
+      #jaeger-collector.jaeger
+    enabled: true
+    log-spans: true
+
+# Sentry
+stacktrace:
+  app:
+    packages: io.tripled
+spring:
+  application:
+    name: poker
