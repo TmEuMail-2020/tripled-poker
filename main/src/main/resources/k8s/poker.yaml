@@ -33,7 +33,7 @@ spec:
               name: web
           env:
             - name: SENTRY_DSN
-              value: https://3dec75f91b204fa1991b608ca3a2a9af@sentry.otd.rotate-it.be/2
+              value: https://3dec75f91b204fa1991b608ca3a2a9af@sentry.otd.rotate-it.be/2?stacktrace.app.packages=io.tripled
             - name: OPENTRACING_JAEGER_HTTP-SENDER_URL
               value: http://jaeger-collector.jaeger:14268/api/traces
 ---
