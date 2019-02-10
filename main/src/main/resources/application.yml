@@ -1,3 +1,5 @@
+
+
 #
 # infra - graphql
 #
@@ -17,7 +19,7 @@ graphiql:
   static:
     basePath: /
   enabled: true
-  pageTitle: GraphiQL
+  pageTitle: Open Triple D Poker - Graphiql
   cdn:
     enabled: true
     version: 0.12.0
@@ -27,7 +29,7 @@ graphiql:
 #      defaultQuery: defaultQuery.graphql
 #      variables: variables.graphql
     variables:
-      editorTheme: "solarized light"
+      editorTheme: "darcula"
 #  headers:
 #    Authorization: "Bearer <your-token>"
 
@@ -51,3 +53,27 @@ management:
     web:
       exposure:
         include: "*"
+
+#
+# tracing
+#
+opentracing:
+  jaeger:
+    const-sampler:
+      decision: true
+    http-sender:
+      url: https://jaeger-collect.otd.rotate-it.be/api/traces
+      #jaeger-collector.jaeger
+    enabled: true
+    log-spans: false
+
+# spring
+spring:
+  application:
+    name: poker
+logging:
+  level:
+    graphql:
+      servlet:
+        internal:
+          ApolloSubscriptionKeepAliveRunner: ERROR #until better look can be had

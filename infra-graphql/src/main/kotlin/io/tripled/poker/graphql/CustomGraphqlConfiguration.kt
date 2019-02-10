@@ -14,18 +14,21 @@ import graphql.servlet.GraphQLObjectMapper
 import graphql.servlet.GraphQLQueryInvoker
 import graphql.servlet.ObjectMapperConfigurer
 import io.tripled.poker.graphql.context.MyGraphQLContextBuilder
-import io.tripled.poker.graphql.exceptions.CustomDataFetcherExceptionHandler
 import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.web.socket.config.annotation.EnableWebSocket
 
 @Configuration
+@EnableWebSocket
 class CustomGraphqlConfiguration {
     private val logger = LoggerFactory.getLogger(CustomGraphqlConfiguration::class.java)
 
     @Bean
     fun schemaConfig(): SchemaGeneratorConfig = SchemaGeneratorConfig(
-            supportedPackages = listOf("io.tripled.poker.graphql.test")
+            supportedPackages = listOf("io.tripled.poker.graphql.test",
+                    "io.tripled.poker.graphql.query",
+                    "io.tripled.poker.graphql.mutation")
     )
 
     @Bean
@@ -66,8 +69,7 @@ class CustomGraphqlConfiguration {
 
     @Bean
     fun graphQLQueryInvoker(): GraphQLQueryInvoker {
-        val exceptionHandler = CustomDataFetcherExceptionHandler()
-        val executionStrategyProvider = DefaultExecutionStrategyProvider(AsyncExecutionStrategy(exceptionHandler))
+        val executionStrategyProvider = DefaultExecutionStrategyProvider(AsyncExecutionStrategy())
 
         return GraphQLQueryInvoker.newBuilder()
                 .withExecutionStrategyProvider(executionStrategyProvider)

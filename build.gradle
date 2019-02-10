@@ -169,6 +169,7 @@ project(':infra-businessmetrics') {
 
 project(':infra-graphql') {
 	dependencies {
+		implementation 'org.springframework.boot:spring-boot-starter-websocket'
 		implementation 'com.graphql-java-kickstart:graphql-spring-boot-starter:5.4.1'
 		implementation 'com.graphql-java-kickstart:graphiql-spring-boot-starter:5.4.1'
 		implementation 'com.graphql-java-kickstart:voyager-spring-boot-starter:5.4.1'
@@ -198,7 +199,10 @@ project(':main') {
 
 	dependencies {
 		implementation 'org.springframework.boot:spring-boot-starter-web'
+		implementation 'org.springframework.boot:spring-boot-starter-websocket'
 		implementation 'io.sentry:sentry-spring:1.7.16'
+		implementation 'io.opentracing.contrib:opentracing-spring-jaeger-cloud-starter:0.2.2'
+		implementation 'io.opentracing.contrib:opentracing-spring-cloud-starter:0.2.2'
 		developmentOnly("org.springframework.boot:spring-boot-devtools")
 
 		implementation project(':app')
