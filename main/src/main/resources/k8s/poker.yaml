@@ -34,6 +34,8 @@ spec:
           env:
             - name: SENTRY_DSN
               value: https://3dec75f91b204fa1991b608ca3a2a9af@sentry.otd.rotate-it.be/2
+            - name: OPENTRACING_JAEGER_HTTP-SENDER_URL
+              value: http://jaeger-collector.jaeger:14268/api/traces
 ---
 apiVersion: v1
 kind: Service
