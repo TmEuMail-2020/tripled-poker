@@ -16,8 +16,11 @@ data class PersistedEvent<AggregateId, Payload>(@Id val eventId: UUID = UUID.ran
 
 @Repository
 class EventStore(val eventRepo: MongoEventRepository) : io.tripled.poker.eventsourcing.EventStore{
-    override fun save(id: Any, event: Any){
-        eventRepo.save(PersistedEvent(aggregateId = id.toString() as Any, payload = event))
+    override fun save(id: Any, events: List<Any>){
+        val persistedEvents = events.map {
+            PersistedEvent(aggregateId = id.toString() as Any, payload =  it)
+        }
+        eventRepo.saveAll(persistedEvents)
     }
 
     override fun findById(id: Any): List<Any> = eventRepo.findByAggregateId(id.toString()).map { it.payload }.toList()
@@ -33,8 +36,8 @@ internal class TestEventPersistence(val eventStore: EventStore,
 
     @GetMapping("/api/events/create")
     fun createEvents(){
-        eventStore.save(BusinessId("100"), TestCreated("first name"))
-        eventStore.save(BusinessId("100"), TestUpdated("name updated"))
+        eventStore.save(BusinessId("100"), listOf(TestCreated("first name")))
+        eventStore.save(BusinessId("100"), listOf(TestUpdated("name updated")))
     }
 
     @GetMapping("/api/events/print")
