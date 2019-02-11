@@ -32,6 +32,7 @@ class TableTests {
                 "Joe" to Card(Suit.HEART, Value.ACE),
                 "Jef" to Card(Suit.HEART, Value.ACE)
         ))))
+        assertTrue(eventStore.events.contains(PlayerWonRound("Joe")))
     }
 
     @Test
@@ -43,4 +44,3 @@ class TableTests {
         assertFalse(eventStore.events.contains(RoundStarted()))
     }
 }
-

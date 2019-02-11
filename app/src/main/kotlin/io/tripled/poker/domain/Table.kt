@@ -3,6 +3,7 @@ package io.tripled.poker.domain
 data class PlayerJoinedTable(val name: String)
 data class RoundStarted(val noop: String = "")
 data class CardsAreDealt(val cards: Map<String, Card>)
+data class PlayerWonRound(val name: String)
 
 enum class Suit { HEART, DIAMOND, CLUB, CLOVER }
 enum class Value { ACE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, TEN, JACK, QUEEN, KING }
@@ -25,9 +26,8 @@ class Table(events: List<Any>) {
             if (players.size > 1)
                 listOf(
                         RoundStarted(),
-                        CardsAreDealt(players.map { it to Card(Suit.HEART, Value.ACE) }.toMap())
+                        CardsAreDealt(players.map { it to Card(Suit.HEART, Value.ACE) }.toMap()),
+                        PlayerWonRound(players.first())
                 )
             else listOf()
-
-
 }
