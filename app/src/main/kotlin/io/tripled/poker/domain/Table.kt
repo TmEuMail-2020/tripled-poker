@@ -2,11 +2,22 @@ package io.tripled.poker.domain
 
 class Player(val name: String)
 
-class Table {
+data class PlayerJoinedTable(val name: String)
+
+class Table(private val events: List<Any>) {
     val players = mutableListOf<Player>()
 
-    fun join(name: String): Int {
-        players.add(Player(name))
-        return 1
+    init {
+        events.forEach { event ->
+            when (event) {
+                is PlayerJoinedTable -> players.add(Player(event.name))
+            }
+        }
     }
+
+    fun join(name: String): PlayerJoinedTable {
+        return PlayerJoinedTable(name)
+    }
+
+
 }
