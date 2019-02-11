@@ -1,17 +1,16 @@
 package io.tripled.poker
 
-import io.tripled.poker.api.TableService
+import io.tripled.poker.api.TableUseCaseToRenameLater
 import io.tripled.poker.domain.PlayerJoinedTable
 import io.tripled.poker.domain.RoundStarted
 import io.tripled.poker.eventsourcing.EventStore
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
-import java.awt.Event
 
 class PlayerJoinsTableTests {
 
     private val eventStore = TestEventStore()
-    private val tableService = TableService(eventStore)
+    private val tableService = TableUseCaseToRenameLater(eventStore)
 
     @Test
     internal fun `a player can join the table`() {
