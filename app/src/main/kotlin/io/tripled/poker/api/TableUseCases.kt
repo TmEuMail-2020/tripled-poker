@@ -10,7 +10,7 @@ interface TableService {
     fun getTable(): io.tripled.poker.api.response.Table
 }
 
-class TableUseCaseToRenameLater(private val eventStore: EventStore):TableService{
+class TableUseCases(private val eventStore: EventStore):TableService{
 
     override fun join(name: String) {
         eventStore.save(1, Table(eventStore.findById(1)).join(name))
