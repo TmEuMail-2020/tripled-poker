@@ -1,10 +1,7 @@
 package io.tripled.poker
 
 import io.tripled.poker.api.TableUseCases
-import io.tripled.poker.domain.Card
-import io.tripled.poker.domain.CardsAreDealt
-import io.tripled.poker.domain.PlayerJoinedTable
-import io.tripled.poker.domain.RoundStarted
+import io.tripled.poker.domain.*
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
@@ -32,8 +29,8 @@ class TableTests {
 
         assertTrue(eventStore.events.contains(RoundStarted()))
         assertTrue(eventStore.events.contains(CardsAreDealt(mapOf(
-                "Joe" to Card(),
-                "Jef" to Card()
+                "Joe" to Card(Suit.HEART, Value.ACE),
+                "Jef" to Card(Suit.HEART, Value.ACE)
         ))))
     }
 

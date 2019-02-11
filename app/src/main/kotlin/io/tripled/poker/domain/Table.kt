@@ -4,7 +4,9 @@ data class PlayerJoinedTable(val name: String)
 data class RoundStarted(val noop: String = "")
 data class CardsAreDealt(val cards: Map<String, Card>)
 
-data class Card(val noop: String = "")
+enum class Suit { HEART, DIAMOND, CLUB, CLOVER }
+enum class Value { ACE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, TEN, JACK, QUEEN, KING }
+data class Card(val suit: Suit, val value: Value)
 
 class Table(events: List<Any>) {
     private val players = players(events)
@@ -22,8 +24,8 @@ class Table(events: List<Any>) {
     fun startRound() =
             if (players.size > 1)
                 listOf(
-                    RoundStarted(),
-                    CardsAreDealt(players.map { it to Card() }.toMap())
+                        RoundStarted(),
+                        CardsAreDealt(players.map { it to Card(Suit.HEART, Value.ACE) }.toMap())
                 )
             else listOf()
 
