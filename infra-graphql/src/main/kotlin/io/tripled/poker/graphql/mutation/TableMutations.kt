@@ -12,4 +12,9 @@ class TableMutations(private val tableService: TableService) : Mutation {
         tableService.join(name)
         return tableService.getTable()
     }
+
+    fun startRound(): Table {
+        tableService.startRound()
+        return tableService.getTable()
+    }
 }
