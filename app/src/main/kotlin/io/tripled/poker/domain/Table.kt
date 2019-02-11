@@ -6,8 +6,11 @@ data class CardsAreDealt(val cards: Map<String, Card>)
 data class PlayerWonRound(val name: String)
 
 enum class Suit { HEART, DIAMOND, CLUB, CLOVER }
-enum class Value { ACE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, TEN, JACK, QUEEN, KING }
-data class Card(val suit: Suit, val value: Value)
+enum class Value { TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, TEN, JACK, QUEEN, KING, ACE }
+data class Card(val suit: Suit, val value: Value) {
+    val score: Int
+        get() = value.ordinal
+}
 
 class Table(events: List<Any>) {
     private val players = players(events)
@@ -22,12 +25,21 @@ class Table(events: List<Any>) {
 
     fun join(name: String) = listOf<Any>(PlayerJoinedTable(name))
 
-    fun startRound() =
-            if (players.size > 1)
-                listOf(
-                        RoundStarted(),
-                        CardsAreDealt(players.map { it to Card(Suit.HEART, Value.ACE) }.toMap()),
-                        PlayerWonRound(players.first())
-                )
-            else listOf()
+    fun startRound(deck: Deck): List<Any> {
+        return if (players.size > 1) {
+            val dealtCards = dealCards(deck)
+            listOf(
+                    RoundStarted(),
+                    CardsAreDealt(dealtCards),
+                    PlayerWonRound(determineWinner(dealtCards))
+            )
+        } else listOf()
+    }
+
+    private fun determineWinner(dealtCards: Map<String, Card>) = dealtCards
+            .toList()
+            .maxBy { it.second.score }!!
+            .first
+
+    private fun dealCards(deck: Deck) = players.associateWith { deck.dealCard() }
 }

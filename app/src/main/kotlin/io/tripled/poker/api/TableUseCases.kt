@@ -1,5 +1,6 @@
 package io.tripled.poker.api
 
+import io.tripled.poker.domain.Deck
 import io.tripled.poker.domain.Table
 import io.tripled.poker.eventsourcing.EventStore
 import io.tripled.poker.projection.TableProjection
@@ -10,7 +11,10 @@ interface TableService {
     fun getTable(): io.tripled.poker.api.response.Table
 }
 
-class TableUseCases(private val eventStore: EventStore):TableService{
+class TableUseCases(
+        private val eventStore: EventStore,
+        private val deck: Deck
+) : TableService {
 
     override fun join(name: String) {
         eventStore.save(1, Table(eventStore.findById(1)).join(name))
@@ -20,7 +24,7 @@ class TableUseCases(private val eventStore: EventStore):TableService{
 
     override fun startRound() {
         val table = Table(eventStore.findById(1))
-        eventStore.save(1, table.startRound())
+        eventStore.save(1, table.startRound(deck))
     }
 
 }

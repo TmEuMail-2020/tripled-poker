@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test
 class TableProjectionTests {
 
     private val eventStore = TestEventStore()
-    private val tableService = TableUseCases(eventStore)
+    private val tableService = TableUseCases(eventStore, TestDeck())
 
 
     @Test
