@@ -30,7 +30,7 @@ class CustomGraphqlConfiguration {
                     "io.tripled.poker.graphql.test",
                     "io.tripled.poker.graphql.query",
                     "io.tripled.poker.graphql.mutation",
-                    "io.tripled.poker.domain"
+                    "io.tripled.poker.api.response"
             )
     )
 
