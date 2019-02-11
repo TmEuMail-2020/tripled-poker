@@ -16,4 +16,7 @@ class DummyTableService : TableService {
     }
 
     override fun getTable(): Table = Table(players)
+    fun clear() {
+        players.clear()
+    }
 }
