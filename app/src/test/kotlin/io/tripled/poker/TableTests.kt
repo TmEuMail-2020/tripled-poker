@@ -1,5 +1,6 @@
 package io.tripled.poker
 
+import io.tripled.poker.api.TableUseCaseToRenameLater
 import io.tripled.poker.domain.Card
 import io.tripled.poker.domain.CardsAreDealt
 import io.tripled.poker.domain.PlayerJoinedTable
