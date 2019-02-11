@@ -211,5 +211,6 @@ project(':main') {
         implementation project(":infra-graphql")
 
 		testImplementation 'org.springframework.boot:spring-boot-starter-test'
+		testImplementation 'com.graphql-java-kickstart:graphql-spring-boot-starter-test:5.4.1'
 	}
 }

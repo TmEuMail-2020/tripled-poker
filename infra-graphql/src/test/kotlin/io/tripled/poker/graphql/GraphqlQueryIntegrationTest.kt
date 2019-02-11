@@ -20,6 +20,8 @@ class GraphqlQueryIntegrationTest(
     @Autowired val graphQLTestTemplate: GraphQLTestTemplate
 ) {
 
+    private val joinTable = "requests/joinTableMutation.graphql";
+    private val queryTable = "requests/queryTable.graphql"
 
     @BeforeEach
     internal fun setUp() {
@@ -28,7 +30,7 @@ class GraphqlQueryIntegrationTest(
 
     @Test
     fun `join table mutation`() {
-        val response = graphQLTestTemplate.postForResource("requests/joinTableMutation.graphql")
+        val response = post(joinTable)
 
         assertNotNull(response)
         assertThat(response.isOk, equalTo(true))
@@ -37,11 +39,13 @@ class GraphqlQueryIntegrationTest(
 
     @Test
     fun `query empty table`() {
-        val response = graphQLTestTemplate.postForResource("requests/queryTable.graphql")
+        val response = post(queryTable)
 
         assertNotNull(response)
         assertThat(response.isOk, equalTo(true))
         assertEquals(0, response.get("$.data.table.players",JSONArray::class.java).size)
     }
+
+    private fun post(resource: String) = graphQLTestTemplate.postForResource(resource)
 
 }

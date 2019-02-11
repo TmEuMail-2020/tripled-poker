@@ -1,0 +1,3 @@
+mutation tableMutations {
+    joinTable(name:"jos"){ players{ name } }
+}
