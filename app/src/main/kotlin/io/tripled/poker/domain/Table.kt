@@ -2,20 +2,30 @@ package io.tripled.poker.domain
 
 data class PlayerJoinedTable(val name: String)
 data class RoundStarted(val noop: String = "")
+data class CardsAreDealt(val cards: Map<String, Card>)
+
+data class Card(val noop: String = "")
 
 class Table(events: List<Any>) {
+    private val players = players(events)
 
-    private val playerCount: Int
-
-    init {
-        playerCount = events.size
+    private fun players(events: List<Any>): List<String> {
+        return events
+                .filter { it is PlayerJoinedTable }
+                .map { event ->
+                    (event as PlayerJoinedTable).name
+                }
     }
 
     fun join(name: String) = listOf<Any>(PlayerJoinedTable(name))
 
     fun startRound() =
-            if (playerCount > 1) listOf<Any>(RoundStarted())
-            else listOf<Any>()
+            if (players.size > 1)
+                listOf(
+                    RoundStarted(),
+                    CardsAreDealt(players.map { it to Card() }.toMap())
+                )
+            else listOf()
 
 
 }
