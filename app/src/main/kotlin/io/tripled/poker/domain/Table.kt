@@ -5,11 +5,11 @@ data class RoundStarted(val noop: String = "")
 data class CardsAreDealt(val cards: Map<String, Card>)
 data class PlayerWonRound(val name: String)
 
-enum class Suit { HEART, DIAMOND, CLUB, CLOVER }
+enum class Suit { DIAMOND, CLOVER, HEART, CLUB }
 enum class Value { TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, TEN, JACK, QUEEN, KING, ACE }
 data class Card(val suit: Suit, val value: Value) {
     val score: Int
-        get() = value.ordinal
+        get() = value.ordinal * 100 + suit.ordinal
 }
 
 class Table(events: List<Any>) {
