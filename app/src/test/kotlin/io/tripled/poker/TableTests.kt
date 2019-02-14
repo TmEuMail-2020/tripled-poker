@@ -1,6 +1,8 @@
 package io.tripled.poker
 
 import io.tripled.poker.api.TableUseCases
+import io.tripled.poker.api.response.Suit
+import io.tripled.poker.api.response.Value
 import io.tripled.poker.domain.*
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test

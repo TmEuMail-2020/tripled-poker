@@ -1,12 +1,13 @@
 package io.tripled.poker.domain
 
+import io.tripled.poker.api.response.Suit
+import io.tripled.poker.api.response.Value
+
 data class PlayerJoinedTable(val name: String)
 data class RoundStarted(val noop: String = "")
 data class CardsAreDealt(val cards: Map<String, Card>)
 data class PlayerWonRound(val name: String)
 
-enum class Suit { DIAMOND, CLOVER, HEART, CLUB }
-enum class Value { TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, TEN, JACK, QUEEN, KING, ACE }
 data class Card(val suit: Suit, val value: Value) {
     val score: Int
         get() = value.ordinal * 100 + suit.ordinal

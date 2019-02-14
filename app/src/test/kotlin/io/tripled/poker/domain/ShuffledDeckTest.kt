@@ -1,5 +1,7 @@
 package io.tripled.poker.domain
 
+import io.tripled.poker.api.response.Suit
+import io.tripled.poker.api.response.Value
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
