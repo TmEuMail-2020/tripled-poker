@@ -19,14 +19,15 @@ buildscript {
 plugins {
 	id 'jacoco'
 	id("io.gitlab.arturbosch.detekt").version("1.0.0-RC12")
-	id 'com.gradle.build-scan' version '2.1'
+	id "com.gradle.build-scan" version "2.1"
+	id "com.moowork.node" version "1.2.0"
 }
 
 buildScan { termsOfServiceUrl = "https://gradle.com/terms-of-service"; termsOfServiceAgree = "yes" }
 
 def kotlinModules = subprojects.findAll {
 	!(it.path in [
-			':docker'
+			':poker-ui-app'
 	])
 }
 
@@ -212,5 +213,18 @@ project(':main') {
 
 		testImplementation 'org.springframework.boot:spring-boot-starter-test'
 		testImplementation 'com.graphql-java-kickstart:graphql-spring-boot-starter-test:5.4.1'
+	}
+}
+
+project(":poker-ui-app") {
+	apply plugin: 'com.moowork.node'
+
+	node {
+		version = '11.6.0'
+		download = true
+	}
+
+	task frontendBuild( type: NodeTask, dependsOn: 'yarn' ) {
+		script = file( 'src' )
 	}
 }

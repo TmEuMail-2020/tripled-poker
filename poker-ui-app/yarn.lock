@@ -23,7 +23,7 @@
   resolved "https://registry.yarnpkg.com/@jetbrains/gen-idea-libs/-/gen-idea-libs-1.0.11.tgz#8d04ecd798b743ec828b6fede078bf063bcd6b38"
   integrity sha512-SfnzO+gYZIyhUbYHUiCbJDTuwpOorSf5zs2zOuzxn5Cx7OvdJJo5Y59vgZLRw7/b3POjMT5ib+yu5cWfWhekWQ==
 
-"@jetbrains/kotlin-extensions@^1.0.1-pre.58":
+"@jetbrains/kotlin-extensions@^1.0.1-pre.58", "@jetbrains/kotlin-extensions@^1.0.1-pre.67":
   version "1.0.1-pre.67"
   resolved "https://registry.yarnpkg.com/@jetbrains/kotlin-extensions/-/kotlin-extensions-1.0.1-pre.67.tgz#87d6f585839de9d7f18dbcb22d64c2ab79874c47"
   integrity sha512-C6ZpK5G2tqmPSmVblDliPjtg1dA1MC5rt5JUY/8eEliFQfRy9/OeYvSuBtn4/zPJ7IR3IUhekdZmBJqbvTxoxA==
