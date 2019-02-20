@@ -5,6 +5,7 @@ import react.dom.*
 import logo.*
 import ticker.*
 import axios.*
+import kotlinext.js.jsObject
 
 class App : RComponent<RProps, RState>() {
 
@@ -38,12 +39,18 @@ class AxiosExample : RComponent<RProps, RState>() {
     private var persons: Array<User> = arrayOf()
 
     override fun componentDidMount(){
-        Axios.get<dynamic>("https://jsonplaceholder.typicode.com/users")
-                .then { result ->
-                    setState {
-                        persons = result.data
-                    }
-                }
+        val config: AxiosConfigSettings = jsObject {
+            url = "https://jsonplaceholder.typicode.com/users"
+            timeout = 3000
+        }
+
+        axios<dynamic>(config).then { response ->
+            setState {
+                console.log(response.data)
+                persons = response.data
+            }
+            console.log(response)
+        }
     }
 
     override fun RBuilder.render() {
@@ -62,52 +69,55 @@ enum class Suit { DIAMOND, SPADES, HEART, CLUB }
 enum class Value { TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, TEN, JACK, QUEEN, KING, ACE }
 data class Card(val value: Value, val suit: Suit)
 data class Player(val name: String, val cards: List<Card> = listOf())
-data class Table(val players: List<Player>, val winner: Player? = null)
+data class Table(val players: List<Player> = emptyList(), val winner: Player? = null)
+data class GraphqlResponse(val table: Table = Table())
 
 fun RBuilder.pokerTable() = child(PokerTableRepresentation::class){}
 
 class PokerTableRepresentation : RComponent<RProps, RState>() {
     private var table: Table = Table(emptyList())
 
+    private fun createHeaders(): dynamic {
+        val postHeaders = js("({})")
+
+        postHeaders["Content-Type"] = "application/json"
+        postHeaders["test"] = "this123"
+
+        console.log(postHeaders)
+
+        return postHeaders
+    }
+
     override fun componentDidMount(){
-        Axios.post<Table>("/graphql",
-                """
-{
-  "query": "query tableQuery {\n  table {\n    players {\n      name\n    }\n  }\n}",
-  "variables": {
-    "name": "yves"
-  },
-  "operationName": "tableQuery"
-}
-                """.trimIndent(),
-                object : AxiosRequestConfig {
-                    override var httpAgent: Any? = "shizzle agent"
-                    override var headers: Any? = createHeaders()
-
-                    private fun createHeaders(): dynamic {
-                        val postHeaders = js("({})")
-
-                        postHeaders["Content-Type"] = "application/json"
-                        postHeaders["test"] = "this123"
-
-                        console.log(postHeaders)
-
-                        return postHeaders
+        val config: AxiosConfigSettings = jsObject {
+            method = "post"
+            url = "/graphql"
+            timeout = 3000
+            headers = createHeaders()
+            data = """
+                    {
+                      "query": "query tableQuery {\n  table {\n    players {\n      name\n    }\n  }\n}",
+                      "variables": {
+                        "name": "yves"
+                      },
+                      "operationName": "tableQuery"
                     }
-                })
-                .then { result ->
-                    setState {
-                        console.log(result.data)
-                        table = result.data
-                    }
-                }
+                    """.trimIndent()
+        }
+
+        axios<GraphqlResponse>(config).then { response ->
+            setState {
+                console.log(response.data)
+                //table = response.data.table
+            }
+            console.log(response)
+        }
     }
 
     override fun RBuilder.render() {
         h1 { + "Poker table" }
 
         ul {
-            console.log(table)
             table.players.map { player -> li { + player.name } }
         }
     }

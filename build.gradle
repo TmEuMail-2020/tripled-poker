@@ -18,9 +18,11 @@ buildscript {
 
 plugins {
 	id 'jacoco'
-	id("io.gitlab.arturbosch.detekt").version("1.0.0-RC12")
+	id "io.gitlab.arturbosch.detekt" version "1.0.0-RC12"
 	id "com.gradle.build-scan" version "2.1"
 	id "com.moowork.node" version "1.2.0"
+	id "com.gorylenko.gradle-git-properties" version "2.0.0"
+
 }
 
 buildScan { termsOfServiceUrl = "https://gradle.com/terms-of-service"; termsOfServiceAgree = "yes" }
@@ -196,6 +198,7 @@ project(':infra-mongostore') {
 }
 
 project(':main') {
+	apply plugin: "com.gorylenko.gradle-git-properties"
 	apply plugin: 'org.springframework.boot'
 
 	dependencies {
@@ -227,4 +230,10 @@ project(":poker-ui-app") {
 	task frontendBuild( type: NodeTask, dependsOn: 'yarn' ) {
 		script = file( 'src' )
 	}
+	
+	task clean(){}
+	
+	task jacocoTestReport(){}
+	
+	task detekt(){}
 }
