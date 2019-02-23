@@ -1,7 +1,9 @@
 package logo
 
-import react.*
-import react.dom.*
+import react.RBuilder
+import react.dom.div
+import react.dom.h1
+import react.dom.img
 
 @JsModule("src/deck/AS.svg")
 external val aceOfSpades: dynamic
