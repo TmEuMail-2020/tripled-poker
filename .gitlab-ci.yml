@@ -4,11 +4,11 @@ stages:
   - docker
   - deploy
 
-ui build:
+.ui build:
   stage: uibuild
-  image: yarnpkg/node-yarn:latest
+  image: node:latest
   script:
-    - cd poker-ui-app && yarn build
+    - cd poker-ui-app && yarn install && mkdir -p node_modules/.cache/kotlin-webpack && yarn build && echo "missing kotlinc ..."
   artifacts:
     paths:
       - poker-ui-app/build/*
