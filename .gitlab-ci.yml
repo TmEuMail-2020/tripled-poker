@@ -8,7 +8,7 @@ ui build:
   stage: uibuild
   image: yarnpkg/node-yarn:latest
   script:
-    - yarn build
+    - cd poker-ui-app && yarn build
   artifacts:
     paths:
       - poker-ui-app/build/*
