@@ -62,9 +62,9 @@ fun RBuilder.playerList(table: Table) = child(PlayerList::class) { attrs.table =
 
 class PlayerList : RComponent<PlayerListProps, RState>() {
     override fun RBuilder.render() {
-        ul {
+        ul(classes = "players") {
             props.table.players.map { player ->
-                li {
+                li(classes = "player") {
                     p { + player.name }
                     card(player.cards[0])
                 }

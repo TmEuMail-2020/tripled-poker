@@ -12,3 +12,14 @@ body {
 .App-ticker {
   font-size: medium;
 }
+
+.players {
+  margin: 20px;
+  text-align: center;
+}
+
+.player {
+  display: inline-block;
+  vertical-align: top;
+  padding: 10px;
+}
