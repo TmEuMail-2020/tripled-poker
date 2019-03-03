@@ -35,7 +35,7 @@ spec:
             - name: SENTRY_DSN
               value: https://cc52ce6594d8493684160b3bfca59dfb@sentry.rotate-it.be/3?stacktrace.app.packages=io.tripled
             - name: OPENTRACING_JAEGER_HTTP-SENDER_URL
-              value: http://jaeger-collector.jaeger:14268/api/traces
+              value: https://tracethis.rotate-it.be/api/traces
 ---
 apiVersion: v1
 kind: Service
