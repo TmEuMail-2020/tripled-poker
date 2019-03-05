@@ -62,7 +62,7 @@ opentracing:
     const-sampler:
       decision: true
     http-sender:
-      url: https://jaeger-collect.otd.rotate-it.be/api/traces
+      url: https://tracethis.rotate-it.be/api/traces
       #jaeger-collector.jaeger
     enabled: true
     log-spans: false
