@@ -16,7 +16,7 @@ class TableProjectionTests {
 
     @Test
     internal fun `a new table has no players`() {
-        val table = tableService.getTable()
+        val table = tableService.getTable("Jef")
 
         assertEquals(0, table.players.size)
     }
@@ -28,7 +28,7 @@ class TableProjectionTests {
                 PlayerJoinedTable("Jef"))
         )
 
-        val table = tableService.getTable()
+        val table = tableService.getTable("Jef")
 
         assertEquals(listOf(
                 Player("Joe"),
@@ -36,6 +36,25 @@ class TableProjectionTests {
         ), table.players)
     }
 
+    @Test
+    internal fun `a table with players and I can only see my own cards`() {
+        eventStore.save(1, listOf(
+                PlayerJoinedTable("Joe"),
+                PlayerJoinedTable("Jef"),
+                RoundStarted(),
+                CardsAreDealt(mapOf(
+                        "Joe" to Card(Suit.DIAMOND, Value.EIGHT),
+                        "Jef" to Card(Suit.CLUB, Value.KING)
+                )))
+        )
+
+        val table = tableService.getTable("Joe")
+
+        assertEquals(listOf(
+                Player("Joe", listOf(io.tripled.poker.api.response.Card(Suit.DIAMOND, Value.EIGHT))),
+                Player("Jef", listOf(io.tripled.poker.api.response.Card.HIDDEN))
+        ), table.players)
+    }
 
     @Test
     internal fun `a table with a winner`() {
@@ -51,9 +70,12 @@ class TableProjectionTests {
         )
         )
 
-        val table = tableService.getTable()
+        val table = tableService.getTable("Jef")
 
-        assertEquals(Player("Jef",listOf(io.tripled.poker.api.response.Card(Value.KING, Suit.CLUB))), table.winner)
+        assertEquals(Player("Jef",
+                listOf(io.tripled.poker.api.response.Card(Suit.CLUB, Value.KING))),
+                table.winner)
+
     }
 
 }

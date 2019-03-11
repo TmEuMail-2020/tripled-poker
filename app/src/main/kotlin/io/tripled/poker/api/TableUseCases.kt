@@ -9,7 +9,7 @@ import io.tripled.poker.projection.TableProjection
 interface TableService {
     fun join(name: String)
     fun startRound()
-    fun getTable(): io.tripled.poker.api.response.Table
+    fun getTable(name: String): io.tripled.poker.api.response.Table
 }
 
 class TableUseCases(
@@ -24,7 +24,7 @@ class TableUseCases(
         eventPublisher?.publish(1, events)
     }
 
-    override fun getTable() = TableProjection(eventStore.findById(1)).table
+    override fun getTable(name: String) = TableProjection(name, eventStore.findById(1)).table
 
     override fun startRound() {
         val events = Table(eventStore.findById(1)).startRound(deck)
