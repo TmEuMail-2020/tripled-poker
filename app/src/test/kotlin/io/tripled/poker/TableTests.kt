@@ -12,7 +12,7 @@ class TableTests {
 
     private val eventStore = TestEventStore()
     private val deck = TestDeck()
-    private val tableService = TableUseCases(eventStore, deck)
+    private val tableService = TableUseCases(eventStore, {deck})
 
     @Test
     internal fun `a player can join the table`() {

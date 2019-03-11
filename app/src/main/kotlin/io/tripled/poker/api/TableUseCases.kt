@@ -14,7 +14,7 @@ interface TableService {
 
 class TableUseCases(
         private val eventStore: EventStore,
-        private val deck: Deck,
+        private val deckFactory: () -> Deck,
         private val eventPublisher: EventPublisher?=null
         ) : TableService {
 
@@ -27,7 +27,7 @@ class TableUseCases(
     override fun getTable(name: String) = TableProjection(name, eventStore.findById(1)).table
 
     override fun startRound() {
-        val events = Table(eventStore.findById(1)).startRound(deck)
+        val events = Table(eventStore.findById(1)).startRound(deckFactory.invoke())
         eventStore.save(1, events)
         eventPublisher?.publish(1, events)
 

@@ -10,7 +10,8 @@ import org.junit.jupiter.api.Test
 class TableProjectionTests {
 
     private val eventStore = TestEventStore()
-    private val tableService = TableUseCases(eventStore, TestDeck())
+    var deck = TestDeck()
+    private val tableService = TableUseCases(eventStore, {deck})
 
 
     @Test
@@ -77,4 +78,52 @@ class TableProjectionTests {
 
     }
 
+    @Test
+    internal fun `all cards are dealt`() {
+        eventStore.save(1, listOf(
+                PlayerJoinedTable("Joe"),
+                PlayerJoinedTable("Jef"),
+                RoundStarted(),
+                CardsAreDealt(mapOf(
+                        "Joe" to Card(Suit.DIAMOND, Value.EIGHT),
+                        "Jef" to Card(Suit.CLUB, Value.KING)
+                )),
+                PlayerWonRound("Jef")
+        )
+        )
+
+        val table = tableService.getTable("Joe")
+
+        assertEquals(Player("Jef",
+                VisibleCards(listOf(io.tripled.poker.api.response.Card(Suit.CLUB, Value.KING)))),
+                table.winner)
+
+    }
+
+    @Test
+    internal fun `new deck is created between rounds`() {
+        val tableService = TableUseCases(eventStore, {ShuffledDeck()})
+
+        eventStore.save(1, listOf(
+                PlayerJoinedTable("1"),
+                PlayerJoinedTable("2"),
+                PlayerJoinedTable("3"),
+                PlayerJoinedTable("4"),
+                PlayerJoinedTable("5"),
+                PlayerJoinedTable("6"),
+                PlayerJoinedTable("7"),
+                PlayerJoinedTable("8"),
+                PlayerJoinedTable("9"),
+                PlayerJoinedTable("10")
+                ))
+
+
+        tableService.startRound()
+        tableService.startRound()
+        tableService.startRound()
+        tableService.startRound()
+        tableService.startRound()
+        tableService.startRound()
+        tableService.startRound()
+    }
 }

@@ -1,7 +1,6 @@
 package io.tripled.poker
 
 import io.tripled.poker.api.TableUseCases
-import io.tripled.poker.domain.Deck
 import io.tripled.poker.domain.EventPublisher
 import io.tripled.poker.domain.ShuffledDeck
 import io.tripled.poker.eventsourcing.EventStore
@@ -13,13 +12,10 @@ import org.springframework.context.annotation.Configuration
 class ApplicationConfiguration {
 
     @Bean
-    fun deck() = ShuffledDeck()
-
-    @Bean
     fun eventPublisher(applicationEventPublisher: ApplicationEventPublisher) = ConcreteEventPublisher(applicationEventPublisher)
 
     @Bean
-    fun tableService(eventStore: EventStore, deck: Deck, eventPublisher: EventPublisher) = TableUseCases(eventStore, deck, eventPublisher)
+    fun tableService(eventStore: EventStore, eventPublisher: EventPublisher) = TableUseCases(eventStore, {ShuffledDeck()}, eventPublisher)
 }
 
 class ConcreteEventPublisher(private val applicationEventPublisher: ApplicationEventPublisher) : EventPublisher {
