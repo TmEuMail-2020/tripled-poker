@@ -1,10 +1,9 @@
 package io.tripled.poker
 
 import io.tripled.poker.api.TableUseCases
-import io.tripled.poker.api.response.Player
-import io.tripled.poker.api.response.Suit
-import io.tripled.poker.api.response.Value
+import io.tripled.poker.api.response.*
 import io.tripled.poker.domain.*
+import io.tripled.poker.domain.Card
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
@@ -51,8 +50,8 @@ class TableProjectionTests {
         val table = tableService.getTable("Joe")
 
         assertEquals(listOf(
-                Player("Joe", listOf(io.tripled.poker.api.response.Card(Suit.DIAMOND, Value.EIGHT))),
-                Player("Jef", listOf(io.tripled.poker.api.response.Card.HIDDEN))
+                Player("Joe", VisibleCards(listOf(io.tripled.poker.api.response.Card(Suit.DIAMOND, Value.EIGHT)))),
+                Player("Jef", HiddenCards(1))
         ), table.players)
     }
 
@@ -70,10 +69,10 @@ class TableProjectionTests {
         )
         )
 
-        val table = tableService.getTable("Jef")
+        val table = tableService.getTable("Joe")
 
         assertEquals(Player("Jef",
-                listOf(io.tripled.poker.api.response.Card(Suit.CLUB, Value.KING))),
+                VisibleCards(listOf(io.tripled.poker.api.response.Card(Suit.CLUB, Value.KING)))),
                 table.winner)
 
     }
