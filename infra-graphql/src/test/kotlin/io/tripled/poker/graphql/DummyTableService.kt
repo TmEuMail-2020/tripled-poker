@@ -9,13 +9,13 @@ class DummyTableService : TableService {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    val players = mutableListOf<Player>()
+    private val players = mutableListOf<Player>()
 
     override fun join(name: String) {
         players += Player(name)
     }
 
-    override fun getTable(): Table = Table(players)
+    override fun getTable(name: String): Table = Table(players)
     fun clear() {
         players.clear()
     }

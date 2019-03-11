@@ -6,5 +6,5 @@ import org.springframework.stereotype.Component
 
 @Component
 class TableResolver(private val tableService: TableService) : Query {
-   fun table() = tableService.getTable()
+   fun table(name: String) = tableService.getTable(name)
 }

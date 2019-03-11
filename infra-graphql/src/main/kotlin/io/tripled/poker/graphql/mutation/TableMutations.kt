@@ -10,11 +10,11 @@ class TableMutations(private val tableService: TableService) : Mutation {
 
     fun joinTable(name: String): Table {
         tableService.join(name)
-        return tableService.getTable()
+        return tableService.getTable(name)
     }
 
-    fun startRound(): Table {
+    fun startRound(name: String): Table {
         tableService.startRound()
-        return tableService.getTable()
+        return tableService.getTable(name)
     }
 }
