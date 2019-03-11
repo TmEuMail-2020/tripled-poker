@@ -51,7 +51,7 @@ class TableProjectionTests {
         val table = tableService.getTable("Joe")
 
         assertEquals(listOf(
-                Player("Joe", VisibleCards(suitedConnectors.cards.map { it.mapToCard() })),
+                Player("Joe", VisibleCards(suitedConnectors.cards().map { it.mapToCard() })),
                 Player("Jef", HiddenCards(2))
         ), table.players)
     }
@@ -73,7 +73,7 @@ class TableProjectionTests {
         val table = tableService.getTable("Joe")
 
         assertEquals(Player("Jef",
-                VisibleCards(suitedAceKing.cards.map { it.mapToCard() })),
+                VisibleCards(suitedAceKing.cards().map { it.mapToCard() })),
                 table.winner)
 
     }
@@ -95,7 +95,7 @@ class TableProjectionTests {
         val table = tableService.getTable("Joe")
 
         assertEquals(Player("Jef",
-                VisibleCards(suitedAceKing.cards.map { it.mapToCard() })),
+                VisibleCards(suitedAceKing.cards().map { it.mapToCard() })),
                 table.winner)
 
     }
