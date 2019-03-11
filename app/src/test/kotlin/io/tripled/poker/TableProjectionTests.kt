@@ -1,9 +1,10 @@
 package io.tripled.poker
 
 import io.tripled.poker.api.TableUseCases
-import io.tripled.poker.api.response.*
+import io.tripled.poker.api.response.HiddenCards
+import io.tripled.poker.api.response.Player
+import io.tripled.poker.api.response.VisibleCards
 import io.tripled.poker.domain.*
-import io.tripled.poker.domain.Card
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
@@ -43,16 +44,15 @@ class TableProjectionTests {
                 PlayerJoinedTable("Jef"),
                 RoundStarted(),
                 CardsAreDealt(mapOf(
-                        "Joe" to Card(Suit.DIAMOND, Value.EIGHT),
-                        "Jef" to Card(Suit.CLUB, Value.KING)
+                        "Joe" to suitedConnectors ,
+                        "Jef" to suitedAceKing)
                 )))
-        )
 
         val table = tableService.getTable("Joe")
 
         assertEquals(listOf(
-                Player("Joe", VisibleCards(listOf(io.tripled.poker.api.response.Card(Suit.DIAMOND, Value.EIGHT)))),
-                Player("Jef", HiddenCards(1))
+                Player("Joe", VisibleCards(suitedConnectors.cards.map { it.mapToCard() })),
+                Player("Jef", HiddenCards(2))
         ), table.players)
     }
 
@@ -63,8 +63,8 @@ class TableProjectionTests {
                 PlayerJoinedTable("Jef"),
                 RoundStarted(),
                 CardsAreDealt(mapOf(
-                        "Joe" to Card(Suit.DIAMOND, Value.EIGHT),
-                        "Jef" to Card(Suit.CLUB, Value.KING)
+                        "Joe" to suitedConnectors,
+                        "Jef" to suitedAceKing
                 )),
                 PlayerWonRound("Jef")
         )
@@ -73,7 +73,7 @@ class TableProjectionTests {
         val table = tableService.getTable("Joe")
 
         assertEquals(Player("Jef",
-                VisibleCards(listOf(io.tripled.poker.api.response.Card(Suit.CLUB, Value.KING)))),
+                VisibleCards(suitedAceKing.cards.map { it.mapToCard() })),
                 table.winner)
 
     }
@@ -85,8 +85,8 @@ class TableProjectionTests {
                 PlayerJoinedTable("Jef"),
                 RoundStarted(),
                 CardsAreDealt(mapOf(
-                        "Joe" to Card(Suit.DIAMOND, Value.EIGHT),
-                        "Jef" to Card(Suit.CLUB, Value.KING)
+                        "Joe" to suitedConnectors,
+                        "Jef" to suitedAceKing
                 )),
                 PlayerWonRound("Jef")
         )
@@ -95,7 +95,7 @@ class TableProjectionTests {
         val table = tableService.getTable("Joe")
 
         assertEquals(Player("Jef",
-                VisibleCards(listOf(io.tripled.poker.api.response.Card(Suit.CLUB, Value.KING)))),
+                VisibleCards(suitedAceKing.cards.map { it.mapToCard() })),
                 table.winner)
 
     }

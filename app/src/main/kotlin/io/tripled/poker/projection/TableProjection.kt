@@ -4,8 +4,6 @@ import io.tripled.poker.api.response.*
 import io.tripled.poker.domain.CardsAreDealt
 import io.tripled.poker.domain.PlayerJoinedTable
 import io.tripled.poker.domain.PlayerWonRound
-import sun.audio.AudioPlayer.player
-import java.util.function.Function
 
 class TableProjection(private val playerName: String, events: List<Any>) {
 
@@ -46,9 +44,9 @@ class TableProjection(private val playerName: String, events: List<Any>) {
     private fun playerWithCards(events: List<Any>, player: String, cardMapper: (List<Card>) -> Cards): Player {
         val lastDealtCards = events.lastOrNull { it is CardsAreDealt } as CardsAreDealt?
         return if (lastDealtCards != null) {
-            val card = lastDealtCards.cards[player]
-            if (card != null) {
-                Player(player, cardMapper.invoke(listOf(Card(card.suit, card.value))))
+            val hand = lastDealtCards.hands[player]
+            if (hand != null) {
+                Player(player, cardMapper.invoke(listOf(hand.card1.mapToCard(), hand.card2.mapToCard())))
             } else {
                 Player(player)
             }
@@ -56,5 +54,7 @@ class TableProjection(private val playerName: String, events: List<Any>) {
             Player(player)
         }
     }
+
+    private fun io.tripled.poker.domain.Card.mapToCard() = io.tripled.poker.api.response.Card(this.suit, this.value)
 
 }

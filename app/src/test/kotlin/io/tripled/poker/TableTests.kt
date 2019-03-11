@@ -30,13 +30,15 @@ class TableTests {
         )
         deck.queue += Card(Suit.HEART, Value.TEN)
         deck.queue += Card(Suit.HEART, Value.ACE)
+        deck.queue += Card(Suit.HEART, Value.KING)
+        deck.queue += Card(Suit.HEART, Value.QUEEN)
 
         tableService.startRound()
 
         assertTrue(eventStore.events.contains(RoundStarted()))
         assertTrue(eventStore.events.contains(CardsAreDealt(mapOf(
-                "Joe" to Card(Suit.HEART, Value.TEN),
-                "Jef" to Card(Suit.HEART, Value.ACE)
+                "Joe" to Hand(Card(Suit.HEART, Value.TEN),Card(Suit.HEART, Value.ACE)) ,
+                "Jef" to Hand(Card(Suit.HEART, Value.KING), Card(Suit.HEART, Value.QUEEN))
         ))))
         assertTrue(eventStore.events.contains(PlayerWonRound("Jef")))
     }
