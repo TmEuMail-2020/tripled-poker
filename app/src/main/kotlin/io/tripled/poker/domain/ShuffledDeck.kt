@@ -5,11 +5,10 @@ import io.tripled.poker.api.response.Value
 
 class ShuffledDeck : Deck {
     private val cards = Suit.values()
-            .filter { suit -> suit != Suit.HIDDEN}
-            .flatMap { suit -> Value.values()
-                    .filter { v -> v != Value.HIDDEN}
-                    .map { value -> Card(suit, value) }
-    }.toMutableList()
+            .flatMap { suit ->
+                Value.values()
+                        .map { value -> Card(suit, value) }
+            }.toMutableList()
 
     init {
         cards.shuffle()

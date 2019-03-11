@@ -1,5 +1,5 @@
 query tableQueries {
-    table {
+    table(name: "jos"){
         players {
             name
         }

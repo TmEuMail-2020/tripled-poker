@@ -20,7 +20,7 @@ class GraphqlQueryIntegrationTest(
     @Autowired val graphQLTestTemplate: GraphQLTestTemplate
 ) {
 
-    private val joinTable = "requests/joinTableMutation.graphql";
+    private val joinTable = "requests/joinTableMutation.graphql"
     private val queryTable = "requests/queryTable.graphql"
 
     @BeforeEach
