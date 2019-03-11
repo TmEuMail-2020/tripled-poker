@@ -6,10 +6,15 @@ import kotlinext.js.jsObject
 import kotlinx.html.InputType
 import kotlinx.html.js.onChangeFunction
 import kotlinx.html.js.onClickFunction
+import kotlinx.html.js.onKeyPressFunction
+import kotlinx.html.onKeyPress
+import kotlinx.html.textInput
 import org.w3c.dom.HTMLInputElement
 import org.w3c.dom.events.Event
+import org.w3c.dom.events.KeyboardEvent
 import react.*
 import react.dom.*
+import kotlin.js.Console
 
 enum class Suit { DIAMOND, SPADES, HEART, CLUB }
 enum class Value { TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, TEN, JACK, QUEEN, KING, ACE }
@@ -84,11 +89,24 @@ class JoinGame : RComponent<JoinGameProps, RState>() {
 
     override fun RBuilder.render() {
         p { +"Join the game" }
-        input(type = InputType.text) {
+        input(type = InputType.text, name = "shizzleInput") {
             attrs {
                 placeholder = "enter player name"
                 onChangeFunction = { event: Event ->
                     playerName = (event.target as HTMLInputElement).value
+                }
+                onKeyPressFunction = { syntheticEvent: Event ->
+                    val event = syntheticEvent.asDynamic().nativeEvent
+                    if (event is KeyboardEvent) {
+                        if (event.key == "Enter") {
+                            val target = event.target as HTMLInputElement
+                            props.onJoinGame(playerName)
+                            setState {
+                                playerName = ""
+                                target.value = ""
+                            }
+                        }
+                    }
                 }
             }
         }
