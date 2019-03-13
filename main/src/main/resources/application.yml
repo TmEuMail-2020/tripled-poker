@@ -10,6 +10,8 @@ graphql:
     corsEnabled: false
     # if you want to @ExceptionHandler annotation for custom GraphQLErrors
     exception-handlers-enabled: true
+    actuator-metrics: true
+    tracingEnabled: false
 
 graphiql:
   mapping: /graphiql
