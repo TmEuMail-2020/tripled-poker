@@ -27,7 +27,6 @@ class CustomGraphqlConfiguration {
     @Bean
     fun schemaConfig(): SchemaGeneratorConfig = SchemaGeneratorConfig(
             supportedPackages = listOf(
-                    "io.tripled.poker.graphql.test",
                     "io.tripled.poker.graphql.query",
                     "io.tripled.poker.graphql.mutation",
                     "io.tripled.poker.api.response"
