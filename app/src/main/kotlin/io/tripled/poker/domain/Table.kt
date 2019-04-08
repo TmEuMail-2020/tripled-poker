@@ -10,21 +10,28 @@ class Table(tableState: TableState) {
     fun join(name: String) = listOf<Event>(PlayerJoinedTable(name))
 
     fun startGame(deck: Deck): List<Event> {
-        return if (players.size > 1) {
-            val playerCards = dealPlayerCards(deck)
-            val flop = dealFlop(deck)
-            val turn = dealTurn(deck)
-            val river = dealRiver(deck)
-            listOf(
-                    startGame(),
-                    playerCards,
-                    flop,
-                    turn,
-                    river,
-                    determineWinner(playerCards, flop, turn, river)
-            )
-        } else listOf()
+        if (players.size <= 1) return listOf()
+
+        val playerCards = dealPlayerCards(deck)
+        val flop = dealFlop(deck)
+        val turn = dealTurn(deck)
+        val river = dealRiver(deck)
+        val result = mutableListOf(
+                startGame(),
+                playerCards)
+        result.addAll(startBettingRound())
+        result.add(flop)
+        result.addAll(startBettingRound())
+        result.add(turn)
+        result.addAll(startBettingRound())
+        result.add(river)
+        result.addAll(startBettingRound())
+        result.add(determineWinner(playerCards, flop, turn, river))
+        return result
+
     }
+
+    private fun startBettingRound() = players.map { PlayerCalled(it) }
 
     private fun determineWinner(playerCards: CardsAreDealt, flop: FlopIsTurned, turn: TurnIsTurned, river: RiverIsTurned) =
             PlayerWonGame(winnerDeterminer.determineWinner(playerCards.hands, listOf(flop.card1, flop.card2, flop.card3, turn.card, river.card)))
