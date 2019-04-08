@@ -119,6 +119,8 @@ configure(kotlinModules) {
 		testCompile("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
 		testCompile("org.junit.jupiter:junit-jupiter-params:${junitVersion}")
 		testRuntime("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
+		testImplementation "com.natpryce:hamkrest:1.7.0.0"
+
 	}
 
 	dependencyManagement {

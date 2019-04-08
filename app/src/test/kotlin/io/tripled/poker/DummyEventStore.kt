@@ -3,14 +3,16 @@ package io.tripled.poker
 import io.tripled.poker.domain.Event
 import io.tripled.poker.eventsourcing.EventStore
 
-class DummyEventStore(private val events: MutableList<Event> = mutableListOf()) : EventStore {
+class DummyEventStore(private val _events: MutableList<Event> = mutableListOf()) : EventStore {
     override fun save(id: Any, events: List<Event>) {
-        this.events.addAll(events)
+        this._events.addAll(events)
     }
 
     override fun findById(id: Any): List<Event> {
-        return events
+        return _events
     }
 
-    fun contains(element: Event) = this.events.contains(element)
+    val events get() = _events.toList()
+
+    fun contains(element: Event) = this._events.contains(element)
 }
