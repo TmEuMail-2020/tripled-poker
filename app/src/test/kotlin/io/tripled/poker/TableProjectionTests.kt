@@ -12,8 +12,7 @@ class TableProjectionTests {
 
     private val eventStore = TestEventStore()
     var deck = TestDeck()
-    private val tableService = TableUseCases(eventStore, {deck})
-
+    private val tableService = TableUseCases(eventStore, { deck })
 
     @Test
     internal fun `a new table has no players`() {
@@ -44,7 +43,7 @@ class TableProjectionTests {
                 PlayerJoinedTable("Jef"),
                 RoundStarted(),
                 CardsAreDealt(mapOf(
-                        "Joe" to suitedConnectors ,
+                        "Joe" to suitedConnectors,
                         "Jef" to suitedAceKing)
                 )))
 
@@ -102,7 +101,7 @@ class TableProjectionTests {
 
     @Test
     internal fun `new deck is created between rounds`() {
-        val tableService = TableUseCases(eventStore, {ShuffledDeck()})
+        val tableService = TableUseCases(eventStore, { ShuffledDeck() })
 
         eventStore.save(1, listOf(
                 PlayerJoinedTable("1"),
@@ -115,7 +114,7 @@ class TableProjectionTests {
                 PlayerJoinedTable("8"),
                 PlayerJoinedTable("9"),
                 PlayerJoinedTable("10")
-                ))
+        ))
 
 
         tableService.startRound()
@@ -125,5 +124,24 @@ class TableProjectionTests {
         tableService.startRound()
         tableService.startRound()
         tableService.startRound()
+    }
+
+    @Test
+    internal fun `player joins after cards are dealt, `() {
+        eventStore.save(1, listOf(
+                PlayerJoinedTable("Joe"),
+                RoundStarted(),
+                CardsAreDealt(mapOf(
+                        "Joe" to suitedConnectors
+                )),
+                PlayerJoinedTable("Jef")
+        ))
+
+        val table = tableService.getTable("Joe")
+
+        assertEquals(listOf(
+                Player("Joe", VisibleCards(suitedConnectors.cards().map { it.mapToCard() })),
+                Player("Jef")
+        ), table.players)
     }
 }

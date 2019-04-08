@@ -45,8 +45,9 @@ class TableProjection(private val playerName: String, events: List<Any>) {
         val lastDealtCards = events.lastOrNull { it is CardsAreDealt } as CardsAreDealt?
         return if (lastDealtCards != null) {
             val hand = lastDealtCards.hands[player]
+
             if (hand != null) {
-                Player(player, cardMapper.invoke(listOf(hand.card1.mapToCard(), hand.card2.mapToCard())))
+                Player(player, cardMapper(listOf(hand.card1.mapToCard(), hand.card2.mapToCard())))
             } else {
                 Player(player)
             }
