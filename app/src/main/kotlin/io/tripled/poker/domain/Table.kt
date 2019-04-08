@@ -2,7 +2,8 @@ package io.tripled.poker.domain
 
 typealias PlayerId = String
 
-class Table(tableState: TableState) {
+class
+Table(tableState: TableState) {
 
     private val players = tableState.players
 
@@ -10,11 +11,12 @@ class Table(tableState: TableState) {
 
     fun startRound(deck: Deck): List<Event> {
         return if (players.size > 1) {
-            val dealtCards = dealCards(deck)
+            val playerCards = dealPlayerCards(deck)
             listOf(
                     RoundStarted(),
-                    CardsAreDealt(dealtCards),
-                    PlayerWonRound(determineWinner(dealtCards))
+                    playerCards,
+                    dealFloppedCards(deck),
+                    PlayerWonRound(determineWinner(playerCards.hands))
             )
         } else listOf()
     }
@@ -24,7 +26,13 @@ class Table(tableState: TableState) {
             .maxBy { it.second.card1.score + it.second.card2.score }!!
             .first
 
-    private fun dealCards(deck: Deck) = players.associateWith { Hand(deck.dealCard(), deck.dealCard()) }
+    private fun dealPlayerCards(deck: Deck): CardsAreDealt {
+        return CardsAreDealt(players.associateWith { Hand(deck.dealCard(), deck.dealCard()) })
+    }
+
+    private fun dealFloppedCards(deck: Deck): FlopIsTurned {
+        return FlopIsTurned(deck.dealCard(), deck.dealCard(), deck.dealCard())
+    }
 
 }
 

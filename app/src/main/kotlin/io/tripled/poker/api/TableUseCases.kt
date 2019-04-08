@@ -28,7 +28,7 @@ class TableUseCases(
     override fun getTable(name: String) = TableProjection().table(name, eventStore.findById(1))
 
     override fun startRound() {
-        val events = Table(TableState.of( eventStore.findById(1))).startRound(deckFactory.invoke())
+        val events = Table(TableState.of( eventStore.findById(1))).startRound(deckFactory())
         eventStore.save(1, events)
         eventPublisher?.publish(1, events)
     }

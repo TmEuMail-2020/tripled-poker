@@ -22,6 +22,9 @@ class StartRoundTests {
         deck.queue += Card(Suit.HEART, Value.ACE)
         deck.queue += Card(Suit.HEART, Value.KING)
         deck.queue += Card(Suit.HEART, Value.QUEEN)
+        deck.queue += Card(Suit.HEART, Value.NINE)
+        deck.queue += Card(Suit.HEART, Value.EIGHT)
+        deck.queue += Card(Suit.HEART, Value.SEVEN)
 
         tableService.startRound()
 
@@ -30,6 +33,11 @@ class StartRoundTests {
                 "Joe" to Hand(Card(Suit.HEART, Value.TEN), Card(Suit.HEART, Value.ACE)),
                 "Jef" to Hand(Card(Suit.HEART, Value.KING), Card(Suit.HEART, Value.QUEEN))
         ))))
+        Assertions.assertTrue(eventStore.events.contains(FlopIsTurned(
+                Card(Suit.HEART, Value.NINE),
+                Card(Suit.HEART, Value.EIGHT),
+                Card(Suit.HEART, Value.SEVEN)
+        )))
         Assertions.assertTrue(eventStore.events.contains(PlayerWonRound("Jef")))
     }
 
