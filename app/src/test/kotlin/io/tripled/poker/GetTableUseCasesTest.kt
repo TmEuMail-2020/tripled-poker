@@ -43,7 +43,7 @@ class GetTableUseCasesTest {
         eventStore.save(1, listOf(
                 PlayerJoinedTable("Joe"),
                 PlayerJoinedTable("Jef"),
-                RoundStarted(),
+                GameStarted(),
                 CardsAreDealt(mapOf(
                         "Joe" to suitedConnectors,
                         "Jef" to suitedAceKing)
@@ -62,12 +62,12 @@ class GetTableUseCasesTest {
         eventStore.save(1, listOf(
                 PlayerJoinedTable("Joe"),
                 PlayerJoinedTable("Jef"),
-                RoundStarted(),
+                GameStarted(),
                 CardsAreDealt(mapOf(
                         "Joe" to suitedConnectors,
                         "Jef" to suitedAceKing
                 )),
-                PlayerWonRound("Jef")
+                PlayerWonGame("Jef")
         )
         )
 
@@ -84,12 +84,12 @@ class GetTableUseCasesTest {
         eventStore.save(1, listOf(
                 PlayerJoinedTable("Joe"),
                 PlayerJoinedTable("Jef"),
-                RoundStarted(),
+                GameStarted(),
                 CardsAreDealt(mapOf(
                         "Joe" to suitedConnectors,
                         "Jef" to suitedAceKing
                 )),
-                PlayerWonRound("Jef")
+                PlayerWonGame("Jef")
         )
         )
 
@@ -102,7 +102,7 @@ class GetTableUseCasesTest {
     }
 
     @Test
-    internal fun `new deck is created between rounds`() {
+    internal fun `new deck is created between games`() {
         val tableService = TableUseCases(eventStore, { ShuffledDeck() })
 
         eventStore.save(1, listOf(
@@ -119,20 +119,20 @@ class GetTableUseCasesTest {
         ))
 
 
-        tableService.startRound()
-        tableService.startRound()
-        tableService.startRound()
-        tableService.startRound()
-        tableService.startRound()
-        tableService.startRound()
-        tableService.startRound()
+        tableService.startGame()
+        tableService.startGame()
+        tableService.startGame()
+        tableService.startGame()
+        tableService.startGame()
+        tableService.startGame()
+        tableService.startGame()
     }
 
     @Test
     internal fun `player joins after cards are dealt`() {
         eventStore.save(1, listOf(
                 PlayerJoinedTable("Joe"),
-                RoundStarted(),
+                GameStarted(),
                 CardsAreDealt(mapOf(
                         "Joe" to suitedConnectors
                 )),
@@ -149,10 +149,10 @@ class GetTableUseCasesTest {
 
 
     @Test
-    internal fun `player joins after round started`() {
+    internal fun `player joins after game started`() {
         eventStore.save(1, listOf(
                 PlayerJoinedTable("Joe"),
-                RoundStarted(),
+                GameStarted(),
                 PlayerJoinedTable("Jef"),
                 CardsAreDealt(mapOf(
                         "Joe" to suitedConnectors

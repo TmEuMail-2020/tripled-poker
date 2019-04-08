@@ -7,26 +7,25 @@ import io.tripled.poker.api.response.Suit
 import io.tripled.poker.api.response.Value
 import io.tripled.poker.domain.*
 import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 
-class StartRoundUseCaseTests {
+class StartGameUseCaseTests {
 
     private val eventStore = DummyEventStore()
     private val deck = DummyDeck()
     private val tableService = TableUseCases(eventStore, { deck })
 
     @Test
-    internal fun `start round with two players`() {
+    internal fun `start game with two players`() {
         addPlayers()
         deck.queue.addAll(DeckMother().deckOfHearts())
 
-        tableService.startRound()
+        tableService.startGame()
 
         expect(eventStore.events).contains.inOrder.only.values(
                 PlayerJoinedTable("Joe"),
                 PlayerJoinedTable("Jef"),
-                RoundStarted(),
+                GameStarted(),
                 CardsAreDealt(mapOf(
                         "Joe" to Hand(Card(Suit.HEART, Value.TEN), Card(Suit.HEART, Value.ACE)),
                         "Jef" to Hand(Card(Suit.HEART, Value.KING), Card(Suit.HEART, Value.QUEEN))
@@ -42,7 +41,7 @@ class StartRoundUseCaseTests {
                 RiverIsTurned(
                         Card(Suit.HEART, Value.FIVE)
                 ),
-                PlayerWonRound("Jef")
+                PlayerWonGame("Jef")
         )
     }
 
@@ -54,12 +53,12 @@ class StartRoundUseCaseTests {
     }
 
     @Test
-    internal fun `cannot start round with one player`() {
+    internal fun `cannot start game with one player`() {
         eventStore.save(1, listOf(PlayerJoinedTable("Joe")))
 
-        tableService.startRound()
+        tableService.startGame()
 
-        Assertions.assertFalse(eventStoreContains(RoundStarted()))
+        Assertions.assertFalse(eventStoreContains(GameStarted()))
     }
 
     private fun eventStoreContains(element: Event) = eventStore.contains(element)

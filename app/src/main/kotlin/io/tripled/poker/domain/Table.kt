@@ -9,14 +9,14 @@ class Table(tableState: TableState) {
 
     fun join(name: String) = listOf<Event>(PlayerJoinedTable(name))
 
-    fun startRound(deck: Deck): List<Event> {
+    fun startGame(deck: Deck): List<Event> {
         return if (players.size > 1) {
             val playerCards = dealPlayerCards(deck)
             val flop = dealFlop(deck)
             val turn = dealTurn(deck)
             val river = dealRiver(deck)
             listOf(
-                    startRound(),
+                    startGame(),
                     playerCards,
                     flop,
                     turn,
@@ -27,9 +27,9 @@ class Table(tableState: TableState) {
     }
 
     private fun determineWinner(playerCards: CardsAreDealt, flop: FlopIsTurned, turn: TurnIsTurned, river: RiverIsTurned) =
-            PlayerWonRound(winnerDeterminer.determineWinner(playerCards.hands, listOf(flop.card1, flop.card2, flop.card3, turn.card, river.card)))
+            PlayerWonGame(winnerDeterminer.determineWinner(playerCards.hands, listOf(flop.card1, flop.card2, flop.card3, turn.card, river.card)))
 
-    private fun startRound() = RoundStarted()
+    private fun startGame() = GameStarted()
 
     private fun dealPlayerCards(deck: Deck): CardsAreDealt = CardsAreDealt(players.associateWith { Hand(deck.dealCard(), deck.dealCard()) })
 

@@ -16,13 +16,13 @@ class TableProjection {
         }
 
         private fun winner(events: List<Event>): Player? {
-            return when (val winner = playerWonRound(events)) {
+            return when (val winner = playerWonGame(events)) {
                 noWinner() -> null
                 else -> playerWithCards(events, winner.name) { hand -> hand.asVisibleCards() }
             }
         }
 
-        private fun playerWonRound(events: List<Any>): PlayerWonRound? = events.lastOrNull { it is PlayerWonRound } as PlayerWonRound?
+        private fun playerWonGame(events: List<Any>): PlayerWonGame? = events.lastOrNull { it is PlayerWonGame } as PlayerWonGame?
 
         private fun players(events: List<Event>) = events
                 .filterEvents<PlayerJoinedTable>()

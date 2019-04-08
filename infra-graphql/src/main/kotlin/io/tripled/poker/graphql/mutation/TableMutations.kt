@@ -14,7 +14,7 @@ class TableMutations(private val tableService: TableService) : Mutation {
     }
 
     fun startRound(name: String): Table {
-        tableService.startRound()
+        tableService.startGame()
         return tableService.getTable(name)
     }
 }
