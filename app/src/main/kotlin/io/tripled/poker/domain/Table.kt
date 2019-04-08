@@ -11,7 +11,8 @@ data class Card(val suit: Suit, val value: Value) {
     val score: Int
         get() = value.ordinal * 100 + suit.ordinal
 }
-data class Hand(val card1: Card, val card2: Card){
+
+data class Hand(val card1: Card, val card2: Card) {
     fun cards() = listOf(card1, card2)
 }
 
@@ -20,10 +21,8 @@ class Table(events: List<Any>) {
 
     private fun players(events: List<Any>): List<String> {
         return events
-                .filter { it is PlayerJoinedTable }
-                .map { event ->
-                    (event as PlayerJoinedTable).name
-                }
+                .filterEvents<PlayerJoinedTable>()
+                .map { event -> event.name }
     }
 
     fun join(name: String) = listOf<Any>(PlayerJoinedTable(name))

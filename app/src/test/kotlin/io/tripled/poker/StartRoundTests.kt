@@ -4,23 +4,13 @@ import io.tripled.poker.api.TableUseCases
 import io.tripled.poker.api.response.Suit
 import io.tripled.poker.api.response.Value
 import io.tripled.poker.domain.*
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
-import java.util.*
 
-class TableTests {
-
-    private val eventStore = TestEventStore()
+class StartRoundTests {
+    private val eventStore = DummyEventStore()
     private val deck = TestDeck()
-    private val tableService = TableUseCases(eventStore, {deck})
-
-    @Test
-    internal fun `a player can join the table`() {
-
-        tableService.join("Joe")
-
-        assertTrue(eventStore.events.contains(PlayerJoinedTable("Joe")))
-    }
+    private val tableService = TableUseCases(eventStore, { deck })
 
     @Test
     internal fun `start round with two players`() {
@@ -35,12 +25,12 @@ class TableTests {
 
         tableService.startRound()
 
-        assertTrue(eventStore.events.contains(RoundStarted()))
-        assertTrue(eventStore.events.contains(CardsAreDealt(mapOf(
-                "Joe" to Hand(Card(Suit.HEART, Value.TEN),Card(Suit.HEART, Value.ACE)) ,
+        Assertions.assertTrue(eventStore.events.contains(RoundStarted()))
+        Assertions.assertTrue(eventStore.events.contains(CardsAreDealt(mapOf(
+                "Joe" to Hand(Card(Suit.HEART, Value.TEN), Card(Suit.HEART, Value.ACE)),
                 "Jef" to Hand(Card(Suit.HEART, Value.KING), Card(Suit.HEART, Value.QUEEN))
         ))))
-        assertTrue(eventStore.events.contains(PlayerWonRound("Jef")))
+        Assertions.assertTrue(eventStore.events.contains(PlayerWonRound("Jef")))
     }
 
     @Test
@@ -49,15 +39,7 @@ class TableTests {
 
         tableService.startRound()
 
-        assertFalse(eventStore.events.contains(RoundStarted()))
+        Assertions.assertFalse(eventStore.events.contains(RoundStarted()))
     }
 
-
-}
-
-class TestDeck : Deck {
-
-    val queue = LinkedList<Card>()
-
-    override fun dealCard() = queue.pop()
 }

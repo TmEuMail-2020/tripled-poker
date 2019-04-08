@@ -1,13 +1,10 @@
 package io.tripled.poker.projection
 
 import io.tripled.poker.api.response.*
-import io.tripled.poker.domain.CardsAreDealt
-import io.tripled.poker.domain.Hand
-import io.tripled.poker.domain.PlayerJoinedTable
-import io.tripled.poker.domain.PlayerWonRound
+import io.tripled.poker.api.response.Table
+import io.tripled.poker.domain.*
 
 class TableProjection(private val playerName: String, events: List<Any>) {
-
     val table: Table
 
     init {
@@ -24,9 +21,9 @@ class TableProjection(private val playerName: String, events: List<Any>) {
     private fun playerWonRound(events: List<Any>): PlayerWonRound? = events.lastOrNull { it is PlayerWonRound } as PlayerWonRound?
 
     private fun players(events: List<Any>) = events
-            .filter { it is PlayerJoinedTable }
+            .filterEvents<PlayerJoinedTable>()
             .map { event ->
-                val name = (event as PlayerJoinedTable).name
+                val name = event.name
                 val playerWithCards = playerWithCards(events, name, obfuscateCards(name))
                 Player(playerWithCards.name, playerWithCards.cards)
             }
@@ -49,8 +46,7 @@ class TableProjection(private val playerName: String, events: List<Any>) {
     private fun noWinner() = null
 
     private fun getPlayerHand(events: List<Any>, player: String) =
-            (events.lastOrNull { it is CardsAreDealt } as CardsAreDealt?)?.hands?.let { it[player] }
-
+            events.lastEventOrNull<CardsAreDealt>()?.hands?.let { it[player] }
 
     private fun io.tripled.poker.domain.Hand.asVisibleCards() = VisibleCards(mapToCards())
     private fun io.tripled.poker.domain.Hand.asHiddenCards() = HiddenCards(cards().size)
