@@ -8,7 +8,9 @@ import io.tripled.poker.domain.*
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
-class TableProjectionTests {
+
+
+class GetTableUseCasesTest {
 
     private val eventStore = TestEventStore()
     var deck = TestDeck()
@@ -127,7 +129,7 @@ class TableProjectionTests {
     }
 
     @Test
-    internal fun `player joins after cards are dealt, `() {
+    internal fun `player joins after cards are dealt`() {
         eventStore.save(1, listOf(
                 PlayerJoinedTable("Joe"),
                 RoundStarted(),
@@ -135,6 +137,26 @@ class TableProjectionTests {
                         "Joe" to suitedConnectors
                 )),
                 PlayerJoinedTable("Jef")
+        ))
+
+        val table = tableService.getTable("Joe")
+
+        assertEquals(listOf(
+                Player("Joe", VisibleCards(suitedConnectors.cards().map { it.mapToCard() })),
+                Player("Jef")
+        ), table.players)
+    }
+
+
+    @Test
+    internal fun `player joins after round started`() {
+        eventStore.save(1, listOf(
+                PlayerJoinedTable("Joe"),
+                RoundStarted(),
+                PlayerJoinedTable("Jef"),
+                CardsAreDealt(mapOf(
+                        "Joe" to suitedConnectors
+                ))
         ))
 
         val table = tableService.getTable("Joe")
