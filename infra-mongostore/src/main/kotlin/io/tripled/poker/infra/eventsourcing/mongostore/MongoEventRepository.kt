@@ -1,6 +1,7 @@
 package io.tripled.poker.infra.eventsourcing.mongostore
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo
+import io.tripled.poker.domain.Event
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.repository.MongoRepository
 import org.springframework.stereotype.Repository
@@ -13,16 +14,16 @@ data class PersistedEvent<AggregateId, Payload>(@Id val eventId: UUID = UUID.ran
 
 @Repository
 class EventStore(val eventRepo: MongoEventRepository) : io.tripled.poker.eventsourcing.EventStore {
-    override fun save(id: Any, events: List<Any>) {
+    override fun save(id: Any, events: List<Event>) {
         val persistedEvents = events.map {
             PersistedEvent(aggregateId = id.toString() as Any, payload = it)
         }
         eventRepo.saveAll(persistedEvents)
     }
 
-    override fun findById(id: Any): List<Any> = eventRepo.findByAggregateId(id.toString()).map { it.payload }.toList()
+    override fun findById(id: Any): List<Event> = eventRepo.findByAggregateId(id.toString()).map { it.payload }.toList()
 }
 
-interface MongoEventRepository : MongoRepository<PersistedEvent<Any, Any>, UUID> {
-    fun findByAggregateId(aggregateId: Any): List<PersistedEvent<Any, Any>>
+interface MongoEventRepository : MongoRepository<PersistedEvent<Any, Event>, UUID> {
+    fun findByAggregateId(aggregateId: Any): List<PersistedEvent<Any, Event>>
 }

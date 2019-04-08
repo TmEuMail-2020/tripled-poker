@@ -2,5 +2,5 @@ package io.tripled.poker.domain
 
 
 interface EventPublisher {
-    fun publish(id: Any, events: List<Any>)
+    fun publish(id: Any, events: List<Event>)
 }

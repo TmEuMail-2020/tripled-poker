@@ -6,9 +6,9 @@ class Table(tableState: TableState) {
 
     private val players = tableState.players
 
-    fun join(name: String) = listOf<Any>(PlayerJoinedTable(name))
+    fun join(name: String) = listOf<Event>(PlayerJoinedTable(name))
 
-    fun startRound(deck: Deck): List<Any> {
+    fun startRound(deck: Deck): List<Event> {
         return if (players.size > 1) {
             val dealtCards = dealCards(deck)
             listOf(
@@ -32,9 +32,9 @@ data class TableState(
         val players: List<PlayerId>) {
 
     companion object {
-        fun of(events: List<Any>) = TableState(players(events))
+        fun of(events: List<Event>) = TableState(players(events))
 
-        private fun players(events: List<Any>): List<String> {
+        private fun players(events: List<Event>): List<String> {
             return events
                     .filterEvents<PlayerJoinedTable>()
                     .map { event -> event.name }

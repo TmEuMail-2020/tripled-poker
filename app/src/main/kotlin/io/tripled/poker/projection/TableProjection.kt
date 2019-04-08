@@ -4,14 +4,14 @@ import io.tripled.poker.api.response.*
 import io.tripled.poker.api.response.Table
 import io.tripled.poker.domain.*
 
-class TableProjection(private val playerName: String, events: List<Any>) {
+class TableProjection(private val playerName: String, events: List<Event>) {
     val table: Table
 
     init {
         table = Table(players(events), winner(events))
     }
 
-    private fun winner(events: List<Any>): Player? {
+    private fun winner(events: List<Event>): Player? {
         return when (val winner = playerWonRound(events)) {
             noWinner() -> null
             else -> playerWithCards(events, winner.name) { hand -> hand.asVisibleCards() }
@@ -20,7 +20,7 @@ class TableProjection(private val playerName: String, events: List<Any>) {
 
     private fun playerWonRound(events: List<Any>): PlayerWonRound? = events.lastOrNull { it is PlayerWonRound } as PlayerWonRound?
 
-    private fun players(events: List<Any>) = events
+    private fun players(events: List<Event>) = events
             .filterEvents<PlayerJoinedTable>()
             .map { event ->
                 val name = event.name
@@ -37,7 +37,7 @@ class TableProjection(private val playerName: String, events: List<Any>) {
 
     private fun itsMe(name: String) = name == playerName
 
-    private fun playerWithCards(events: List<Any>, player: String, cardMapper: (Hand) -> Cards) = when (val hand = getPlayerHand(events, player)) {
+    private fun playerWithCards(events: List<Event>, player: String, cardMapper: (Hand) -> Cards) = when (val hand = getPlayerHand(events, player)) {
         noHand() -> Player(player)
         else -> Player(player, cardMapper(hand))
     }
@@ -45,7 +45,7 @@ class TableProjection(private val playerName: String, events: List<Any>) {
     private fun noHand() = null
     private fun noWinner() = null
 
-    private fun getPlayerHand(events: List<Any>, player: String) =
+    private fun getPlayerHand(events: List<Event>, player: String) =
             events.lastEventOrNull<CardsAreDealt>()?.hands?.let { it[player] }
 
     private fun io.tripled.poker.domain.Hand.asVisibleCards() = VisibleCards(mapToCards())

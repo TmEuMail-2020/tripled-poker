@@ -1,6 +1,7 @@
 package io.tripled.poker
 
 import io.tripled.poker.api.TableUseCases
+import io.tripled.poker.domain.Event
 import io.tripled.poker.domain.EventPublisher
 import io.tripled.poker.domain.ShuffledDeck
 import io.tripled.poker.eventsourcing.EventStore
@@ -19,7 +20,7 @@ class ApplicationConfiguration {
 }
 
 class ConcreteEventPublisher(private val applicationEventPublisher: ApplicationEventPublisher) : EventPublisher {
-    override fun publish(id: Any, events: List<Any>) {
+    override fun publish(id: Any, events: List<Event>) {
         events.forEach { event ->
             applicationEventPublisher.publishEvent(event)
         }
