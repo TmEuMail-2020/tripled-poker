@@ -27,6 +27,7 @@ class StartRoundUseCaseTests {
         deck.queue += Card(Suit.HEART, Value.EIGHT)
         deck.queue += Card(Suit.HEART, Value.SEVEN)
         deck.queue += Card(Suit.HEART, Value.SIX)
+        deck.queue += Card(Suit.HEART, Value.FIVE)
 
         tableService.startRound()
 
@@ -42,6 +43,9 @@ class StartRoundUseCaseTests {
         )))
         assertTrue(eventStoreContains(TurnIsTurned(
                 Card(Suit.HEART, Value.SIX)
+        )))
+        assertTrue(eventStoreContains(RiverIsTurned(
+                Card(Suit.HEART, Value.FIVE)
         )))
         assertTrue(eventStoreContains(PlayerWonRound("Jef")))
     }

@@ -15,14 +15,13 @@ Table(tableState: TableState) {
             listOf(
                     startRound(),
                     playerCards,
-                    dealFloppedCards(deck),
+                    dealFlop(deck),
                     dealTurn(deck),
+                    dealRiver(deck),
                     determineWinner(playerCards.hands)
             )
         } else listOf()
     }
-
-    private fun dealTurn(deck: Deck) = TurnIsTurned(deck.dealCard())
 
     private fun startRound() = RoundStarted()
 
@@ -33,9 +32,11 @@ Table(tableState: TableState) {
 
     private fun dealPlayerCards(deck: Deck): CardsAreDealt = CardsAreDealt(players.associateWith { Hand(deck.dealCard(), deck.dealCard()) })
 
-    private fun dealFloppedCards(deck: Deck): FlopIsTurned = FlopIsTurned(deck.dealCard(), deck.dealCard(), deck.dealCard())
+    private fun dealFlop(deck: Deck): FlopIsTurned = FlopIsTurned(deck.dealCard(), deck.dealCard(), deck.dealCard())
 
+    private fun dealTurn(deck: Deck) = TurnIsTurned(deck.dealCard())
 }
+    private fun dealRiver(deck: Deck) = RiverIsTurned(deck.dealCard())
 
 data class TableState(
         val players: List<PlayerId>) {
