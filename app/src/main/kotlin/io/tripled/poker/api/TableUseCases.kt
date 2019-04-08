@@ -19,13 +19,13 @@ class TableUseCases(
         private val eventPublisher: EventPublisher? = null
 ) : TableService {
 
+    /**COMMAND**/
+
     override fun join(name: String) {
         val events = Table(TableState.of( eventStore.findById(1))).join(name)
         eventStore.save(1, events)
         eventPublisher?.publish(1, events)
     }
-
-    override fun getTable(name: String) = TableProjection().table(name, eventStore.findById(1))
 
     override fun startGame() {
         val tableEvents = eventStore.findById(1)
@@ -36,5 +36,9 @@ class TableUseCases(
         eventStore.save(1, outputEvents)
         eventPublisher?.publish(1, outputEvents)
     }
+
+    /*QUERY**/
+
+    override fun getTable(name: String) = TableProjection().table(name, eventStore.findById(1))
 
 }

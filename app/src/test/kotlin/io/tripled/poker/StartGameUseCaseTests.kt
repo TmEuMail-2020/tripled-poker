@@ -16,7 +16,7 @@ class StartGameUseCaseTests {
     private val tableService = TableUseCases(eventStore, { deck })
 
     @Test
-    internal fun `start game with two players`() {
+    internal fun `play game with two players`() {
         addPlayers()
         deck.queue.addAll(DeckMother().deckOfHearts())
 
@@ -30,17 +30,25 @@ class StartGameUseCaseTests {
                         "Joe" to Hand(Card(Suit.HEART, Value.TEN), Card(Suit.HEART, Value.ACE)),
                         "Jef" to Hand(Card(Suit.HEART, Value.KING), Card(Suit.HEART, Value.QUEEN))
                 )),
+                PlayerCalled("Joe"),
+                PlayerCalled("Jef"),
                 FlopIsTurned(
                         Card(Suit.HEART, Value.NINE),
                         Card(Suit.HEART, Value.EIGHT),
                         Card(Suit.HEART, Value.SEVEN)
                 ),
+                PlayerCalled("Joe"),
+                PlayerCalled("Jef"),
                 TurnIsTurned(
                         Card(Suit.HEART, Value.SIX)
                 ),
+                PlayerCalled("Joe"),
+                PlayerCalled("Jef"),
                 RiverIsTurned(
                         Card(Suit.HEART, Value.FIVE)
                 ),
+                PlayerCalled("Joe"),
+                PlayerCalled("Jef"),
                 PlayerWonGame("Jef")
         )
     }
