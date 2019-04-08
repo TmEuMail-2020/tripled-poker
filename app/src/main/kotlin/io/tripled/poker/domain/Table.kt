@@ -13,26 +13,27 @@ Table(tableState: TableState) {
         return if (players.size > 1) {
             val playerCards = dealPlayerCards(deck)
             listOf(
-                    RoundStarted(),
+                    startRound(),
                     playerCards,
                     dealFloppedCards(deck),
-                    PlayerWonRound(determineWinner(playerCards.hands))
+                    dealTurn(deck),
+                    determineWinner(playerCards.hands)
             )
         } else listOf()
     }
 
-    private fun determineWinner(dealtCards: Map<PlayerId, Hand>) = dealtCards
+    private fun dealTurn(deck: Deck) = TurnIsTurned(deck.dealCard())
+
+    private fun startRound() = RoundStarted()
+
+    private fun determineWinner(dealtCards: Map<PlayerId, Hand>): PlayerWonRound = PlayerWonRound(dealtCards
             .toList()
             .maxBy { it.second.card1.score + it.second.card2.score }!!
-            .first
+            .first)
 
-    private fun dealPlayerCards(deck: Deck): CardsAreDealt {
-        return CardsAreDealt(players.associateWith { Hand(deck.dealCard(), deck.dealCard()) })
-    }
+    private fun dealPlayerCards(deck: Deck): CardsAreDealt = CardsAreDealt(players.associateWith { Hand(deck.dealCard(), deck.dealCard()) })
 
-    private fun dealFloppedCards(deck: Deck): FlopIsTurned {
-        return FlopIsTurned(deck.dealCard(), deck.dealCard(), deck.dealCard())
-    }
+    private fun dealFloppedCards(deck: Deck): FlopIsTurned = FlopIsTurned(deck.dealCard(), deck.dealCard(), deck.dealCard())
 
 }
 
@@ -42,11 +43,9 @@ data class TableState(
     companion object {
         fun of(events: List<Event>) = TableState(players(events))
 
-        private fun players(events: List<Event>): List<String> {
-            return events
-                    .filterEvents<PlayerJoinedTable>()
-                    .map { event -> event.name }
-        }
+        private fun players(events: List<Event>): List<String> = events
+                .filterEvents<PlayerJoinedTable>()
+                .map { event -> event.name }
     }
 
 }

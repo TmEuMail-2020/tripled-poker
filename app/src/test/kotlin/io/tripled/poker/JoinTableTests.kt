@@ -17,7 +17,7 @@ class JoinTableTests {
 
         tableService.join("Joe")
 
-        assertTrue(eventStore.events.contains(PlayerJoinedTable("Joe")))
+        assertTrue(eventStore.contains(PlayerJoinedTable("Joe")))
     }
 
 }
