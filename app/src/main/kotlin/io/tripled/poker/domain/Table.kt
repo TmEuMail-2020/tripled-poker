@@ -5,8 +5,8 @@ import io.tripled.poker.api.response.Value
 
 data class PlayerJoinedTable(val name: String)
 data class RoundStarted(val noop: String = "")
-data class CardsAreDealt(val hands: Map<String, Hand>)
-data class PlayerWonRound(val name: String)
+data class CardsAreDealt(val hands: Map<PlayerId, Hand>)
+data class PlayerWonRound(val name: PlayerId)
 data class Card(val suit: Suit, val value: Value) {
     val score: Int
         get() = value.ordinal * 100 + suit.ordinal
@@ -16,14 +16,27 @@ data class Hand(val card1: Card, val card2: Card) {
     fun cards() = listOf(card1, card2)
 }
 
-class Table(events: List<Any>) {
-    private val players = players(events)
+typealias PlayerId = String
 
-    private fun players(events: List<Any>): List<String> {
-        return events
-                .filterEvents<PlayerJoinedTable>()
-                .map { event -> event.name }
+data class TableState(
+        val players: List<PlayerId>) {
+
+
+    companion object {
+        fun of(events: List<Any>) = TableState(players(events))
+
+        private fun players(events: List<Any>): List<String> {
+            return events
+                    .filterEvents<PlayerJoinedTable>()
+                    .map { event -> event.name }
+        }
     }
+
+}
+
+class Table(tableState: TableState) {
+
+    private val players = tableState.players
 
     fun join(name: String) = listOf<Any>(PlayerJoinedTable(name))
 
@@ -38,7 +51,7 @@ class Table(events: List<Any>) {
         } else listOf()
     }
 
-    private fun determineWinner(dealtCards: Map<String, Hand>) = dealtCards
+    private fun determineWinner(dealtCards: Map<PlayerId, Hand>) = dealtCards
             .toList()
             .maxBy { it.second.card1.score + it.second.card2.score }!!
             .first
