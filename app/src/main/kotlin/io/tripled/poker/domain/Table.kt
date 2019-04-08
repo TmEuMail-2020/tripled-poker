@@ -1,38 +1,6 @@
 package io.tripled.poker.domain
 
-import io.tripled.poker.api.response.Suit
-import io.tripled.poker.api.response.Value
-
-data class PlayerJoinedTable(val name: String)
-data class RoundStarted(val noop: String = "")
-data class CardsAreDealt(val hands: Map<PlayerId, Hand>)
-data class PlayerWonRound(val name: PlayerId)
-data class Card(val suit: Suit, val value: Value) {
-    val score: Int
-        get() = value.ordinal * 100 + suit.ordinal
-}
-
-data class Hand(val card1: Card, val card2: Card) {
-    fun cards() = listOf(card1, card2)
-}
-
 typealias PlayerId = String
-
-data class TableState(
-        val players: List<PlayerId>) {
-
-
-    companion object {
-        fun of(events: List<Any>) = TableState(players(events))
-
-        private fun players(events: List<Any>): List<String> {
-            return events
-                    .filterEvents<PlayerJoinedTable>()
-                    .map { event -> event.name }
-        }
-    }
-
-}
 
 class Table(tableState: TableState) {
 
@@ -57,4 +25,20 @@ class Table(tableState: TableState) {
             .first
 
     private fun dealCards(deck: Deck) = players.associateWith { Hand(deck.dealCard(), deck.dealCard()) }
+
+}
+
+data class TableState(
+        val players: List<PlayerId>) {
+
+    companion object {
+        fun of(events: List<Any>) = TableState(players(events))
+
+        private fun players(events: List<Any>): List<String> {
+            return events
+                    .filterEvents<PlayerJoinedTable>()
+                    .map { event -> event.name }
+        }
+    }
+
 }
