@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test
 class GetTableUseCasesTest {
 
     private val eventStore = DummyEventStore()
-    var deck = TestDeck()
+    var deck = DummyDeck()
     private val tableService = TableUseCases(eventStore, { deck })
 
     @Test

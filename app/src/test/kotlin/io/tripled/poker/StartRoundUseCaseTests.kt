@@ -13,24 +13,13 @@ import org.junit.jupiter.api.Test
 class StartRoundUseCaseTests {
 
     private val eventStore = DummyEventStore()
-    private val deck = TestDeck()
+    private val deck = DummyDeck()
     private val tableService = TableUseCases(eventStore, { deck })
 
     @Test
     internal fun `start round with two players`() {
-        eventStore.save(1, listOf(
-                PlayerJoinedTable("Joe"),
-                PlayerJoinedTable("Jef"))
-        )
-        deck.queue += Card(Suit.HEART, Value.TEN)
-        deck.queue += Card(Suit.HEART, Value.ACE)
-        deck.queue += Card(Suit.HEART, Value.KING)
-        deck.queue += Card(Suit.HEART, Value.QUEEN)
-        deck.queue += Card(Suit.HEART, Value.NINE)
-        deck.queue += Card(Suit.HEART, Value.EIGHT)
-        deck.queue += Card(Suit.HEART, Value.SEVEN)
-        deck.queue += Card(Suit.HEART, Value.SIX)
-        deck.queue += Card(Suit.HEART, Value.FIVE)
+        addPlayers()
+        deck.queue.addAll(DeckMother().deckOfHearts())
 
         tableService.startRound()
 
@@ -54,6 +43,13 @@ class StartRoundUseCaseTests {
                         Card(Suit.HEART, Value.FIVE)
                 ),
                 PlayerWonRound("Jef")
+        )
+    }
+
+    private fun addPlayers() {
+        eventStore.save(1, listOf(
+                PlayerJoinedTable("Joe"),
+                PlayerJoinedTable("Jef"))
         )
     }
 
