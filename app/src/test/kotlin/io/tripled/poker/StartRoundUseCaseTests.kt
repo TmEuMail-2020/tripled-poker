@@ -1,5 +1,7 @@
 package io.tripled.poker
 
+import ch.tutteli.atrium.api.cc.en_GB.*
+import ch.tutteli.atrium.verbs.expect
 import io.tripled.poker.api.TableUseCases
 import io.tripled.poker.api.response.Suit
 import io.tripled.poker.api.response.Value
@@ -9,6 +11,7 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 
 class StartRoundUseCaseTests {
+
     private val eventStore = DummyEventStore()
     private val deck = TestDeck()
     private val tableService = TableUseCases(eventStore, { deck })
@@ -31,23 +34,27 @@ class StartRoundUseCaseTests {
 
         tableService.startRound()
 
-        assertTrue(eventStoreContains(RoundStarted()))
-        assertTrue(eventStoreContains(CardsAreDealt(mapOf(
-                "Joe" to Hand(Card(Suit.HEART, Value.TEN), Card(Suit.HEART, Value.ACE)),
-                "Jef" to Hand(Card(Suit.HEART, Value.KING), Card(Suit.HEART, Value.QUEEN))
-        ))))
-        assertTrue(eventStoreContains(FlopIsTurned(
-                Card(Suit.HEART, Value.NINE),
-                Card(Suit.HEART, Value.EIGHT),
-                Card(Suit.HEART, Value.SEVEN)
-        )))
-        assertTrue(eventStoreContains(TurnIsTurned(
-                Card(Suit.HEART, Value.SIX)
-        )))
-        assertTrue(eventStoreContains(RiverIsTurned(
-                Card(Suit.HEART, Value.FIVE)
-        )))
-        assertTrue(eventStoreContains(PlayerWonRound("Jef")))
+        expect(eventStore.events).contains.inOrder.only.values(
+                PlayerJoinedTable("Joe"),
+                PlayerJoinedTable("Jef"),
+                RoundStarted(),
+                CardsAreDealt(mapOf(
+                        "Joe" to Hand(Card(Suit.HEART, Value.TEN), Card(Suit.HEART, Value.ACE)),
+                        "Jef" to Hand(Card(Suit.HEART, Value.KING), Card(Suit.HEART, Value.QUEEN))
+                )),
+                FlopIsTurned(
+                        Card(Suit.HEART, Value.NINE),
+                        Card(Suit.HEART, Value.EIGHT),
+                        Card(Suit.HEART, Value.SEVEN)
+                ),
+                TurnIsTurned(
+                        Card(Suit.HEART, Value.SIX)
+                ),
+                RiverIsTurned(
+                        Card(Suit.HEART, Value.FIVE)
+                ),
+                PlayerWonRound("Jef")
+        )
     }
 
     @Test
