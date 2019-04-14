@@ -6,6 +6,7 @@
   "dependencies": {
     "@jetbrains/kotlin-extensions": "^1.0.1-pre.67",
     "axios": "^0.18.0",
+    "create-react-kotlin-app": "^1.0.11",
     "react": "^16.8.2",
     "react-dom": "^16.8.2"
   },
