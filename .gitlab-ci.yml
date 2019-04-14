@@ -19,7 +19,8 @@ gradle build:
   variables:
     GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.parallel=true"
   script:
-#    - mv poker-ui-app/build main/src/main/resources/public
+    - cd poker-ui-app && gradle npm_run_build && cd ..
+    - mv poker-ui-app/build main/src/main/resources/public
     - gradle --build-cache --scan assemble check coverage detekt
     - 'cat ''build/reports/jacoco/coverage/html/index.html'' | sed -n ''s/.*Total[^%]*>\([0-9]*%\).*/Coverage: \1/pg'''
   coverage: /Coverage[^0-9]*([0-9]{1,3})%/
