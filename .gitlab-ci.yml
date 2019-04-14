@@ -19,6 +19,15 @@ gradle build:
   variables:
     GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.parallel=true"
   script:
+    - |
+      cd  /tmp && \
+      wget -k "https://github.com/JetBrains/kotlin/releases/download/v1.3.21/kotlin-compiler-1.3.21.zip"  && \
+      unzip "kotlin-compiler-${KOTLIN_VERSION}.zip" && \
+      mkdir -p "/usr/local/kotlin" && \
+      mv "/tmp/kotlinc/bin" "/tmp/kotlinc/lib" "/usr/local/kotlin" && \
+      rm /usr/local/kotlin/bin/*.bat && \
+      chmod +x /usr/local/kotlin/bin/* && \
+      ln -s "/usr/local/kotlin/bin/"* "/usr/bin/"
     - cd poker-ui-app && gradle npm_install_create-react-kotlin-app && gradle npm_run_build && cd ..
     - cat /home/gradle/.npm/_logs/*.log
     - mv poker-ui-app/build main/src/main/resources/public
