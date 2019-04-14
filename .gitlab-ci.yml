@@ -23,7 +23,7 @@ gradle build:
       wget -k "https://github.com/JetBrains/kotlin/releases/download/v1.3.21/kotlin-compiler-1.3.21.zip" && \
       unzip "kotlin-compiler-1.3.21.zip" && \
       chmod +x kotlinc/bin/* && export PATH=$PATH:`pwd`/kotlinc/bin && echo $PATH
-    - cd poker-ui-app && gradle npm_install_create-react-kotlin-app && gradle npm_run_build && cd ..
+    - cd poker-ui-app && gradle npm_install_-g_create-react-kotlin-app && gradle npm_run_build && cd ..
     - cat /home/gradle/.npm/_logs/*.log
     - mv poker-ui-app/build main/src/main/resources/public
     - gradle --build-cache --scan assemble check coverage detekt
