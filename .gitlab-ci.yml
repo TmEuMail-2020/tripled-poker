@@ -25,7 +25,7 @@ gradle build:
       chmod +x kotlinc/bin/* && export PATH=$PATH:`pwd`/kotlinc/bin && echo $PATH
     - unset CI
     - cd poker-ui-app && gradle npm_install_-g_create-react-kotlin-app && gradle npm_run_build && cd ..
-    - cat /home/gradle/.npm/_logs/*.log
+    - cat /home/gradle/.npm/_logs/*.log || true
     - mv poker-ui-app/build main/src/main/resources/public
     - gradle --build-cache --scan assemble check coverage detekt
     - 'cat ''build/reports/jacoco/coverage/html/index.html'' | sed -n ''s/.*Total[^%]*>\([0-9]*%\).*/Coverage: \1/pg'''
