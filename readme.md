@@ -37,3 +37,10 @@ https://docs.spring.io/spring-metrics/docs/current/public/prometheus
 ### Serve to 
 * localhost:8080/graphiql
 * localhost:8080/api/businessMetric
+
+### Infrastructure
+#### Runtime infra
+![alt text](runtime infra.png "runtime infrastructure")
+
+#### Build infra
+![alt text](build infra.png "building high level overview")
