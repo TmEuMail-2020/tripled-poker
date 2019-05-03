@@ -2,6 +2,9 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: poker
+  annotations:
+    app.gitlab.com/app: "poker"
+    app.gitlab.com/env: "production"
   labels:
     app: production
     release: production
