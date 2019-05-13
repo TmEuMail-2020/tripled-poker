@@ -15,58 +15,35 @@ class Table(tableState: TableState) {
 
     fun join(name: String) = listOf<Event>(PlayerJoinedTable(name))
 
-    fun startGame(deck: Deck): List<Event> {
-        if (players.size <= 1) return listOf()
+    fun startGame(deck: Deck) = sequence {
+        if (players.size > 1)
+            yieldAll(listOf(
+                    GameStarted(deck.cards),
+                    dealPlayerHands(deck)
+            ))
+    }.toList()
 
-        return mutableListOf(
-                GameStarted(deck.cards),
-                dealPlayerHands(deck))
-    }
-
-    fun check(player: PlayerId): List<Event> {
-        val result = mutableListOf<Event>()
-        result.add(PlayerChecked(player))
+    fun check(player: PlayerId) = sequence {
+        yield(PlayerChecked(player))
 
         if (everybodyCheckedThisRound()) {
-            result.add(RoundCompleted())
+            yield(RoundCompleted())
         }
-        return result
-    }
+    }.toList()
 
-    fun flop(): List<Event> {
-        val result = mutableListOf<Event>()
-        val flop = dealFlop(deck)
-        result.add(flop)
-        return result
-    }
+    fun flop(): List<Event> = listOf(dealFlop(deck))
 
-    fun turn(): List<Event> {
-        val result = mutableListOf<Event>()
-        val turn = dealTurn(deck)
-        result.add(turn)
-        return result
-    }
+    fun turn(): List<Event> = listOf(dealTurn(deck))
 
-    fun river(): List<Event> {
-        val result = mutableListOf<Event>()
-        val river = dealRiver(deck)
-        result.add(river)
+    fun river(): List<Event> = listOf(dealRiver(deck))
 
-        doEverythingElse(result)
-        return result
-    }
-
-
-    private fun doEverythingElse(result: MutableList<Event>) {
-        result.addAll(startBettingRound())
-        result.add(determineWinner())
-    }
+    fun determineWinner(): List<Event> = listOf(determineWinnerEvent())
 
     private fun everybodyCheckedThisRound() = ((countCalls + 1) % players.size) == 0
 
     private fun startBettingRound() = players.map { PlayerChecked(it) }
 
-    private fun determineWinner() =
+    private fun determineWinnerEvent() =
             PlayerWonGame(winnerDeterminer.determineWinner(hands, this.theCardsOnTheTable))
 
     private fun dealPlayerHands(deck: Deck): HandsAreDealt = HandsAreDealt(players.associateWith { Hand(deck.dealCard(), deck.dealCard()) })

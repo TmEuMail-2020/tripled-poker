@@ -30,18 +30,22 @@ class StartGameUseCaseTests {
         deck.queue.addAll(DeckMother().deckOfHearts())
 
         useCases.startGame()
-
         useCases.check("Joe")
         useCases.check("Jef")
+
         useCases.flop()
-
         useCases.check("Joe")
         useCases.check("Jef")
+
         useCases.turn()
-
         useCases.check("Joe")
         useCases.check("Jef")
+
         useCases.river()
+        useCases.check("Joe")
+        useCases.check("Jef")
+
+        useCases.determineWinner()
 
         expect(eventStore.events).contains.inOrder.only.values(
                 PlayerJoinedTable("Joe"),
@@ -73,6 +77,7 @@ class StartGameUseCaseTests {
                 ),
                 PlayerChecked("Joe"),
                 PlayerChecked("Jef"),
+                RoundCompleted(),
                 PlayerWonGame("Jef")
         )
     }
