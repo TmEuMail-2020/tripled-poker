@@ -10,6 +10,7 @@ class Table(tableState: TableState) {
     private val winnerDeterminer = WinnerDeterminer()
     private val hands = tableState.hands
     private val deck = PredeterminedCardDeck(tableState.cards)
+    private val countCalls = tableState.countChecks;
 
     fun join(name: String) = listOf<Event>(PlayerJoinedTable(name))
 
@@ -24,20 +25,25 @@ class Table(tableState: TableState) {
     }
 
     fun call(player: String): List<Event> {
-        val flop = dealFlop(deck)
-        val turn = dealTurn(deck)
-        val river = dealRiver(deck)
+        if (countCalls == 0) {
 
-        val result = mutableListOf<Event>()
-        result.addAll(startBettingRound())
-        result.add(flop)
-        result.addAll(startBettingRound())
-        result.add(turn)
-        result.addAll(startBettingRound())
-        result.add(river)
-        result.addAll(startBettingRound())
-        result.add(determineWinner(flop, turn, river))
-        return result
+            val flop = dealFlop(deck)
+            val turn = dealTurn(deck)
+            val river = dealRiver(deck)
+
+            val result = mutableListOf<Event>()
+            result.addAll(startBettingRound())
+            result.add(flop)
+            result.addAll(startBettingRound())
+            result.add(turn)
+            result.addAll(startBettingRound())
+            result.add(river)
+            result.addAll(startBettingRound())
+            result.add(determineWinner(flop, turn, river))
+            return result
+        }
+        return listOf()
+
     }
 
     private fun startBettingRound() = players.map { PlayerCalled(it) }
@@ -45,7 +51,7 @@ class Table(tableState: TableState) {
     private fun determineWinner(flop: FlopIsTurned, turn: TurnIsTurned, river: RiverIsTurned) =
             PlayerWonGame(winnerDeterminer.determineWinner(hands, listOf(flop.card1, flop.card2, flop.card3, turn.card, river.card)))
 
-    private fun startGame2(deck:Deck) = GameStarted(deck.cards)
+    private fun startGame2(deck: Deck) = GameStarted(deck.cards)
 
     private fun dealPlayerHands(deck: Deck): HandsAreDealt = HandsAreDealt(players.associateWith { Hand(deck.dealCard(), deck.dealCard()) })
 
@@ -59,10 +65,15 @@ class Table(tableState: TableState) {
 data class TableState(
         val players: List<PlayerId>,
         val hands: Map<PlayerId, Hand>,
-        val cards: List<Card>) {
+        val cards: List<Card>,
+        val countChecks: Int) {
 
     companion object {
-        fun of(events: List<Event>) = TableState(players(events), hands(events), deck(events))
+        fun of(events: List<Event>) = TableState(players(events), hands(events), deck(events), countChecks(events))
+
+        private fun countChecks(events: List<Event>): Int =
+                events.filterEvents<PlayerCalled>().size
+
 
         private fun players(events: List<Event>): List<String> = events
                 .filterEvents<PlayerJoinedTable>()
@@ -83,7 +94,7 @@ data class TableState(
 
             val cards = lastEventOrNull.cards.toMutableList()
             return events.fold(cards) { _, event ->
-                when (event){
+                when (event) {
                     is HandsAreDealt -> cards.removeAll(
                             event.hands.flatMap { it.value.cards() }
                     )

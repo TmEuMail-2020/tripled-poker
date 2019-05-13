@@ -32,8 +32,7 @@ class StartGameUseCaseTests {
         useCases.startGame()
         useCases.call("Joe")
 
-        // TODO: split me further
-        //useCases.call("Jef")
+        useCases.call("Jef")
 
         expect(eventStore.events).contains.inOrder.only.values(
                 PlayerJoinedTable("Joe"),
