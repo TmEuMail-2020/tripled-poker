@@ -20,11 +20,9 @@ class Table(tableState: TableState) {
         return mutableListOf(
                 startGame2(deck),
                 dealPlayerHands(deck))
-
-
     }
 
-    fun check(player: String): List<Event> {
+    fun check(player: PlayerId): List<Event> {
         val result = mutableListOf<Event>()
         result.add(PlayerChecked(player))
 
