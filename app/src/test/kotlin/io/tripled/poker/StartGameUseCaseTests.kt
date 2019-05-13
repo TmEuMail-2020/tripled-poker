@@ -44,6 +44,7 @@ class StartGameUseCaseTests {
                 )),
                 PlayerChecked("Joe"),
                 PlayerChecked("Jef"),
+                RoundCompleted(),
                 FlopIsTurned(
                         NINE of HEART,
                         EIGHT of HEART,
