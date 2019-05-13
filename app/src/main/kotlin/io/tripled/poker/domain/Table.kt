@@ -1,5 +1,6 @@
 package io.tripled.poker.domain
 
+import sun.audio.AudioPlayer.player
 import java.util.Arrays.asList
 
 typealias PlayerId = String
@@ -27,18 +28,24 @@ class Table(tableState: TableState) {
         result.add(PlayerChecked(player))
 
         if (everybodyChecked()) {
-           result.add(RoundCompleted())
-            gotoFlop(result)
+            result.add(RoundCompleted())
+            result.addAll(flop())
         }
         return result
     }
 
-    private fun gotoFlop(result: MutableList<Event>) {
+    fun flop(): List<Event> {
+        val result = mutableListOf<Event>()
+        doEverythingElse(result)
+        return result
+    }
+
+    private fun doEverythingElse(result: MutableList<Event>) {
         val flop = dealFlop(deck)
+        result.add(flop)
+
         val turn = dealTurn(deck)
         val river = dealRiver(deck)
-
-        result.add(flop)
         result.addAll(startBettingRound())
         result.add(turn)
         result.addAll(startBettingRound())
