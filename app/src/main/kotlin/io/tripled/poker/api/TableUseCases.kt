@@ -14,6 +14,7 @@ interface TableService {
     fun check(player: String)
     fun flop()
     fun turn()
+    fun river()
 }
 
 class TableUseCases(
@@ -35,6 +36,12 @@ class TableUseCases(
         eventPublisher?.publish(1, events)
     }
 
+    override fun river() {
+        val events = Table(TableState.of(eventStore.findById(1))).river()
+        eventStore.save(1, events)
+        eventPublisher?.publish(1, events)
+    }
+
     override fun join(name: String) {
         val events = Table(TableState.of(eventStore.findById(1))).join(name)
         eventStore.save(1, events)
@@ -51,6 +58,7 @@ class TableUseCases(
         eventPublisher?.publish(1, outputEvents)
     }
 
+
     override fun check(player: String) {
         val tableEvents = eventStore.findById(1)
         val table = Table(TableState.of(tableEvents))
@@ -61,9 +69,7 @@ class TableUseCases(
         eventPublisher?.publish(1, outputEvents)
     }
 
-
     /*QUERY**/
-
     override fun getTable(name: String) = TableProjection().table(name, eventStore.findById(1))
 
 }

@@ -44,14 +44,20 @@ class Table(tableState: TableState) {
         val result = mutableListOf<Event>()
         val turn = dealTurn(deck)
         result.add(turn)
+        return result
+    }
+
+    fun river(): List<Event> {
+        val result = mutableListOf<Event>()
+        val river = dealRiver(deck)
+        result.add(river)
+
         doEverythingElse(result)
         return result
     }
 
+
     private fun doEverythingElse(result: MutableList<Event>) {
-        val river = dealRiver(deck)
-        result.addAll(startBettingRound())
-        result.add(river)
         result.addAll(startBettingRound())
         result.add(determineWinner())
     }

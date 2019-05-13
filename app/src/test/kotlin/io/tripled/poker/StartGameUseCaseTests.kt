@@ -33,13 +33,15 @@ class StartGameUseCaseTests {
 
         useCases.check("Joe")
         useCases.check("Jef")
-
         useCases.flop()
 
         useCases.check("Joe")
         useCases.check("Jef")
-
         useCases.turn()
+
+        useCases.check("Joe")
+        useCases.check("Jef")
+        useCases.river()
 
         expect(eventStore.events).contains.inOrder.only.values(
                 PlayerJoinedTable("Joe"),
@@ -65,6 +67,7 @@ class StartGameUseCaseTests {
                 ),
                 PlayerChecked("Joe"),
                 PlayerChecked("Jef"),
+                RoundCompleted(),
                 RiverIsTurned(
                         FIVE of HEART
                 ),
