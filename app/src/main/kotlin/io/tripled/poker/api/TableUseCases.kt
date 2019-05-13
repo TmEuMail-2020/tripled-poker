@@ -3,6 +3,7 @@ package io.tripled.poker.api
 import io.tripled.poker.domain.*
 import io.tripled.poker.eventsourcing.EventStore
 import io.tripled.poker.projection.TableProjection
+import sun.audio.AudioPlayer.player
 
 interface TableService {
     fun join(name: String)
@@ -22,6 +23,12 @@ class TableUseCases(
 ) : TableService {
     /**COMMAND**/
 
+    override fun join(name: String) = executeOnTable { join(name) }
+
+    override fun startGame() =executeOnTable {startGame(deckFactory()) }
+
+    override fun check(player: String) = executeOnTable { check(player) }
+
     override fun turn() = executeOnTable { turn() }
 
     override fun flop() = executeOnTable { flop() }
@@ -30,8 +37,6 @@ class TableUseCases(
 
     override fun determineWinner() = executeOnTable { determineWinner() }
 
-    override fun join(name: String) = executeOnTable { join(name) }
-
     private fun executeOnTable(command: Table.() -> List<Event>) {
         val events = withTable().command()
         save(events)
@@ -39,27 +44,6 @@ class TableUseCases(
     }
 
     private fun withTable() = Table(TableState.of(eventStore.findById(1)))
-
-    override fun startGame() {
-        val tableEvents = eventStore.findById(1)
-        val table = Table(TableState.of(tableEvents))
-
-        val outputEvents = table.startGame(deckFactory())
-
-        save(outputEvents)
-        publish(outputEvents)
-    }
-
-
-    override fun check(player: String) {
-        val tableEvents = eventStore.findById(1)
-        val table = Table(TableState.of(tableEvents))
-
-        val outputEvents = table.check(player)
-
-        save(outputEvents)
-        publish(outputEvents)
-    }
 
     private fun publish(events: List<Event>) {
         eventPublisher?.publish(1, events)
