@@ -42,25 +42,25 @@ class StartGameUseCaseTests {
                         "Joe" to Hand(TEN of HEART, ACE of HEART),
                         "Jef" to Hand(KING of HEART, QUEEN of HEART)
                 )),
-                PlayerCalled("Joe"),
-                PlayerCalled("Jef"),
+                PlayerChecked("Joe"),
+                PlayerChecked("Jef"),
                 FlopIsTurned(
                         NINE of HEART,
                         EIGHT of HEART,
                         SEVEN of HEART
                 ),
-                PlayerCalled("Joe"),
-                PlayerCalled("Jef"),
+                PlayerChecked("Joe"),
+                PlayerChecked("Jef"),
                 TurnIsTurned(
                         SIX of HEART
                 ),
-                PlayerCalled("Joe"),
-                PlayerCalled("Jef"),
+                PlayerChecked("Joe"),
+                PlayerChecked("Jef"),
                 RiverIsTurned(
                         FIVE of HEART
                 ),
-                PlayerCalled("Joe"),
-                PlayerCalled("Jef"),
+                PlayerChecked("Joe"),
+                PlayerChecked("Jef"),
                 PlayerWonGame("Jef")
         )
     }

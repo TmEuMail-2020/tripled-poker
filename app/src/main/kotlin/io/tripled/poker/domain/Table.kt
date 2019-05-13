@@ -25,6 +25,13 @@ class Table(tableState: TableState) {
     }
 
     fun check(player: String): List<Event> {
+        // player Called event
+        // check if all players checked
+        // y -> flop
+        // n -> nix
+
+
+
         if (countCalls == 0) {
 
             val flop = dealFlop(deck)
@@ -46,7 +53,7 @@ class Table(tableState: TableState) {
 
     }
 
-    private fun startBettingRound() = players.map { PlayerCalled(it) }
+    private fun startBettingRound() = players.map { PlayerChecked(it) }
 
     private fun determineWinner(flop: FlopIsTurned, turn: TurnIsTurned, river: RiverIsTurned) =
             PlayerWonGame(winnerDeterminer.determineWinner(hands, listOf(flop.card1, flop.card2, flop.card3, turn.card, river.card)))
@@ -72,7 +79,7 @@ data class TableState(
         fun of(events: List<Event>) = TableState(players(events), hands(events), deck(events), countChecks(events))
 
         private fun countChecks(events: List<Event>): Int =
-                events.filterEvents<PlayerCalled>().size
+                events.filterEvents<PlayerChecked>().size
 
 
         private fun players(events: List<Event>): List<String> = events
