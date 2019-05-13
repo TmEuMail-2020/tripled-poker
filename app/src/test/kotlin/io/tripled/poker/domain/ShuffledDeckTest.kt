@@ -14,7 +14,7 @@ internal class ShuffledDeckTest {
 
         Suit.values().forEach { suit ->
             Value.values().forEach { value ->
-                assertTrue(cards.contains(Card(suit, value)))
+                assertTrue(cards.contains(value of suit))
             }
         }
     }

@@ -1,10 +1,13 @@
 package io.tripled.poker
 
-import ch.tutteli.atrium.api.cc.en_GB.*
+import ch.tutteli.atrium.api.cc.en_GB.contains
+import ch.tutteli.atrium.api.cc.en_GB.inOrder
+import ch.tutteli.atrium.api.cc.en_GB.only
+import ch.tutteli.atrium.api.cc.en_GB.values
 import ch.tutteli.atrium.verbs.expect
 import io.tripled.poker.api.TableUseCases
-import io.tripled.poker.api.response.Suit
-import io.tripled.poker.api.response.Value
+import io.tripled.poker.api.response.Suit.HEART
+import io.tripled.poker.api.response.Value.*
 import io.tripled.poker.domain.*
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
@@ -27,19 +30,19 @@ class StartGameUseCaseTests {
                 PlayerJoinedTable("Jef"),
                 GameStarted(),
                 CardsAreDealt(mapOf(
-                        "Joe" to Hand(Card(Suit.HEART, Value.TEN), Card(Suit.HEART, Value.ACE)),
-                        "Jef" to Hand(Card(Suit.HEART, Value.KING), Card(Suit.HEART, Value.QUEEN))
+                        "Joe" to Hand(TEN of HEART, ACE of HEART),
+                        "Jef" to Hand(KING of HEART, QUEEN of HEART)
                 )),
                 FlopIsTurned(
-                        Card(Suit.HEART, Value.NINE),
-                        Card(Suit.HEART, Value.EIGHT),
-                        Card(Suit.HEART, Value.SEVEN)
+                        NINE of HEART,
+                        EIGHT of HEART,
+                        SEVEN of HEART
                 ),
                 TurnIsTurned(
-                        Card(Suit.HEART, Value.SIX)
+                        SIX of HEART
                 ),
                 RiverIsTurned(
-                        Card(Suit.HEART, Value.FIVE)
+                        FIVE of HEART
                 ),
                 PlayerWonGame("Jef")
         )
