@@ -19,7 +19,7 @@ class Table(tableState: TableState) {
         if (players.size <= 1) return listOf()
 
         return mutableListOf(
-                startGame2(deck),
+                GameStarted(deck.cards),
                 dealPlayerHands(deck))
     }
 
@@ -61,11 +61,7 @@ class Table(tableState: TableState) {
     private fun determineWinner() =
             PlayerWonGame(winnerDeterminer.determineWinner(hands, this.theCardsOnTheTable))
 
-    // WTF?
-    private fun startGame2(deck: Deck) = GameStarted(deck.cards)
-
     private fun dealPlayerHands(deck: Deck): HandsAreDealt = HandsAreDealt(players.associateWith { Hand(deck.dealCard(), deck.dealCard()) })
-
 
     private fun dealFlop(deck: Deck): FlopIsTurned = FlopIsTurned(deck.dealCard(), deck.dealCard(), deck.dealCard())
 
