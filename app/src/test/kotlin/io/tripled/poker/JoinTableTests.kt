@@ -2,6 +2,7 @@ package io.tripled.poker
 
 import io.tripled.poker.api.TableUseCases
 import io.tripled.poker.domain.*
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
@@ -17,6 +18,23 @@ class JoinTableTests {
         tableService.join("Joe")
 
         assertTrue(eventStore.contains(PlayerJoinedTable("Joe")))
+    }
+
+    @Test
+    internal fun `a player can't join the table with an empty name`() {
+
+        tableService.join("")
+
+        assertFalse(eventStore.contains(PlayerJoinedTable("")))
+    }
+
+    @Test
+    internal fun `a player can't join twice with the same name`() {
+
+        tableService.join("jef")
+        tableService.join("jef")
+
+        assertEquals(1, eventStore.events.filterEvents<PlayerJoinedTable>().size)
     }
 
 }

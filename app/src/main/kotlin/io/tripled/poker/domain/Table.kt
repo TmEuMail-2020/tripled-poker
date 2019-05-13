@@ -13,7 +13,9 @@ class Table(tableState: TableState) {
     private val countCalls = tableState.countChecks;
     private val theCardsOnTheTable = tableState.cardsOnTable
 
-    fun join(name: String) = listOf<Event>(PlayerJoinedTable(name))
+    fun join(name: PlayerId) = if (valid(name)) listOf<Event>(PlayerJoinedTable(name)) else listOf()
+
+    private fun valid(name: PlayerId) = name.isNotBlank() && !players.contains(name)
 
     fun startGame(deck: Deck) = sequence {
         if (players.size > 1)
