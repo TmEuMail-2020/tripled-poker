@@ -27,7 +27,7 @@ class Table(tableState: TableState) {
         val result = mutableListOf<Event>()
         result.add(PlayerChecked(player))
 
-        if (everybodyChecked()) {
+        if (everybodyCheckedThisRound()) {
             result.add(RoundCompleted())
         }
         return result
@@ -37,22 +37,26 @@ class Table(tableState: TableState) {
         val result = mutableListOf<Event>()
         val flop = dealFlop(deck)
         result.add(flop)
+        return result
+    }
+
+    fun turn(): List<Event> {
+        val result = mutableListOf<Event>()
+        val turn = dealTurn(deck)
+        result.add(turn)
         doEverythingElse(result)
         return result
     }
 
     private fun doEverythingElse(result: MutableList<Event>) {
-        val turn = dealTurn(deck)
         val river = dealRiver(deck)
-        result.addAll(startBettingRound())
-        result.add(turn)
         result.addAll(startBettingRound())
         result.add(river)
         result.addAll(startBettingRound())
         result.add(determineWinner())
     }
 
-    private fun everybodyChecked() = countCalls == players.size - 1
+    private fun everybodyCheckedThisRound() = ((countCalls + 1) % players.size) == 0
 
     private fun startBettingRound() = players.map { PlayerChecked(it) }
 

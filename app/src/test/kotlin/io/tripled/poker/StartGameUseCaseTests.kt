@@ -30,10 +30,16 @@ class StartGameUseCaseTests {
         deck.queue.addAll(DeckMother().deckOfHearts())
 
         useCases.startGame()
+
         useCases.check("Joe")
         useCases.check("Jef")
 
         useCases.flop()
+
+        useCases.check("Joe")
+        useCases.check("Jef")
+
+        useCases.turn()
 
         expect(eventStore.events).contains.inOrder.only.values(
                 PlayerJoinedTable("Joe"),
@@ -53,6 +59,7 @@ class StartGameUseCaseTests {
                 ),
                 PlayerChecked("Joe"),
                 PlayerChecked("Jef"),
+                RoundCompleted(),
                 TurnIsTurned(
                         SIX of HEART
                 ),
