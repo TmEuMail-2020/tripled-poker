@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test
 class GetTableUseCasesTest {
 
     private val eventStore = DummyEventStore()
-    var deck = DummyDeck()
+    var deck = PredeterminedCardDeck(listOf())
     private val tableService = TableUseCases(eventStore, { deck })
 
     @Test
@@ -43,8 +43,8 @@ class GetTableUseCasesTest {
         eventStore.save(1, listOf(
                 PlayerJoinedTable("Joe"),
                 PlayerJoinedTable("Jef"),
-                GameStarted(),
-                CardsAreDealt(mapOf(
+                GameStarted(listOf()),
+                HandsAreDealt(mapOf(
                         "Joe" to suitedConnectors,
                         "Jef" to suitedAceKing)
                 )))
@@ -62,8 +62,8 @@ class GetTableUseCasesTest {
         eventStore.save(1, listOf(
                 PlayerJoinedTable("Joe"),
                 PlayerJoinedTable("Jef"),
-                GameStarted(),
-                CardsAreDealt(mapOf(
+                GameStarted(listOf()),
+                HandsAreDealt(mapOf(
                         "Joe" to suitedConnectors,
                         "Jef" to suitedAceKing
                 )),
@@ -84,8 +84,8 @@ class GetTableUseCasesTest {
         eventStore.save(1, listOf(
                 PlayerJoinedTable("Joe"),
                 PlayerJoinedTable("Jef"),
-                GameStarted(),
-                CardsAreDealt(mapOf(
+                GameStarted(listOf()),
+                HandsAreDealt(mapOf(
                         "Joe" to suitedConnectors,
                         "Jef" to suitedAceKing
                 )),
@@ -132,8 +132,8 @@ class GetTableUseCasesTest {
     internal fun `player joins after cards are dealt`() {
         eventStore.save(1, listOf(
                 PlayerJoinedTable("Joe"),
-                GameStarted(),
-                CardsAreDealt(mapOf(
+                GameStarted(listOf()),
+                HandsAreDealt(mapOf(
                         "Joe" to suitedConnectors
                 )),
                 PlayerJoinedTable("Jef")
@@ -152,9 +152,9 @@ class GetTableUseCasesTest {
     internal fun `player joins after game started`() {
         eventStore.save(1, listOf(
                 PlayerJoinedTable("Joe"),
-                GameStarted(),
+                GameStarted(listOf()),
                 PlayerJoinedTable("Jef"),
-                CardsAreDealt(mapOf(
+                HandsAreDealt(mapOf(
                         "Joe" to suitedConnectors
                 ))
         ))

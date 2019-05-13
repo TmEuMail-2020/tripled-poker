@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test
 class JoinTableTests {
 
     private val eventStore = DummyEventStore()
-    private val deck = DummyDeck()
+    private val deck = PredeterminedCardDeck(listOf())
     private val tableService = TableUseCases(eventStore, {deck})
 
     @Test

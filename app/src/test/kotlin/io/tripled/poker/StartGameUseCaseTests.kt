@@ -10,26 +10,36 @@ import io.tripled.poker.api.response.Suit.HEART
 import io.tripled.poker.api.response.Value.*
 import io.tripled.poker.domain.*
 import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 class StartGameUseCaseTests {
 
     private val eventStore = DummyEventStore()
-    private val deck = DummyDeck()
-    private val tableService = TableUseCases(eventStore, { deck })
+    private val deck = PredeterminedCardDeck(listOf())
+    private val useCases = TableUseCases(eventStore, { deck })
+
+    @BeforeEach
+    internal fun setUp() {
+        deck.queue.clear()
+    }
 
     @Test
     internal fun `play game with two players`() {
         addPlayers()
         deck.queue.addAll(DeckMother().deckOfHearts())
 
-        tableService.startGame()
+        useCases.startGame()
+        useCases.call("Joe")
+
+        // TODO: split me further
+        //useCases.call("Jef")
 
         expect(eventStore.events).contains.inOrder.only.values(
                 PlayerJoinedTable("Joe"),
                 PlayerJoinedTable("Jef"),
-                GameStarted(),
-                CardsAreDealt(mapOf(
+                GameStarted(DeckMother().deckOfHearts()),
+                HandsAreDealt(mapOf(
                         "Joe" to Hand(TEN of HEART, ACE of HEART),
                         "Jef" to Hand(KING of HEART, QUEEN of HEART)
                 )),
@@ -56,6 +66,24 @@ class StartGameUseCaseTests {
         )
     }
 
+    @Test
+    internal fun `Start game with two players`() {
+        addPlayers()
+        deck.queue.addAll(DeckMother().deckOfHearts())
+
+        useCases.startGame()
+
+        expect(eventStore.events).contains.inOrder.only.values(
+                PlayerJoinedTable("Joe"),
+                PlayerJoinedTable("Jef"),
+                GameStarted(DeckMother().deckOfHearts()),
+                HandsAreDealt(mapOf(
+                        "Joe" to Hand(TEN of HEART, ACE of HEART),
+                        "Jef" to Hand(KING of HEART, QUEEN of HEART)
+                ))
+        )
+    }
+
     private fun addPlayers() {
         eventStore.save(1, listOf(
                 PlayerJoinedTable("Joe"),
@@ -67,9 +95,9 @@ class StartGameUseCaseTests {
     internal fun `cannot start game with one player`() {
         eventStore.save(1, listOf(PlayerJoinedTable("Joe")))
 
-        tableService.startGame()
+        useCases.startGame()
 
-        Assertions.assertFalse(eventStoreContains(GameStarted()))
+        Assertions.assertFalse(eventStoreContains(GameStarted(listOf())))
     }
 
     private fun eventStoreContains(element: Event) = eventStore.contains(element)

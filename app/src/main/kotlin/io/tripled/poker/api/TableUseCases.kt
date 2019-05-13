@@ -11,6 +11,7 @@ interface TableService {
     fun join(name: String)
     fun startGame()
     fun getTable(name: String): io.tripled.poker.api.response.Table
+    fun call(player: String)
 }
 
 class TableUseCases(
@@ -18,11 +19,10 @@ class TableUseCases(
         private val deckFactory: () -> Deck,
         private val eventPublisher: EventPublisher? = null
 ) : TableService {
-
     /**COMMAND**/
 
     override fun join(name: String) {
-        val events = Table(TableState.of( eventStore.findById(1))).join(name)
+        val events = Table(TableState.of(eventStore.findById(1))).join(name)
         eventStore.save(1, events)
         eventPublisher?.publish(1, events)
     }
@@ -36,6 +36,17 @@ class TableUseCases(
         eventStore.save(1, outputEvents)
         eventPublisher?.publish(1, outputEvents)
     }
+
+    override fun call(player: String) {
+        val tableEvents = eventStore.findById(1)
+        val table = Table(TableState.of(tableEvents))
+
+        val outputEvents = table.call(player)
+
+        eventStore.save(1, outputEvents)
+        eventPublisher?.publish(1, outputEvents)
+    }
+
 
     /*QUERY**/
 

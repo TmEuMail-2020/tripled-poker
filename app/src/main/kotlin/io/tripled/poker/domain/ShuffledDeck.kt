@@ -4,7 +4,7 @@ import io.tripled.poker.api.response.Suit
 import io.tripled.poker.api.response.Value
 
 class ShuffledDeck : Deck {
-    private val cards = Suit.values()
+    override val cards = Suit.values()
             .flatMap { suit ->
                 Value.values()
                         .map { value -> Card(suit, value) }

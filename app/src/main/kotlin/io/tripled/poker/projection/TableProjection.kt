@@ -50,7 +50,7 @@ class TableProjection {
         private fun noWinner() = null
 
         private fun getPlayerHand(events: List<Event>, player: String) =
-                events.lastEventOrNull<CardsAreDealt>()?.hands?.let { it[player] }
+                events.lastEventOrNull<HandsAreDealt>()?.hands?.let { it[player] }
 
         private fun io.tripled.poker.domain.Hand.asVisibleCards() = VisibleCards(mapToCards())
         private fun io.tripled.poker.domain.Hand.asHiddenCards() = HiddenCards(cards().size)
