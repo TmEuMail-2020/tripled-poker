@@ -5,7 +5,7 @@ import io.tripled.poker.api.response.Player
 import io.tripled.poker.api.response.Table
 
 class DummyTableService : TableService {
-    override fun call(player: String) {
+    override fun check(player: String) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 

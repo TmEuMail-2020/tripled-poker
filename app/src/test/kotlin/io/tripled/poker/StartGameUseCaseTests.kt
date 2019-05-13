@@ -30,9 +30,10 @@ class StartGameUseCaseTests {
         deck.queue.addAll(DeckMother().deckOfHearts())
 
         useCases.startGame()
-        useCases.call("Joe")
+        useCases.check("Joe")
+        useCases.check("Jef")
 
-        useCases.call("Jef")
+        useCases.flop()
 
         expect(eventStore.events).contains.inOrder.only.values(
                 PlayerJoinedTable("Joe"),

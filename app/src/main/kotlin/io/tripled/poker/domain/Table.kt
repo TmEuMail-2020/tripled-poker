@@ -29,21 +29,19 @@ class Table(tableState: TableState) {
 
         if (everybodyChecked()) {
             result.add(RoundCompleted())
-            result.addAll(flop())
         }
         return result
     }
 
     fun flop(): List<Event> {
         val result = mutableListOf<Event>()
+        val flop = dealFlop(deck)
+        result.add(flop)
         doEverythingElse(result)
         return result
     }
 
     private fun doEverythingElse(result: MutableList<Event>) {
-        val flop = dealFlop(deck)
-        result.add(flop)
-
         val turn = dealTurn(deck)
         val river = dealRiver(deck)
         result.addAll(startBettingRound())
