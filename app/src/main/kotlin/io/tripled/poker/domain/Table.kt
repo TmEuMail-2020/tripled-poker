@@ -1,6 +1,5 @@
 package io.tripled.poker.domain
 
-import sun.audio.AudioPlayer.player
 import java.util.Arrays.asList
 
 typealias PlayerId = String
@@ -10,7 +9,7 @@ class Table(tableState: TableState) {
     private val players = tableState.players
     private val winnerDeterminer = WinnerDeterminer()
     private val hands = tableState.hands
-    private val deck = PredeterminedCardDeck(tableState.cards)
+    private val deck = PredeterminedCardDeck(tableState.remainingCards)
     private val countCalls = tableState.countChecks;
 
     fun join(name: String) = listOf<Event>(PlayerJoinedTable(name))
@@ -75,7 +74,7 @@ class Table(tableState: TableState) {
 data class TableState(
         val players: List<PlayerId>,
         val hands: Map<PlayerId, Hand>,
-        val cards: List<Card>,
+        val remainingCards: List<Card>,
         val countChecks: Int) {
 
     companion object {
