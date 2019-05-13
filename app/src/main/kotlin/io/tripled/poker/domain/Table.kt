@@ -24,7 +24,7 @@ class Table(tableState: TableState) {
 
     }
 
-    fun call(player: String): List<Event> {
+    fun check(player: String): List<Event> {
         if (countCalls == 0) {
 
             val flop = dealFlop(deck)

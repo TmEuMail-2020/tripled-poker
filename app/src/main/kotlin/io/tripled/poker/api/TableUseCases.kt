@@ -41,7 +41,7 @@ class TableUseCases(
         val tableEvents = eventStore.findById(1)
         val table = Table(TableState.of(tableEvents))
 
-        val outputEvents = table.call(player)
+        val outputEvents = table.check(player)
 
         eventStore.save(1, outputEvents)
         eventPublisher?.publish(1, outputEvents)
