@@ -18,10 +18,11 @@ gradle build:
   image: gradle:latest
   variables:
     GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.parallel=true"
+    KOTLIN_VERSION: "1.3.30"
   script:
     - |
-      wget -k "https://github.com/JetBrains/kotlin/releases/download/v1.3.21/kotlin-compiler-1.3.21.zip" && \
-      unzip "kotlin-compiler-1.3.21.zip" && \
+      wget -k "https://github.com/JetBrains/kotlin/releases/download/v$KOTLIN_VERSION/kotlin-compiler-$KOTLIN_VERSION.zip" && \
+      unzip "kotlin-compiler-$KOTLIN_VERSION.zip" && \
       chmod +x kotlinc/bin/* && export PATH=$PATH:`pwd`/kotlinc/bin && echo $PATH
     - unset CI
     - cd poker-ui-app && gradle npm_install_-g_create-react-kotlin-app && gradle npm_run_build && cd ..
