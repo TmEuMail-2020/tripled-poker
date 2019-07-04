@@ -7,13 +7,11 @@ import com.fasterxml.jackson.module.kotlin.KotlinModule
 import graphql.execution.AsyncExecutionStrategy
 import graphql.schema.GraphQLSchema
 import graphql.schema.idl.SchemaPrinter
-import graphql.servlet.DefaultExecutionStrategyProvider
-import graphql.servlet.GraphQLErrorHandler
-import graphql.servlet.GraphQLInvocationInputFactory
-import graphql.servlet.GraphQLObjectMapper
-import graphql.servlet.GraphQLQueryInvoker
-import graphql.servlet.ObjectMapperConfigurer
-import io.tripled.poker.graphql.context.MyGraphQLContextBuilder
+import graphql.servlet.config.DefaultExecutionStrategyProvider
+import graphql.servlet.config.ObjectMapperConfigurer
+import graphql.servlet.core.GraphQLErrorHandler
+import graphql.servlet.core.GraphQLObjectMapper
+import graphql.servlet.core.GraphQLQueryInvoker
 import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -57,17 +55,6 @@ class CustomGraphqlConfiguration {
         )
         return schema
     }
-
-    @Bean
-    fun contextBuilder() = MyGraphQLContextBuilder()
-
-    @Bean
-    fun graphQLInvocationInputFactory(
-            schema: GraphQLSchema,
-            contextBuilder: MyGraphQLContextBuilder
-    ): GraphQLInvocationInputFactory = GraphQLInvocationInputFactory.newBuilder(schema)
-            .withGraphQLContextBuilder(contextBuilder)
-            .build()
 
     @Bean
     fun graphQLQueryInvoker(): GraphQLQueryInvoker {

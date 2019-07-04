@@ -10,7 +10,7 @@ class Table(tableState: TableState) {
     private val winnerDeterminer = WinnerDeterminer()
     private val hands = tableState.hands
     private val deck = PredeterminedCardDeck(tableState.remainingCards)
-    private val countCalls = tableState.countChecks;
+    private val countCalls = tableState.countChecks
     private val theCardsOnTheTable = tableState.cardsOnTable
 
     fun join(name: PlayerId) = if (valid(name)) listOf<Event>(PlayerJoinedTable(name)) else listOf()
