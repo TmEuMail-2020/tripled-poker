@@ -7,11 +7,6 @@ typealias PlayerId = String
 class Table(tableState: TableState) {
 
     private val players = tableState.players
-    private val winnerDeterminer = WinnerDeterminer()
-    private val hands = tableState.hands
-    private val deck = PredeterminedCardDeck(tableState.remainingCards)
-    private val countCalls = tableState.countChecks
-    private val gamePhase = tableState.gamePhase
 
     fun join(name: PlayerId) = if (valid(name)) listOf<Event>(PlayerJoinedTable(name)) else listOf()
 
@@ -25,8 +20,20 @@ class Table(tableState: TableState) {
             ))
     }.toList()
 
+    private fun dealPlayerHands(deck: Deck): HandsAreDealt = HandsAreDealt(players.associateWith { Hand(deck.dealCard(), deck.dealCard()) })
+
+}
+
+class Game(tableState: TableState) {
+    private val deck = PredeterminedCardDeck(tableState.remainingCards)
+    private val countCalls = tableState.countChecks
+    private val gamePhase = tableState.gamePhase
+    private val winnerDeterminer = WinnerDeterminer()
+    private val hands = tableState.hands
+    private val players = tableState.players
+
     fun check(player: PlayerId) = sequence {
-        if (GamePhase.DONE == gamePhase){
+        if (GamePhase.DONE == gamePhase) {
             throw RuntimeException("t'is gedaan, zet u derover")
         }
         yield(PlayerChecked(player))
@@ -43,6 +50,7 @@ class Table(tableState: TableState) {
         }
     }.toList()
 
+
     private fun flop(): List<Event> = listOf(dealFlop(deck))
 
     private fun turn(): List<Event> = listOf(dealTurn(deck))
@@ -56,13 +64,12 @@ class Table(tableState: TableState) {
     private fun determineWinnerEvent() =
             PlayerWonGame(winnerDeterminer.determineWinner(hands, listOf()))
 
-    private fun dealPlayerHands(deck: Deck): HandsAreDealt = HandsAreDealt(players.associateWith { Hand(deck.dealCard(), deck.dealCard()) })
-
     private fun dealFlop(deck: Deck): FlopIsTurned = FlopIsTurned(deck.dealCard(), deck.dealCard(), deck.dealCard())
 
     private fun dealTurn(deck: Deck) = TurnIsTurned(deck.dealCard())
 
     private fun dealRiver(deck: Deck) = RiverIsTurned(deck.dealCard())
+
 }
 
 data class TableState(
@@ -117,7 +124,7 @@ data class TableState(
 
         private fun phase(events: List<Event>): GamePhase =
                 events.fold(GamePhase.PRE_FLOP, { acc, event ->
-                    when(event) {
+                    when (event) {
                         is FlopIsTurned -> GamePhase.FLOP
                         is TurnIsTurned -> GamePhase.TURN
                         is RiverIsTurned -> GamePhase.RIVER

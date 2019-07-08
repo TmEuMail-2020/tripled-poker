@@ -1,5 +1,6 @@
 package io.tripled.poker
 
+import io.tripled.poker.api.GameUseCases
 import io.tripled.poker.api.TableUseCases
 import io.tripled.poker.api.response.HiddenCards
 import io.tripled.poker.api.response.Player
@@ -14,11 +15,12 @@ class GetTableUseCasesTest {
 
     private val eventStore = DummyEventStore()
     var deck = PredeterminedCardDeck(listOf())
-    private val tableService = TableUseCases(eventStore, { deck })
+    private val tableUseCases = TableUseCases(eventStore, { deck })
+    private val gameUseCases = GameUseCases(eventStore)
 
     @Test
     internal fun `a new table has no players`() {
-        val table = tableService.getTable("Jef")
+        val table = tableUseCases.getTable("Jef")
 
         assertEquals(0, table.players.size)
     }
@@ -30,7 +32,7 @@ class GetTableUseCasesTest {
                 PlayerJoinedTable("Jef"))
         )
 
-        val table = tableService.getTable("Jef")
+        val table = tableUseCases.getTable("Jef")
 
         assertEquals(listOf(
                 Player("Joe"),
@@ -49,7 +51,7 @@ class GetTableUseCasesTest {
                         "Jef" to suitedAceKing)
                 )))
 
-        val table = tableService.getTable("Joe")
+        val table = tableUseCases.getTable("Joe")
 
         assertEquals(listOf(
                 Player("Joe", VisibleCards(suitedConnectors.cards().map { it.mapToCard() })),
@@ -71,7 +73,7 @@ class GetTableUseCasesTest {
         )
         )
 
-        val table = tableService.getTable("Joe")
+        val table = tableUseCases.getTable("Joe")
 
         assertEquals(Player("Jef",
                 VisibleCards(suitedAceKing.cards().map { it.mapToCard() })),
@@ -93,7 +95,7 @@ class GetTableUseCasesTest {
         )
         )
 
-        val table = tableService.getTable("Joe")
+        val table = tableUseCases.getTable("Joe")
 
         assertEquals(Player("Jef",
                 VisibleCards(suitedAceKing.cards().map { it.mapToCard() })),
@@ -139,7 +141,7 @@ class GetTableUseCasesTest {
                 PlayerJoinedTable("Jef")
         ))
 
-        val table = tableService.getTable("Joe")
+        val table = tableUseCases.getTable("Joe")
 
         assertEquals(listOf(
                 Player("Joe", VisibleCards(suitedConnectors.cards().map { it.mapToCard() })),
@@ -159,7 +161,7 @@ class GetTableUseCasesTest {
                 ))
         ))
 
-        val table = tableService.getTable("Joe")
+        val table = tableUseCases.getTable("Joe")
 
         assertEquals(listOf(
                 Player("Joe", VisibleCards(suitedConnectors.cards().map { it.mapToCard() })),

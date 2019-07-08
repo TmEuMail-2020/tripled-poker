@@ -2,6 +2,9 @@ package io.tripled.poker
 
 import ch.tutteli.atrium.api.cc.en_GB.*
 import ch.tutteli.atrium.verbs.expect
+import io.tripled.poker.api.GameService
+import io.tripled.poker.api.GameUseCases
+import io.tripled.poker.api.TableService
 import io.tripled.poker.api.TableUseCases
 import io.tripled.poker.api.response.Suit.HEART
 import io.tripled.poker.api.response.Value.*
@@ -15,7 +18,8 @@ class StartGameUseCaseTests {
 
     private val eventStore = DummyEventStore()
     private val deck = PredeterminedCardDeck(listOf())
-    private val useCases = TableUseCases(eventStore, { deck })
+    private val useCases: TableService = TableUseCases(eventStore, { deck })
+    private val gameUseCases: GameService = GameUseCases(eventStore)
 
     @BeforeEach
     internal fun setUp() {
@@ -86,7 +90,7 @@ class StartGameUseCaseTests {
 
         expect {
             // -> execute action on done game
-            useCases.check("Joe")
+            gameUseCases.check("Joe")
         }.toThrow<RuntimeException>{
             message { startsWith("t'is gedaan, zet u derover") }
         }
@@ -96,8 +100,8 @@ class StartGameUseCaseTests {
 
 
     private fun checkAllInRound() {
-        useCases.check("Joe")
-        useCases.check("Jef")
+        gameUseCases.check("Joe")
+        gameUseCases.check("Jef")
     }
 
     @Test

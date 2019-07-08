@@ -8,10 +8,6 @@ import org.springframework.stereotype.Component
 @Component
 class DummyTableService : TableService {
 
-    override fun check(player: String) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
     override fun startGame() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }

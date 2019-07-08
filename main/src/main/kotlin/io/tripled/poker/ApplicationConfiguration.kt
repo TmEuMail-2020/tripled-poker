@@ -1,5 +1,6 @@
 package io.tripled.poker
 
+import io.tripled.poker.api.GameUseCases
 import io.tripled.poker.api.TableUseCases
 import io.tripled.poker.domain.Event
 import io.tripled.poker.domain.EventPublisher
@@ -16,7 +17,10 @@ class ApplicationConfiguration {
     fun eventPublisher(applicationEventPublisher: ApplicationEventPublisher) = ConcreteEventPublisher(applicationEventPublisher)
 
     @Bean
-    fun tableService(eventStore: EventStore, eventPublisher: EventPublisher) = TableUseCases(eventStore, {ShuffledDeck()}, eventPublisher)
+    fun tableUseCases(eventStore: EventStore, eventPublisher: EventPublisher) = TableUseCases(eventStore, {ShuffledDeck()}, eventPublisher)
+
+    @Bean
+    fun gameUseCases(eventStore: EventStore, eventPublisher: EventPublisher) = GameUseCases(eventStore, eventPublisher)
 }
 
 class ConcreteEventPublisher(private val applicationEventPublisher: ApplicationEventPublisher) : EventPublisher {
