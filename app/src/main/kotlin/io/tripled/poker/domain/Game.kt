@@ -1,7 +1,5 @@
 package io.tripled.poker.domain
 
-import java.util.*
-
 data class HandsAreDealt(val cardsInDeck: List<Card>, val hands: Map<PlayerId, Hand>) : Event
 data class RoundCompleted(val Noop: String = "Guido") : Event
 data class PlayerChecked(val name: PlayerId) : Event
@@ -78,9 +76,7 @@ data class GameState(
                 events.filterEvents<PlayerChecked>().size
 
 
-        private fun players(events: List<Event>): List<PlayerId> = events
-                .lastEventOrNull<HandsAreDealt>()
-                ?.hands?.keys?.toList() ?: listOf()
+        private fun players(events: List<Event>): List<PlayerId> = hands(events).keys.toList()
 
         private fun hands(events: List<Event>): Map<PlayerId, Hand> {
             val lastEventOrNull = events
@@ -90,9 +86,7 @@ data class GameState(
 
         private fun deck(events: List<Event>): List<Card> {
             val lastEventOrNull = events
-                    .lastEventOrNull<HandsAreDealt>()
-            if (lastEventOrNull == null)
-                return listOf()
+                    .lastEventOrNull<HandsAreDealt>() ?: return listOf()
 
             val cards = lastEventOrNull.cardsInDeck.toMutableList()
             return events.fold(cards) { _, event ->
@@ -101,7 +95,7 @@ data class GameState(
                             event.hands.flatMap { it.value.cards() }
                     )
                     is FlopIsTurned -> cards.removeAll(
-                            Arrays.asList(event.card1, event.card2, event.card3)
+                            listOf(event.card1, event.card2, event.card3)
                     )
                     is TurnIsTurned -> cards.remove(event.card)
                     is RiverIsTurned -> cards.remove(event.card)
