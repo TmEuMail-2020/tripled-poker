@@ -17,8 +17,8 @@ class StartGameUseCaseTests {
 
     private val eventStore = DummyEventStore()
     private val deck = PredeterminedCardDeck(listOf())
-    private val useCases: TableService = TableUseCases(eventStore, { deck })
-    private val gameUseCases: GameService = GameUseCases(eventStore)
+    private val gameUseCases: GameService = GameUseCases(eventStore,{deck})
+    private val tableUseCases: TableService = TableUseCases(eventStore, gameUseCases)
 
     @BeforeEach
     internal fun setUp() {
@@ -33,7 +33,7 @@ class StartGameUseCaseTests {
         }
         initDeck()
 
-        useCases.startGame()
+        tableUseCases.startGame()
 
         // TODO: refactor to separate tests
         allPlayersCheck()
@@ -56,11 +56,11 @@ class StartGameUseCaseTests {
         }
         initDeck()
 
-        useCases.startGame()
+        tableUseCases.startGame()
 
         expect(eventStore.newEvents).contains.inOrder.only.values(
-                GameStarted(listOf("Joe", "Jef"), DeckMother().deckOfHearts()),
-                HandsAreDealt(mapOf(
+                GameStarted(listOf("Joe", "Jef")),
+                HandsAreDealt(DeckMother().deckOfHearts(), mapOf(
                         "Joe" to Hand(TEN of HEART, ACE of HEART),
                         "Jef" to Hand(KING of HEART, QUEEN of HEART)
                 ))
@@ -80,9 +80,9 @@ class StartGameUseCaseTests {
     internal fun `cannot start game with one player`() {
         eventStore.save(1, listOf(PlayerJoinedTable("Joe")))
 
-        useCases.startGame()
+        tableUseCases.startGame()
 
-        Assertions.assertFalse(eventStoreContains(GameStarted(listOf(), listOf())))
+        Assertions.assertFalse(eventStoreContains(GameStarted(listOf())))
     }
 
     private fun eventStoreContains(element: Event) = eventStore.contains(element)

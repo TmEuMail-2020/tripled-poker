@@ -1,5 +1,6 @@
 package io.tripled.poker
 
+import io.tripled.poker.api.GameUseCases
 import io.tripled.poker.api.TableUseCases
 import io.tripled.poker.api.response.HiddenCards
 import io.tripled.poker.api.response.Player
@@ -13,7 +14,7 @@ class GetTableUseCasesTest {
 
     private val eventStore = DummyEventStore()
     private var deck = PredeterminedCardDeck(listOf())
-    private val tableUseCases = TableUseCases(eventStore, { deck })
+    private val tableUseCases = TableUseCases(eventStore, GameUseCases(eventStore,{deck}))
 
     @Test
     internal fun `a new table has no players`() {
@@ -39,7 +40,7 @@ class GetTableUseCasesTest {
     @Test
     internal fun `a table with players and I can only see my own cards`() {
         eventStore.given {
-            startGame("Joe" to suitedConnectors,
+            startGame(deck.cards, "Joe" to suitedConnectors,
                     "Jef" to suitedAceKing)
         }
 
@@ -56,8 +57,8 @@ class GetTableUseCasesTest {
         eventStore.save(1, listOf(
                 PlayerJoinedTable("Joe"),
                 PlayerJoinedTable("Jef"),
-                GameStarted(listOf("Joe", "Jef"), listOf()),
-                HandsAreDealt(mapOf(
+                GameStarted(listOf("Joe", "Jef")),
+                HandsAreDealt(deck.cards, mapOf(
                         "Joe" to suitedConnectors,
                         "Jef" to suitedAceKing
                 )),
@@ -78,8 +79,8 @@ class GetTableUseCasesTest {
         eventStore.save(1, listOf(
                 PlayerJoinedTable("Joe"),
                 PlayerJoinedTable("Jef"),
-                GameStarted(listOf("Joe", "Jef"), listOf()),
-                HandsAreDealt(mapOf(
+                GameStarted(listOf("Joe", "Jef")),
+                HandsAreDealt(deck.cards, mapOf(
                         "Joe" to suitedConnectors,
                         "Jef" to suitedAceKing
                 )),
@@ -97,7 +98,7 @@ class GetTableUseCasesTest {
 
     @Test
     internal fun `new deck is created between games`() {
-        val tableService = TableUseCases(eventStore, { ShuffledDeck() })
+        val tableService = TableUseCases(eventStore, GameUseCases(eventStore,{ShuffledDeck()}))
 
         eventStore.save(1, listOf(
                 PlayerJoinedTable("1"),
@@ -126,8 +127,8 @@ class GetTableUseCasesTest {
     internal fun `player joins after cards are dealt`() {
         eventStore.save(1, listOf(
                 PlayerJoinedTable("Joe"),
-                GameStarted(listOf("Joe", "Jef"), listOf()),
-                HandsAreDealt(mapOf(
+                GameStarted(listOf("Joe", "Jef")),
+                HandsAreDealt(deck.cards, mapOf(
                         "Joe" to suitedConnectors
                 )),
                 PlayerJoinedTable("Jef")
@@ -146,9 +147,9 @@ class GetTableUseCasesTest {
     internal fun `player joins after game started`() {
         eventStore.save(1, listOf(
                 PlayerJoinedTable("Joe"),
-                GameStarted(listOf("Joe", "Jef"), listOf()),
+                GameStarted(listOf("Joe", "Jef")),
                 PlayerJoinedTable("Jef"),
-                HandsAreDealt(mapOf(
+                HandsAreDealt(deck.cards, mapOf(
                         "Joe" to suitedConnectors
                 ))
         ))

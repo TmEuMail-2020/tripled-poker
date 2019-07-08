@@ -2,6 +2,7 @@ package io.tripled.poker
 
 import ch.tutteli.atrium.api.cc.en_GB.isEmpty
 import ch.tutteli.atrium.verbs.expect
+import io.tripled.poker.api.GameUseCases
 import io.tripled.poker.api.TableUseCases
 import io.tripled.poker.domain.PlayerJoinedTable
 import io.tripled.poker.domain.PredeterminedCardDeck
@@ -13,7 +14,7 @@ class JoinTableTests {
 
     private val eventStore = DummyEventStore()
     private val deck = PredeterminedCardDeck(listOf())
-    private val tableService = TableUseCases(eventStore, { deck })
+    private val tableService = TableUseCases(eventStore, GameUseCases(eventStore,{deck}))
 
     @Test
     internal fun `a player can join the table`() {

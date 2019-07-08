@@ -12,19 +12,23 @@ interface TableService {
 
 interface GameService {
     fun check(player: String)
+    fun startGame()
 //    fun getGame(playerId: PlayerId): io.tripled.poker.api.response.Table
 }
 
 class TableUseCases(
         private val eventStore: EventStore,
-        private val deckFactory: () -> Deck,
+        private val gameUseCases: GameService,
         private val eventPublisher: EventPublisher? = null
 ) : TableService {
     /**COMMAND**/
 
     override fun join(name: String) = executeOnTable { join(name) }
 
-    override fun startGame() = executeOnTable { startGame(deckFactory()) }
+    override fun startGame() {
+        executeOnTable { startGame() }
+        gameUseCases.startGame()
+    }
 
     private fun executeOnTable(command: Table.() -> List<Event>) {
         val events = withTable().command()
@@ -49,8 +53,14 @@ class TableUseCases(
 
 class GameUseCases(
         private val eventStore: EventStore,
+        private val deckFactory: () -> Deck,
         private val eventPublisher: EventPublisher? = null
 ) : GameService {
+
+    override fun startGame() {
+        executeOnGame { start(deckFactory.invoke()) }
+    }
+
     override fun check(player: PlayerId) = executeOnGame { check(player) }
 
     private fun executeOnGame(command: Game.() -> List<Event>) {

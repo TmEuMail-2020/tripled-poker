@@ -18,8 +18,8 @@ import org.junit.jupiter.api.Test
 class HappyPokerTest {
     private val eventStore = DummyEventStore()
     private val deck = PredeterminedCardDeck(listOf())
-    private val useCases: TableService = TableUseCases(eventStore, { deck })
-    private val gameUseCases: GameService = GameUseCases(eventStore)
+    private val gameUseCases: GameService = GameUseCases(eventStore,{deck})
+    private val useCases: TableService = TableUseCases(eventStore, gameUseCases)
 
     @BeforeEach
     internal fun setUp() {
@@ -45,8 +45,8 @@ class HappyPokerTest {
         expect(eventStore.newEvents).contains.inOrder.only.values(
                 PlayerJoinedTable("Joe"),
                 PlayerJoinedTable("Jef"),
-                GameStarted(listOf("Joe", "Jef"), DeckMother().deckOfHearts()),
-                HandsAreDealt(mapOf(
+                GameStarted(listOf("Joe", "Jef")),
+                HandsAreDealt(DeckMother().deckOfHearts(), mapOf(
                         "Joe" to Hand(Value.TEN of Suit.HEART, Value.ACE of Suit.HEART),
                         "Jef" to Hand(Value.KING of Suit.HEART, Value.QUEEN of Suit.HEART)
                 )),

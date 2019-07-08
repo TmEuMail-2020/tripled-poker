@@ -6,7 +6,7 @@ import io.tripled.poker.eventsourcing.EventStore
 class DummyEventStore(private val _newEvents: MutableList<Event> = mutableListOf()) : EventStore {
     var given: List<Event> = listOf()
 
-    fun given(pokerBuilder: EventBuilder.() -> Unit){
+    fun given(pokerBuilder: EventBuilder.() -> Unit) {
         val builder = EventBuilder()
         builder.pokerBuilder()
         given = builder.events
@@ -31,11 +31,11 @@ class DummyEventStore(private val _newEvents: MutableList<Event> = mutableListOf
             events += players.map { PlayerJoinedTable(it) }
         }
 
-        fun startGame(vararg playerHands: Pair<PlayerId, Hand>){
+        fun startGame(cardsInDeck: List<Card>, vararg playerHands: Pair<PlayerId, Hand>) {
             val playerIds = playerHands.map { p -> p.first }.toTypedArray()
             playersJoin(*playerIds)
-            events += GameStarted(playerIds.toList(), listOf())
-            events += HandsAreDealt(mapOf(*playerHands))
+            events += GameStarted(playerIds.toList())
+            events += HandsAreDealt(cardsInDeck, mapOf(*playerHands))
         }
     }
 }

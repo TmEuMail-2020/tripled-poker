@@ -2,13 +2,13 @@ package io.tripled.poker.domain
 
 import java.util.*
 
-data class HandsAreDealt(val hands: Map<PlayerId, Hand>) : Event
-data class RoundCompleted(val Noop:String = "Guido") : Event
+data class HandsAreDealt(val cardsInDeck: List<Card>, val hands: Map<PlayerId, Hand>) : Event
+data class RoundCompleted(val Noop: String = "Guido") : Event
 data class PlayerChecked(val name: PlayerId) : Event
 data class PlayerWonGame(val name: PlayerId) : Event
-data class FlopIsTurned(val  card1: Card, val card2: Card, val card3: Card) : Event
-data class TurnIsTurned(val  card: Card) : Event
-data class RiverIsTurned(val  card: Card) : Event
+data class FlopIsTurned(val card1: Card, val card2: Card, val card3: Card) : Event
+data class TurnIsTurned(val card: Card) : Event
+data class RiverIsTurned(val card: Card) : Event
 
 class Game(gameState: GameState) {
     private val deck = PredeterminedCardDeck(gameState.remainingCards)
@@ -17,6 +17,8 @@ class Game(gameState: GameState) {
     private val winnerDeterminer = WinnerDeterminer()
     private val hands = gameState.hands
     private val players = gameState.players
+
+    fun start(deck: Deck) = sequence { yield(dealPlayerHands(deck)) }.toList()
 
     fun check(player: PlayerId) = sequence {
         if (GamePhase.DONE == gamePhase) {
@@ -36,6 +38,7 @@ class Game(gameState: GameState) {
         }
     }.toList()
 
+    private fun dealPlayerHands(deck: Deck): HandsAreDealt = HandsAreDealt(deck.cards, players.associateWith { Hand(deck.dealCard(), deck.dealCard()) })
 
     private fun flop(): List<Event> = listOf(dealFlop(deck))
 
@@ -87,11 +90,11 @@ data class GameState(
 
         private fun deck(events: List<Event>): List<Card> {
             val lastEventOrNull = events
-                    .lastEventOrNull<GameStarted>()
+                    .lastEventOrNull<HandsAreDealt>()
             if (lastEventOrNull == null)
                 return listOf()
 
-            val cards = lastEventOrNull.cards.toMutableList()
+            val cards = lastEventOrNull.cardsInDeck.toMutableList()
             return events.fold(cards) { _, event ->
                 when (event) {
                     is HandsAreDealt -> cards.removeAll(
