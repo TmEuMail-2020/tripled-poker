@@ -59,7 +59,7 @@ class GameUseCases(
         publish(events)
     }
 
-    private fun withGame() = Game(TableState.of(eventStore.findById(1)))
+    private fun withGame() = Game(GameState.of(eventStore.findById(1)))
 
     private fun publish(events: List<Event>) {
         eventPublisher?.publish(1, events)
