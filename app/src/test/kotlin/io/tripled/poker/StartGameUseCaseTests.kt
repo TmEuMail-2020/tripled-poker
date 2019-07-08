@@ -42,7 +42,7 @@ class StartGameUseCaseTests {
         expect(eventStore.events).contains.inOrder.only.values(
                 PlayerJoinedTable("Joe"),
                 PlayerJoinedTable("Jef"),
-                GameStarted(DeckMother().deckOfHearts()),
+                GameStarted(listOf("Joe", "Jef"), DeckMother().deckOfHearts()),
                 HandsAreDealt(mapOf(
                         "Joe" to Hand(TEN of HEART, ACE of HEART),
                         "Jef" to Hand(KING of HEART, QUEEN of HEART)
@@ -114,7 +114,7 @@ class StartGameUseCaseTests {
         expect(eventStore.events).contains.inOrder.only.values(
                 PlayerJoinedTable("Joe"),
                 PlayerJoinedTable("Jef"),
-                GameStarted(DeckMother().deckOfHearts()),
+                GameStarted(listOf("Joe", "Jef"), DeckMother().deckOfHearts()),
                 HandsAreDealt(mapOf(
                         "Joe" to Hand(TEN of HEART, ACE of HEART),
                         "Jef" to Hand(KING of HEART, QUEEN of HEART)
@@ -135,7 +135,7 @@ class StartGameUseCaseTests {
 
         useCases.startGame()
 
-        Assertions.assertFalse(eventStoreContains(GameStarted(listOf())))
+        Assertions.assertFalse(eventStoreContains(GameStarted(listOf(), listOf())))
     }
 
     private fun eventStoreContains(element: Event) = eventStore.contains(element)

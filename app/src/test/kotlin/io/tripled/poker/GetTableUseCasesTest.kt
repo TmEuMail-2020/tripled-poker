@@ -45,7 +45,7 @@ class GetTableUseCasesTest {
         eventStore.save(1, listOf(
                 PlayerJoinedTable("Joe"),
                 PlayerJoinedTable("Jef"),
-                GameStarted(listOf()),
+                GameStarted(listOf("Joe", "Jef"), listOf()),
                 HandsAreDealt(mapOf(
                         "Joe" to suitedConnectors,
                         "Jef" to suitedAceKing)
@@ -64,7 +64,7 @@ class GetTableUseCasesTest {
         eventStore.save(1, listOf(
                 PlayerJoinedTable("Joe"),
                 PlayerJoinedTable("Jef"),
-                GameStarted(listOf()),
+                GameStarted(listOf("Joe", "Jef"), listOf()),
                 HandsAreDealt(mapOf(
                         "Joe" to suitedConnectors,
                         "Jef" to suitedAceKing
@@ -86,7 +86,7 @@ class GetTableUseCasesTest {
         eventStore.save(1, listOf(
                 PlayerJoinedTable("Joe"),
                 PlayerJoinedTable("Jef"),
-                GameStarted(listOf()),
+                GameStarted(listOf("Joe", "Jef"), listOf()),
                 HandsAreDealt(mapOf(
                         "Joe" to suitedConnectors,
                         "Jef" to suitedAceKing
@@ -134,7 +134,7 @@ class GetTableUseCasesTest {
     internal fun `player joins after cards are dealt`() {
         eventStore.save(1, listOf(
                 PlayerJoinedTable("Joe"),
-                GameStarted(listOf()),
+                GameStarted(listOf("Joe", "Jef"), listOf()),
                 HandsAreDealt(mapOf(
                         "Joe" to suitedConnectors
                 )),
@@ -154,7 +154,7 @@ class GetTableUseCasesTest {
     internal fun `player joins after game started`() {
         eventStore.save(1, listOf(
                 PlayerJoinedTable("Joe"),
-                GameStarted(listOf()),
+                GameStarted(listOf("Joe", "Jef"), listOf()),
                 PlayerJoinedTable("Jef"),
                 HandsAreDealt(mapOf(
                         "Joe" to suitedConnectors
