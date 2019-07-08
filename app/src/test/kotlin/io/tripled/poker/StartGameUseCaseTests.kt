@@ -36,7 +36,6 @@ class StartGameUseCaseTests {
         useCases.check("Joe")
         useCases.check("Jef")
 
-        useCases.turn()
         useCases.check("Joe")
         useCases.check("Jef")
 

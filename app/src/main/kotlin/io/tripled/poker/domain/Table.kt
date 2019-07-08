@@ -31,8 +31,11 @@ class Table(tableState: TableState) {
 
         if (everybodyCheckedThisRound()) {
             yield(RoundCompleted())
-            if(gamePhase == GamePhase.PRE_FLOP)
-                yieldAll(flop())
+
+            when (gamePhase) {
+                GamePhase.PRE_FLOP -> yieldAll(flop())
+                GamePhase.FLOP -> yieldAll(turn())
+            }
         }
     }.toList()
 
@@ -129,6 +132,7 @@ data class TableState(
                 events.fold(GamePhase.PRE_FLOP, { acc, event ->
                     when(event) {
                         is FlopIsTurned -> GamePhase.FLOP
+                        is TurnIsTurned -> GamePhase.TURN
                         else -> acc
                     }
                 })

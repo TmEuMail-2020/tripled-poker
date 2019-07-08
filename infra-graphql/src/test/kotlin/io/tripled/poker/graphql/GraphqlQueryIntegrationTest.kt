@@ -16,8 +16,8 @@ import org.springframework.context.annotation.ComponentScan
 @GraphQLTest
 @ComponentScan
 class GraphqlQueryIntegrationTest(
-        @Autowired val dummyTableService:DummyTableService,
-    @Autowired val graphQLTestTemplate: GraphQLTestTemplate
+        @Autowired val dummyTableService: DummyTableService,
+        @Autowired val graphQLTestTemplate: GraphQLTestTemplate
 ) {
 
     private val joinTable = "requests/joinTableMutation.graphql"
@@ -43,7 +43,7 @@ class GraphqlQueryIntegrationTest(
 
         assertNotNull(response)
         assertThat(response.isOk, equalTo(true))
-        assertEquals(0, response.get("$.data.table.players",JSONArray::class.java).size)
+        assertEquals(0, response.get("$.data.table.players", JSONArray::class.java).size)
     }
 
     private fun post(resource: String) = graphQLTestTemplate.postForResource(resource)
