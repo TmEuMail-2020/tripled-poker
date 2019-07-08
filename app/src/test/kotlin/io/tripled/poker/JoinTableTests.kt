@@ -1,5 +1,7 @@
 package io.tripled.poker
 
+import ch.tutteli.atrium.api.cc.en_GB.isEmpty
+import ch.tutteli.atrium.verbs.expect
 import io.tripled.poker.api.TableUseCases
 import io.tripled.poker.domain.PlayerJoinedTable
 import io.tripled.poker.domain.PredeterminedCardDeck
@@ -23,7 +25,6 @@ class JoinTableTests {
 
     @Test
     internal fun `a player can't join the table with an empty name`() {
-
         tableService.join("")
 
         assertFalse(eventStore.contains(PlayerJoinedTable("")))
@@ -31,11 +32,13 @@ class JoinTableTests {
 
     @Test
     internal fun `a player can't join twice with the same name`() {
+        eventStore.given {
+            playersJoin("jef")
+        }
 
         tableService.join("jef")
-        tableService.join("jef")
 
-        assertEquals(1, eventStore.newEvents.filterEvents<PlayerJoinedTable>().size)
+        expect(eventStore.newEvents).isEmpty()
     }
 
 }

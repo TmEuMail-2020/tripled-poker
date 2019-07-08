@@ -28,7 +28,9 @@ class StartGameUseCaseTests {
 
     @Test
     internal fun `can't keep playing the game when it's done`() {
-        addPlayers()
+        eventStore.given {
+            playersJoin("Joe", "Jef")
+        }
         initDeck()
 
         useCases.startGame()
@@ -47,10 +49,11 @@ class StartGameUseCaseTests {
         }
     }
 
-
     @Test
     internal fun `Start game with two players`() {
-        addPlayers()
+        eventStore.given {
+            playersJoin("Joe", "Jef")
+        }
         initDeck()
 
         useCases.startGame()
@@ -71,13 +74,6 @@ class StartGameUseCaseTests {
     private fun allPlayersCheck() {
         gameUseCases.check("Joe")
         gameUseCases.check("Jef")
-    }
-
-    private fun addPlayers() {
-        eventStore.given = listOf(
-                PlayerJoinedTable("Joe"),
-                PlayerJoinedTable("Jef")
-        )
     }
 
     @Test

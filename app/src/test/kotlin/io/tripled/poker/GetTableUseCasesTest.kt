@@ -24,10 +24,9 @@ class GetTableUseCasesTest {
 
     @Test
     internal fun `a table with players`() {
-        eventStore.save(1, listOf(
-                PlayerJoinedTable("Joe"),
-                PlayerJoinedTable("Jef"))
-        )
+        eventStore.given {
+            playersJoin("Joe", "Jef")
+        }
 
         val table = tableUseCases.getTable("Jef")
 
@@ -39,14 +38,10 @@ class GetTableUseCasesTest {
 
     @Test
     internal fun `a table with players and I can only see my own cards`() {
-        eventStore.save(1, listOf(
-                PlayerJoinedTable("Joe"),
-                PlayerJoinedTable("Jef"),
-                GameStarted(listOf("Joe", "Jef"), listOf()),
-                HandsAreDealt(mapOf(
-                        "Joe" to suitedConnectors,
-                        "Jef" to suitedAceKing)
-                )))
+        eventStore.given {
+            startGame("Joe" to suitedConnectors,
+                    "Jef" to suitedAceKing)
+        }
 
         val table = tableUseCases.getTable("Joe")
 
