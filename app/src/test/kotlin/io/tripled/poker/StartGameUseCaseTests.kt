@@ -25,64 +25,19 @@ class StartGameUseCaseTests {
         deck.queue.clear()
     }
 
-    @Test
-    internal fun `play game with two players`() {
-        addPlayers()
-        deck.queue.addAll(DeckMother().deckOfHearts())
-
-        useCases.startGame()
-
-        // TODO: refactor to separate tests
-        checkAllInRound()
-        checkAllInRound()
-        checkAllInRound()
-        checkAllInRound()
-
-        expect(eventStore.newEvents).contains.inOrder.only.values(
-                GameStarted(listOf("Joe", "Jef"), DeckMother().deckOfHearts()),
-                HandsAreDealt(mapOf(
-                        "Joe" to Hand(TEN of HEART, ACE of HEART),
-                        "Jef" to Hand(KING of HEART, QUEEN of HEART)
-                )),
-                PlayerChecked("Joe"),
-                PlayerChecked("Jef"),
-                RoundCompleted(),
-                FlopIsTurned(
-                        NINE of HEART,
-                        EIGHT of HEART,
-                        SEVEN of HEART
-                ),
-                PlayerChecked("Joe"),
-                PlayerChecked("Jef"),
-                RoundCompleted(),
-                TurnIsTurned(
-                        SIX of HEART
-                ),
-                PlayerChecked("Joe"),
-                PlayerChecked("Jef"),
-                RoundCompleted(),
-                RiverIsTurned(
-                        FIVE of HEART
-                ),
-                PlayerChecked("Joe"),
-                PlayerChecked("Jef"),
-                RoundCompleted(),
-                PlayerWonGame("Jef")
-        )
-    }
 
     @Test
     internal fun `can't keep playing the game when it's done`() {
         addPlayers()
-        deck.queue.addAll(DeckMother().deckOfHearts())
+        initDeck()
 
         useCases.startGame()
 
         // TODO: refactor to separate tests
-        checkAllInRound()
-        checkAllInRound()
-        checkAllInRound()
-        checkAllInRound()
+        allPlayersCheck()
+        allPlayersCheck()
+        allPlayersCheck()
+        allPlayersCheck()
 
         expect {
             // -> execute action on done game
@@ -93,15 +48,10 @@ class StartGameUseCaseTests {
     }
 
 
-    private fun checkAllInRound() {
-        gameUseCases.check("Joe")
-        gameUseCases.check("Jef")
-    }
-
     @Test
     internal fun `Start game with two players`() {
         addPlayers()
-        deck.queue.addAll(DeckMother().deckOfHearts())
+        initDeck()
 
         useCases.startGame()
 
@@ -112,6 +62,15 @@ class StartGameUseCaseTests {
                         "Jef" to Hand(KING of HEART, QUEEN of HEART)
                 ))
         )
+    }
+
+    private fun initDeck() {
+        deck.queue.addAll(DeckMother().deckOfHearts())
+    }
+
+    private fun allPlayersCheck() {
+        gameUseCases.check("Joe")
+        gameUseCases.check("Jef")
     }
 
     private fun addPlayers() {
