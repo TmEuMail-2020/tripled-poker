@@ -12,6 +12,7 @@ class Table(tableState: TableState) {
     private val deck = PredeterminedCardDeck(tableState.remainingCards)
     private val countCalls = tableState.countChecks
     private val theCardsOnTheTable = tableState.cardsOnTable
+    private val gamePhase = tableState.gamePhase
 
     fun join(name: PlayerId) = if (valid(name)) listOf<Event>(PlayerJoinedTable(name)) else listOf()
 
@@ -30,6 +31,8 @@ class Table(tableState: TableState) {
 
         if (everybodyCheckedThisRound()) {
             yield(RoundCompleted())
+            if(gamePhase == GamePhase.PRE_FLOP)
+                yieldAll(flop())
         }
     }.toList()
 
@@ -42,8 +45,6 @@ class Table(tableState: TableState) {
     fun determineWinner(): List<Event> = listOf(determineWinnerEvent())
 
     private fun everybodyCheckedThisRound() = ((countCalls + 1) % players.size) == 0
-
-    private fun startBettingRound() = players.map { PlayerChecked(it) }
 
     private fun determineWinnerEvent() =
             PlayerWonGame(winnerDeterminer.determineWinner(hands, this.theCardsOnTheTable))
@@ -62,14 +63,15 @@ data class TableState(
         val hands: Map<PlayerId, Hand>,
         val remainingCards: List<Card>,
         val cardsOnTable: List<Card>,
-        val countChecks: Int) {
+        val countChecks: Int,
+        val gamePhase: GamePhase) {
 
     companion object {
         fun of(events: List<Event>) = TableState(players(events),
                 hands(events),
                 deck(events),
                 cardsOnTable(events),
-                countChecks(events))
+                countChecks(events), phase(events))
 
         private fun cardsOnTable(events: List<Event>): List<Card> {
             val cardsOnTable = listOf<Card>()
@@ -122,6 +124,14 @@ data class TableState(
                 cards
             }
         }
+
+        private fun phase(events: List<Event>): GamePhase =
+                events.fold(GamePhase.PRE_FLOP, { acc, event ->
+                    when(event) {
+                        is FlopIsTurned -> GamePhase.FLOP
+                        else -> acc
+                    }
+                })
     }
 
 }

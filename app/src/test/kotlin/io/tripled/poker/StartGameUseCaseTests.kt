@@ -33,7 +33,6 @@ class StartGameUseCaseTests {
         useCases.check("Joe")
         useCases.check("Jef")
 
-        useCases.flop()
         useCases.check("Joe")
         useCases.check("Jef")
 
