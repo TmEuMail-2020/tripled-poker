@@ -11,7 +11,6 @@ class Table(tableState: TableState) {
     private val hands = tableState.hands
     private val deck = PredeterminedCardDeck(tableState.remainingCards)
     private val countCalls = tableState.countChecks
-    private val theCardsOnTheTable = tableState.cardsOnTable
     private val gamePhase = tableState.gamePhase
 
     fun join(name: PlayerId) = if (valid(name)) listOf<Event>(PlayerJoinedTable(name)) else listOf()
@@ -55,7 +54,7 @@ class Table(tableState: TableState) {
     private fun everybodyCheckedThisRound() = ((countCalls + 1) % players.size) == 0
 
     private fun determineWinnerEvent() =
-            PlayerWonGame(winnerDeterminer.determineWinner(hands, this.theCardsOnTheTable))
+            PlayerWonGame(winnerDeterminer.determineWinner(hands, listOf()))
 
     private fun dealPlayerHands(deck: Deck): HandsAreDealt = HandsAreDealt(players.associateWith { Hand(deck.dealCard(), deck.dealCard()) })
 
@@ -70,7 +69,6 @@ data class TableState(
         val players: List<PlayerId>,
         val hands: Map<PlayerId, Hand>,
         val remainingCards: List<Card>,
-        val cardsOnTable: List<Card>,
         val countChecks: Int,
         val gamePhase: GamePhase) {
 
@@ -78,27 +76,7 @@ data class TableState(
         fun of(events: List<Event>) = TableState(players(events),
                 hands(events),
                 deck(events),
-                cardsOnTable(events),
                 countChecks(events), phase(events))
-
-        private fun cardsOnTable(events: List<Event>): List<Card> {
-            val cardsOnTable = listOf<Card>()
-
-            return events.fold(cardsOnTable) { acc, event ->
-                doIets(event, acc)
-                cardsOnTable
-            }
-        }
-
-        private fun doIets(event: Event, acc: List<Card>) {
-            when (event) {
-                is FlopIsTurned -> acc +
-                        asList(event.card1, event.card2, event.card3)
-
-                is TurnIsTurned -> acc + event.card
-                is RiverIsTurned -> acc + event.card
-            }
-        }
 
         private fun countChecks(events: List<Event>): Int =
                 events.filterEvents<PlayerChecked>().size
