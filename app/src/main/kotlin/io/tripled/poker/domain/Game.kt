@@ -75,10 +75,9 @@ data class GameState(
                 events.filterEvents<PlayerChecked>().size
 
 
-        private fun players(events: List<Event>): List<String> = events
-                .filterEvents<PlayerJoinedTable>()
-                .map { event -> event.name }
-
+        private fun players(events: List<Event>): List<PlayerId> = events
+                .lastEventOrNull<GameStarted>()
+                ?.players ?: listOf()
 
         private fun hands(events: List<Event>): Map<PlayerId, Hand> {
             val lastEventOrNull = events

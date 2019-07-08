@@ -12,7 +12,6 @@ import io.tripled.poker.domain.*
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import java.lang.RuntimeException
 
 class StartGameUseCaseTests {
 
@@ -39,9 +38,7 @@ class StartGameUseCaseTests {
         checkAllInRound()
         checkAllInRound()
 
-        expect(eventStore.events).contains.inOrder.only.values(
-                PlayerJoinedTable("Joe"),
-                PlayerJoinedTable("Jef"),
+        expect(eventStore.newEvents).contains.inOrder.only.values(
                 GameStarted(listOf("Joe", "Jef"), DeckMother().deckOfHearts()),
                 HandsAreDealt(mapOf(
                         "Joe" to Hand(TEN of HEART, ACE of HEART),
@@ -87,15 +84,12 @@ class StartGameUseCaseTests {
         checkAllInRound()
         checkAllInRound()
 
-
         expect {
             // -> execute action on done game
             gameUseCases.check("Joe")
         }.toThrow<RuntimeException>{
             message { startsWith("t'is gedaan, zet u derover") }
         }
-
-
     }
 
 
@@ -111,9 +105,7 @@ class StartGameUseCaseTests {
 
         useCases.startGame()
 
-        expect(eventStore.events).contains.inOrder.only.values(
-                PlayerJoinedTable("Joe"),
-                PlayerJoinedTable("Jef"),
+        expect(eventStore.newEvents).contains.inOrder.only.values(
                 GameStarted(listOf("Joe", "Jef"), DeckMother().deckOfHearts()),
                 HandsAreDealt(mapOf(
                         "Joe" to Hand(TEN of HEART, ACE of HEART),
@@ -123,9 +115,9 @@ class StartGameUseCaseTests {
     }
 
     private fun addPlayers() {
-        eventStore.save(1, listOf(
+        eventStore.given = listOf(
                 PlayerJoinedTable("Joe"),
-                PlayerJoinedTable("Jef"))
+                PlayerJoinedTable("Jef")
         )
     }
 

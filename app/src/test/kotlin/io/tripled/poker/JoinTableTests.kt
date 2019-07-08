@@ -1,8 +1,9 @@
 package io.tripled.poker
 
 import io.tripled.poker.api.TableUseCases
-import io.tripled.poker.domain.*
-import org.junit.jupiter.api.Assertions
+import io.tripled.poker.domain.PlayerJoinedTable
+import io.tripled.poker.domain.PredeterminedCardDeck
+import io.tripled.poker.domain.filterEvents
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
@@ -34,7 +35,7 @@ class JoinTableTests {
         tableService.join("jef")
         tableService.join("jef")
 
-        assertEquals(1, eventStore.events.filterEvents<PlayerJoinedTable>().size)
+        assertEquals(1, eventStore.newEvents.filterEvents<PlayerJoinedTable>().size)
     }
 
 }
