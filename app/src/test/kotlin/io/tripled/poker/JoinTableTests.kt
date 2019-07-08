@@ -5,15 +5,15 @@ import ch.tutteli.atrium.verbs.expect
 import io.tripled.poker.api.TableUseCases
 import io.tripled.poker.domain.PlayerJoinedTable
 import io.tripled.poker.domain.PredeterminedCardDeck
-import io.tripled.poker.domain.filterEvents
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 
 class JoinTableTests {
 
     private val eventStore = DummyEventStore()
     private val deck = PredeterminedCardDeck(listOf())
-    private val tableService = TableUseCases(eventStore, {deck})
+    private val tableService = TableUseCases(eventStore, { deck })
 
     @Test
     internal fun `a player can join the table`() {
