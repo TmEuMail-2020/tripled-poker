@@ -18,7 +18,7 @@ class Game(gameState: GameState) {
     private val hands = gameState.hands
     private val players = gameState.players
 
-    fun start(deck: Deck) = sequence { yield(dealPlayerHands(deck)) }.toList()
+    fun start(players: List<PlayerId>, deck: Deck) = sequence { yield(dealPlayerHands(players, deck)) }.toList()
 
     fun check(player: PlayerId) = sequence {
         if (GamePhase.DONE == gamePhase) {
@@ -38,7 +38,7 @@ class Game(gameState: GameState) {
         }
     }.toList()
 
-    private fun dealPlayerHands(deck: Deck): HandsAreDealt = HandsAreDealt(deck.cards, players.associateWith { Hand(deck.dealCard(), deck.dealCard()) })
+    private fun dealPlayerHands(players: List<PlayerId>, deck: Deck): HandsAreDealt = HandsAreDealt(deck.cards, players.associateWith { Hand(deck.dealCard(), deck.dealCard()) })
 
     private fun flop(): List<Event> = listOf(dealFlop(deck))
 
@@ -79,8 +79,8 @@ data class GameState(
 
 
         private fun players(events: List<Event>): List<PlayerId> = events
-                .lastEventOrNull<GameStarted>()
-                ?.players ?: listOf()
+                .lastEventOrNull<HandsAreDealt>()
+                ?.hands?.keys?.toList() ?: listOf()
 
         private fun hands(events: List<Event>): Map<PlayerId, Hand> {
             val lastEventOrNull = events
