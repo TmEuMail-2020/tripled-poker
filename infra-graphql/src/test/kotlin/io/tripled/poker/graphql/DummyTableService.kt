@@ -3,7 +3,9 @@ package io.tripled.poker.graphql
 import io.tripled.poker.api.TableService
 import io.tripled.poker.api.response.Player
 import io.tripled.poker.api.response.Table
+import org.springframework.stereotype.Component
 
+@Component
 class DummyTableService : TableService {
     override fun flop() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.

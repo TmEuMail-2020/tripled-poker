@@ -8,13 +8,17 @@ import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.equalTo
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.ComponentScan
+import org.springframework.context.annotation.Import
 
 
 @GraphQLTest
+@Import(DummyTableService::class)
 @ComponentScan
+@Disabled
 class GraphqlQueryIntegrationTest(
         @Autowired val dummyTableService: DummyTableService,
         @Autowired val graphQLTestTemplate: GraphQLTestTemplate
@@ -29,6 +33,7 @@ class GraphqlQueryIntegrationTest(
     }
 
     @Test
+    @Disabled
     fun `join table mutation`() {
         val response = post(joinTable)
 
