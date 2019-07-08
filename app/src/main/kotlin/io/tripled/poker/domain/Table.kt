@@ -27,6 +27,9 @@ class Table(tableState: TableState) {
     }.toList()
 
     fun check(player: PlayerId) = sequence {
+        if (GamePhase.DONE == gamePhase){
+            throw RuntimeException("t'is gedaan, zet u derover")
+        }
         yield(PlayerChecked(player))
 
         if (everybodyCheckedThisRound()) {
@@ -41,13 +44,13 @@ class Table(tableState: TableState) {
         }
     }.toList()
 
-    fun flop(): List<Event> = listOf(dealFlop(deck))
+    private fun flop(): List<Event> = listOf(dealFlop(deck))
 
-    fun turn(): List<Event> = listOf(dealTurn(deck))
+    private fun turn(): List<Event> = listOf(dealTurn(deck))
 
-    fun river(): List<Event> = listOf(dealRiver(deck))
+    private fun river(): List<Event> = listOf(dealRiver(deck))
 
-    fun determineWinner(): List<Event> = listOf(determineWinnerEvent())
+    private fun determineWinner(): List<Event> = listOf(determineWinnerEvent())
 
     private fun everybodyCheckedThisRound() = ((countCalls + 1) % players.size) == 0
 
@@ -82,14 +85,18 @@ data class TableState(
             val cardsOnTable = listOf<Card>()
 
             return events.fold(cardsOnTable) { acc, event ->
-                when (event) {
-                    is FlopIsTurned -> acc +
-                            asList(event.card1, event.card2, event.card3)
-
-                    is TurnIsTurned -> acc + event.card
-                    is RiverIsTurned -> acc + event.card
-                }
+                doIets(event, acc)
                 cardsOnTable
+            }
+        }
+
+        private fun doIets(event: Event, acc: List<Card>) {
+            when (event) {
+                is FlopIsTurned -> acc +
+                        asList(event.card1, event.card2, event.card3)
+
+                is TurnIsTurned -> acc + event.card
+                is RiverIsTurned -> acc + event.card
             }
         }
 
@@ -136,6 +143,7 @@ data class TableState(
                         is FlopIsTurned -> GamePhase.FLOP
                         is TurnIsTurned -> GamePhase.TURN
                         is RiverIsTurned -> GamePhase.RIVER
+                        is PlayerWonGame -> GamePhase.DONE
                         else -> acc
                     }
                 })

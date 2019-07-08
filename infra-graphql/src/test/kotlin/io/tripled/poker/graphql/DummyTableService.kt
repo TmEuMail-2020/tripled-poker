@@ -7,21 +7,6 @@ import org.springframework.stereotype.Component
 
 @Component
 class DummyTableService : TableService {
-    override fun flop() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun turn() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun river() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun determineWinner() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
 
     override fun check(player: String) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.

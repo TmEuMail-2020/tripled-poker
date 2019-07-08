@@ -1,9 +1,6 @@
 package io.tripled.poker
 
-import ch.tutteli.atrium.api.cc.en_GB.contains
-import ch.tutteli.atrium.api.cc.en_GB.inOrder
-import ch.tutteli.atrium.api.cc.en_GB.only
-import ch.tutteli.atrium.api.cc.en_GB.values
+import ch.tutteli.atrium.api.cc.en_GB.*
 import ch.tutteli.atrium.verbs.expect
 import io.tripled.poker.api.TableUseCases
 import io.tripled.poker.api.response.Suit.HEART
@@ -12,6 +9,7 @@ import io.tripled.poker.domain.*
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import java.lang.RuntimeException
 
 class StartGameUseCaseTests {
 
@@ -30,17 +28,12 @@ class StartGameUseCaseTests {
         deck.queue.addAll(DeckMother().deckOfHearts())
 
         useCases.startGame()
-        useCases.check("Joe")
-        useCases.check("Jef")
 
-        useCases.check("Joe")
-        useCases.check("Jef")
-
-        useCases.check("Joe")
-        useCases.check("Jef")
-
-        useCases.check("Joe")
-        useCases.check("Jef")
+        // TODO: refactor to separate tests
+        checkAllInRound()
+        checkAllInRound()
+        checkAllInRound()
+        checkAllInRound()
 
         expect(eventStore.events).contains.inOrder.only.values(
                 PlayerJoinedTable("Joe"),
@@ -75,6 +68,36 @@ class StartGameUseCaseTests {
                 RoundCompleted(),
                 PlayerWonGame("Jef")
         )
+    }
+
+    @Test
+    internal fun `can't keep playing the game when it's done`() {
+        addPlayers()
+        deck.queue.addAll(DeckMother().deckOfHearts())
+
+        useCases.startGame()
+
+        // TODO: refactor to separate tests
+        checkAllInRound()
+        checkAllInRound()
+        checkAllInRound()
+        checkAllInRound()
+
+
+        expect {
+            // -> execute action on done game
+            useCases.check("Joe")
+        }.toThrow<RuntimeException>{
+            message { startsWith("t'is gedaan, zet u derover") }
+        }
+
+
+    }
+
+
+    private fun checkAllInRound() {
+        useCases.check("Joe")
+        useCases.check("Jef")
     }
 
     @Test

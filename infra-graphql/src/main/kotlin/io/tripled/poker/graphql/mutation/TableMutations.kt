@@ -14,14 +14,6 @@ class TableMutations(private val tableService: TableService) : Mutation {
 
     fun check(name: String) = executeUseCase(name) { check(name) }
 
-    fun flop(name: String) = executeUseCase(name) { flop() }
-
-    fun turn(name: String) = executeUseCase(name) { turn() }
-
-    fun river(name: String) = executeUseCase(name) { river() }
-
-    fun winner(name: String) = executeUseCase(name) { determineWinner() }
-
     private fun executeUseCase(name: String, usecase: TableService.() -> Unit): Table {
         tableService.usecase()
         return tableService.getTable(name)
