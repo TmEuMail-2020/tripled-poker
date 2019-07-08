@@ -38,8 +38,7 @@ class StartGameUseCaseTests {
 
         useCases.check("Joe")
         useCases.check("Jef")
-
-        useCases.river()
+        
         useCases.check("Joe")
         useCases.check("Jef")
 

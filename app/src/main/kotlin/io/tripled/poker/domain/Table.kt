@@ -35,6 +35,7 @@ class Table(tableState: TableState) {
             when (gamePhase) {
                 GamePhase.PRE_FLOP -> yieldAll(flop())
                 GamePhase.FLOP -> yieldAll(turn())
+                GamePhase.TURN -> yieldAll(river())
             }
         }
     }.toList()
@@ -133,6 +134,7 @@ data class TableState(
                     when(event) {
                         is FlopIsTurned -> GamePhase.FLOP
                         is TurnIsTurned -> GamePhase.TURN
+                        is RiverIsTurned -> GamePhase.RIVER
                         else -> acc
                     }
                 })
