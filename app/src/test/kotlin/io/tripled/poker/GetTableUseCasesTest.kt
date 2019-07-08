@@ -1,6 +1,5 @@
 package io.tripled.poker
 
-import io.tripled.poker.api.GameUseCases
 import io.tripled.poker.api.TableUseCases
 import io.tripled.poker.api.response.HiddenCards
 import io.tripled.poker.api.response.Player
@@ -10,13 +9,11 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
 
-
 class GetTableUseCasesTest {
 
     private val eventStore = DummyEventStore()
-    var deck = PredeterminedCardDeck(listOf())
+    private var deck = PredeterminedCardDeck(listOf())
     private val tableUseCases = TableUseCases(eventStore, { deck })
-    private val gameUseCases = GameUseCases(eventStore)
 
     @Test
     internal fun `a new table has no players`() {
