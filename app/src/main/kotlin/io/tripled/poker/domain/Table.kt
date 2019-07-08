@@ -36,6 +36,7 @@ class Table(tableState: TableState) {
                 GamePhase.PRE_FLOP -> yieldAll(flop())
                 GamePhase.FLOP -> yieldAll(turn())
                 GamePhase.TURN -> yieldAll(river())
+                GamePhase.RIVER -> yieldAll(determineWinner())
             }
         }
     }.toList()

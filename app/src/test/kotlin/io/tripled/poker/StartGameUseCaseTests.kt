@@ -38,11 +38,9 @@ class StartGameUseCaseTests {
 
         useCases.check("Joe")
         useCases.check("Jef")
-        
+
         useCases.check("Joe")
         useCases.check("Jef")
-
-        useCases.determineWinner()
 
         expect(eventStore.events).contains.inOrder.only.values(
                 PlayerJoinedTable("Joe"),
