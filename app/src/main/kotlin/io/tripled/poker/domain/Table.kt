@@ -72,66 +72,14 @@ class Game(gameState: GameState) {
 
 }
 
-data class TableState(
-        val players: List<PlayerId>,
-        val hands: Map<PlayerId, Hand>,
-        val remainingCards: List<Card>,
-        val countChecks: Int,
-        val gamePhase: GamePhase) {
+data class TableState(val players: List<PlayerId>) {
 
     companion object {
-        fun of(events: List<Event>) = TableState(players(events),
-                hands(events),
-                deck(events),
-                countChecks(events), phase(events))
-
-        private fun countChecks(events: List<Event>): Int =
-                events.filterEvents<PlayerChecked>().size
-
+        fun of(events: List<Event>) = TableState(players(events))
 
         private fun players(events: List<Event>): List<String> = events
                 .filterEvents<PlayerJoinedTable>()
                 .map { event -> event.name }
-
-
-        private fun hands(events: List<Event>): Map<PlayerId, Hand> {
-            val lastEventOrNull = events
-                    .lastEventOrNull<HandsAreDealt>()
-            return lastEventOrNull?.hands ?: mapOf()
-        }
-
-        private fun deck(events: List<Event>): List<Card> {
-            val lastEventOrNull = events
-                    .lastEventOrNull<GameStarted>()
-            if (lastEventOrNull == null)
-                return listOf()
-
-            val cards = lastEventOrNull.cards.toMutableList()
-            return events.fold(cards) { _, event ->
-                when (event) {
-                    is HandsAreDealt -> cards.removeAll(
-                            event.hands.flatMap { it.value.cards() }
-                    )
-                    is FlopIsTurned -> cards.removeAll(
-                            asList(event.card1, event.card2, event.card3)
-                    )
-                    is TurnIsTurned -> cards.remove(event.card)
-                    is RiverIsTurned -> cards.remove(event.card)
-                }
-                cards
-            }
-        }
-
-        private fun phase(events: List<Event>): GamePhase =
-                events.fold(GamePhase.PRE_FLOP, { acc, event ->
-                    when (event) {
-                        is FlopIsTurned -> GamePhase.FLOP
-                        is TurnIsTurned -> GamePhase.TURN
-                        is RiverIsTurned -> GamePhase.RIVER
-                        is PlayerWonGame -> GamePhase.DONE
-                        else -> acc
-                    }
-                })
     }
 
 }
