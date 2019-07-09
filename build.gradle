@@ -173,6 +173,32 @@ task coverage(type: JacocoReport, group: 'Coverage reports') {
 	}
 }
 
+task jacocoTestCoverageVerification(type: JacocoCoverageVerification, dependsOn: 'coverage') {
+	def coverageModules = kotlinModules.findAll {
+		!it.path.contains("test") && !it.path.contains('api')
+	}
+
+	sourceDirectories = files(coverageModules.sourceSets.main.allSource.srcDirs)
+	classDirectories = files(coverageModules.sourceSets.main.output)
+	executionData = files(coverageModules.stream()
+			.map { it.file('./build/jacoco/test.exec') }
+			.toArray())
+
+	doFirst {
+		executionData = files(executionData.findAll { it.exists() })
+	}
+
+	violationRules {
+		failOnViolation = true
+		rule {
+			limit {
+				minimum = 0.92
+			}
+		}
+	}
+}
+
+
 project(':infra-businessmetrics') {
 	dependencies {
 		implementation 'org.springframework.boot:spring-boot-starter-web'
