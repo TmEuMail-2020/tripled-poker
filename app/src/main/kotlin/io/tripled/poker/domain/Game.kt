@@ -10,7 +10,7 @@ data class RiverIsTurned(val card: Card) : Event
 
 class Game(gameState: GameState) {
     private val deck = PredeterminedCardDeck(gameState.remainingCards)
-    private val countCalls = gameState.countChecks
+    private var countChecks = gameState.countChecks
     private val gamePhase = gameState.gamePhase
     private val winnerDeterminer = WinnerDeterminer()
     private val hands = gameState.hands
@@ -22,6 +22,8 @@ class Game(gameState: GameState) {
         if (GamePhase.DONE == gamePhase) {
             throw RuntimeException("t'is gedaan, zet u derover")
         }
+
+        countChecks++
         yield(PlayerChecked(player))
 
         if (everybodyCheckedThisRound()) {
@@ -46,7 +48,7 @@ class Game(gameState: GameState) {
 
     private fun determineWinner(): List<Event> = listOf(determineWinnerEvent())
 
-    private fun everybodyCheckedThisRound() = ((countCalls + 1) % players.size) == 0
+    private fun everybodyCheckedThisRound() = (countChecks % players.size) == 0
 
     private fun determineWinnerEvent() =
             PlayerWonGame(winnerDeterminer.determineWinner(hands, listOf()))
