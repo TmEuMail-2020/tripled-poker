@@ -1,7 +1,6 @@
-package ticker
+package app.ticker
 
 import react.*
-import react.dom.*
 import kotlin.browser.*
 
 interface TickerProps : RProps {

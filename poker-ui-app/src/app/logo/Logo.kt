@@ -1,4 +1,4 @@
-package logo
+package app.logo
 
 import react.RBuilder
 import react.dom.div

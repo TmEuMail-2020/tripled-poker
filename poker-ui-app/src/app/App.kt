@@ -2,8 +2,8 @@ package app
 
 import react.*
 import react.dom.*
-import logo.*
-import ticker.*
+import app.logo.*
+import app.ticker.*
 import poker.pokerTable
 
 class App : RComponent<RProps, RState>() {
