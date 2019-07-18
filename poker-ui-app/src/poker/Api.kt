@@ -114,63 +114,39 @@ class PokerApi(var playerName: String = "") {
             .replace("\n", "\\n")
             .replace("\t", "\\t")
 
+    fun getTable(f: (Table) -> Unit) =
+            post(f, "getTable")
+
+    fun joinTable(playerName: String, f: (Table) -> Unit): Promise<Unit> {
+        this.playerName = playerName
+        return post(f, "joinTable")
+    }
+
+    fun playRound(f: (Table) -> Unit) = post(f, "playRound")
+
+    fun check(f: (Table) -> Unit)  = post(f, "check")
+
+    private fun post(f: (Table) -> Unit, operation: String): Promise<Unit> {
+        return axios<GraphqlResponse>(jsObject {
+            method = "post"
+            url = "/graphql"
+            timeout = 3000
+            headers = createHeaders()
+            data = query(operation, playerName)
+        }).then { response ->
+            if (response.data.errors != null && response.data.errors.isNotEmpty()){
+                window.alert(response.data.errors[0].message)
+            } else {
+                f.invoke(response.data.data.table)
+            }
+        }
+    }
 
     private fun createHeaders(): dynamic {
         val postHeaders = js("({})")
         postHeaders["Content-Type"] = "application/json"
         return postHeaders
     }
-
-    fun getTable(f: (Table) -> Unit) =
-            axios<GraphqlResponse>(jsObject {
-                method = "post"
-                url = "/graphql"
-                timeout = 3000
-                headers = createHeaders()
-                data = query("getTable", playerName)
-            }).then { response ->
-                f.invoke(response.data.data.table)
-            }
-
-    fun joinTable(playerName: String, f: (Table) -> Unit): Promise<Unit> {
-        this.playerName = playerName
-        return axios<GraphqlResponse>(jsObject {
-            method = "post"
-            url = "/graphql"
-            timeout = 3000
-            headers = createHeaders()
-            data = query("joinTable", playerName)
-        }).then { response ->
-            f.invoke(response.data.data.table)
-        }
-    }
-
-    fun playRound(f: (Table) -> Unit) =
-            axios<GraphqlResponse>(jsObject {
-                method = "post"
-                url = "/graphql"
-                timeout = 3000
-                headers = createHeaders()
-                data = query("playRound", playerName)
-            }).then { response ->
-                f.invoke(response.data.data.table)
-            }
-
-    fun check(f: (Table) -> Unit)  =
-            axios<GraphqlResponse>(jsObject {
-                method = "post"
-                url = "/graphql"
-                timeout = 3000
-                headers = createHeaders()
-                data = query("check", playerName)
-            }).then { response ->
-
-                if (response.data.errors != null && response.data.errors.isNotEmpty()){
-                    window.alert(response.data.errors[0].message)
-                } else {
-                    f.invoke(response.data.data.table)
-                }
-            }
 
     private fun query(operation: String, playerName: String = "") = """
         {
