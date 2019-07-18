@@ -4,14 +4,11 @@ import com.expedia.graphql.SchemaGeneratorConfig
 import com.expedia.graphql.TopLevelObject
 import com.expedia.graphql.toSchema
 import com.fasterxml.jackson.module.kotlin.KotlinModule
-import graphql.execution.AsyncExecutionStrategy
 import graphql.schema.GraphQLSchema
 import graphql.schema.idl.SchemaPrinter
-import graphql.servlet.config.DefaultExecutionStrategyProvider
 import graphql.servlet.config.ObjectMapperConfigurer
 import graphql.servlet.core.GraphQLErrorHandler
 import graphql.servlet.core.GraphQLObjectMapper
-import graphql.servlet.core.GraphQLQueryInvoker
 import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -27,6 +24,7 @@ class CustomGraphqlConfiguration {
             supportedPackages = listOf(
                     "io.tripled.poker.graphql.query",
                     "io.tripled.poker.graphql.mutation",
+                    "io.tripled.poker.graphql.subscription",
                     "io.tripled.poker.api.response"
             )
     )
@@ -35,6 +33,7 @@ class CustomGraphqlConfiguration {
     fun schema(
             queries: List<Query>,
             mutations: List<Mutation>,
+            subscriptions: List<Subscription>,
             schemaConfig: SchemaGeneratorConfig
     ): GraphQLSchema {
         fun List<Any>.toTopLevelObjectDefs() = this.map {
@@ -44,6 +43,7 @@ class CustomGraphqlConfiguration {
         val schema = toSchema(
                 queries = queries.toTopLevelObjectDefs(),
                 mutations = mutations.toTopLevelObjectDefs(),
+                subscriptions = subscriptions.toTopLevelObjectDefs(),
                 config = schemaConfig
         )
         logger.info(SchemaPrinter(
@@ -54,15 +54,6 @@ class CustomGraphqlConfiguration {
         ).print(schema)
         )
         return schema
-    }
-
-    @Bean
-    fun graphQLQueryInvoker(): GraphQLQueryInvoker {
-        val executionStrategyProvider = DefaultExecutionStrategyProvider(AsyncExecutionStrategy())
-
-        return GraphQLQueryInvoker.newBuilder()
-                .withExecutionStrategyProvider(executionStrategyProvider)
-                .build()
     }
 
     @Bean

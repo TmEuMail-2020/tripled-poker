@@ -19,6 +19,7 @@ class DummyTableService : TableService {
     }
 
     override fun getTable(name: String): Table = Table(players)
+
     fun clear() {
         players.clear()
     }

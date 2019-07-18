@@ -12,6 +12,11 @@ graphql:
     exception-handlers-enabled: true
     actuator-metrics: true
     tracingEnabled: false
+    websocket:
+      enabled: true
+    subscriptions:
+      websocket:
+        path: /subscriptions
 
 graphiql:
   mapping: /graphiql
@@ -23,8 +28,8 @@ graphiql:
   enabled: true
   pageTitle: Open Triple D Poker - Graphiql
   cdn:
-    enabled: true
-    version: 0.12.0
+    enabled: false
+    version: 0.13.0
   props:
     resources:
 #      query: query.graphql
