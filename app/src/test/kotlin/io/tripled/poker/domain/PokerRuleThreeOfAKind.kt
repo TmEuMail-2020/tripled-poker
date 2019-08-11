@@ -23,13 +23,13 @@ class PokerRuleThreeOfAKindTest {
         @JvmStatic
         private fun threeOfAKindRule() = Stream.of(
                 Arguments.of("if 3 cards are the same we have 3 of a kind",
-                        listOf(KING of CLUB, KING of DIAMOND, KING of SPADES), true),
+                        listOf(KING of CLUBS, KING of DIAMONDS, KING of SPADES), true),
                 Arguments.of("3 different cards are not 3 of a kind",
-                        listOf(JACK of CLUB, QUEEN of DIAMOND, KING of SPADES), false),
+                        listOf(JACK of CLUBS, QUEEN of DIAMONDS, KING of SPADES), false),
                 Arguments.of("One card is not 3 of a kind",
-                        listOf(KING of CLUB), false),
+                        listOf(KING of CLUBS), false),
                 Arguments.of("if 4 cards are of the same value we have three of a kind",
-                        listOf(KING of CLUB, KING of DIAMOND, KING of HEART, KING of SPADES), true)
+                        listOf(KING of CLUBS, KING of DIAMONDS, KING of HEARTS, KING of SPADES), true)
         )
     }
 

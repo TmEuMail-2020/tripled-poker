@@ -33,35 +33,35 @@ class PokerRulePairTest {
         @JvmStatic
         private fun onePairRule() = Stream.of(
                 Arguments.of("if 2 cards are of the same value we have a pair",
-                        listOf(KING of CLUB, KING of DIAMOND), true),
+                        listOf(KING of CLUBS, KING of DIAMONDS), true),
                 Arguments.of("if 2 cards are of different value we don't have a pair",
-                        listOf(QUEEN of CLUB, KING of DIAMOND), false),
+                        listOf(QUEEN of CLUBS, KING of DIAMONDS), false),
                 Arguments.of("if there are 7 cards and none of them are the same",
                         (1..7).map {
-                            Value.values()[it] of DIAMOND
+                            Value.values()[it] of DIAMONDS
                         }, false),
                 Arguments.of("if there are 7 cards and the last two are a pair",
                         (1..6).map {
-                            Value.values()[it] of DIAMOND
-                        } + (Value.values()[6] of HEART), true)
+                            Value.values()[it] of DIAMONDS
+                        } + (Value.values()[6] of HEARTS), true)
         )
 
         @JvmStatic
         private fun twoPairRule() = Stream.of(
                 Arguments.of("if we have a pair of kings and a pair of aces value we have two pair",
-                        listOf(KING of CLUB, KING of DIAMOND, ACE of HEART, ACE of SPADES), true),
+                        listOf(KING of CLUBS, KING of DIAMONDS, ACE of HEARTS, ACE of SPADES), true),
                 Arguments.of("if 4 cards are of the same value we have two pair",
-                        listOf(KING of CLUB, KING of DIAMOND, KING of HEART, KING of SPADES), true),
+                        listOf(KING of CLUBS, KING of DIAMONDS, KING of HEARTS, KING of SPADES), true),
                 Arguments.of("if there are 7 cards and none of them are the same",
                         (1..7).map {
-                            Value.values()[it] of DIAMOND
+                            Value.values()[it] of DIAMONDS
                         }, false),
                 Arguments.of("if 2 cards are of different value we don't have a pair",
-                        listOf(QUEEN of CLUB, KING of DIAMOND), false),
+                        listOf(QUEEN of CLUBS, KING of DIAMONDS), false),
                 Arguments.of("if there are 7 cards and the last two are a pair",
                         (1..6).map {
-                            Value.values()[it] of DIAMOND
-                        } + (Value.values()[6] of HEART), false)
+                            Value.values()[it] of DIAMONDS
+                        } + (Value.values()[6] of HEARTS), false)
         )
     }
 

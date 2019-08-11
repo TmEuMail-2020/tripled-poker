@@ -1,6 +1,6 @@
 package io.tripled.poker.api.response
 
-enum class Suit { DIAMOND, SPADES, HEART, CLUB }
+enum class Suit { DIAMONDS, SPADES, HEARTS, CLUBS }
 enum class Value { TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, TEN, JACK, QUEEN, KING, ACE }
 data class Card(val suit: Suit, val value: Value)
 data class Player(val name: String, val cards: Cards = HiddenCards(0))

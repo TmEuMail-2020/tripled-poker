@@ -12,7 +12,7 @@ import org.w3c.dom.events.KeyboardEvent
 import react.*
 import react.dom.*
 
-enum class Suit { DIAMOND, SPADES, HEART, CLUB }
+enum class Suit { DIAMONDS, SPADES, HEARTS, CLUBS }
 enum class Value { TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, TEN, JACK, QUEEN, KING, ACE }
 data class Card(val value: String, val suit: String){
     val typedValue = Value.valueOf(value)

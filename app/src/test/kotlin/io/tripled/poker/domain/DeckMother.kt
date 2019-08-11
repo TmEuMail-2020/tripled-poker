@@ -1,20 +1,20 @@
 package io.tripled.poker.domain
 
-import io.tripled.poker.api.response.Suit.HEART
+import io.tripled.poker.api.response.Suit.HEARTS
 import io.tripled.poker.api.response.Value.*
 
 class DeckMother {
     fun deckOfHearts(): List<Card> {
         return listOf(
-                TEN of HEART,
-                ACE of HEART,
-                KING of HEART,
-                QUEEN of HEART,
-                NINE of HEART,
-                EIGHT of HEART,
-                SEVEN of HEART,
-                SIX of HEART,
-                FIVE of HEART
+                TEN of HEARTS,
+                ACE of HEARTS,
+                KING of HEARTS,
+                QUEEN of HEARTS,
+                NINE of HEARTS,
+                EIGHT of HEARTS,
+                SEVEN of HEARTS,
+                SIX of HEARTS,
+                FIVE of HEARTS
         )
     }
 }

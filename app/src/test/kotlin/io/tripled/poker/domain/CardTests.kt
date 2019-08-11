@@ -10,19 +10,19 @@ class CardTests {
 
     @Test
     internal fun `suits are taken into account when comparing cards`() {
-        val cards = listOf(TWO of HEART,
+        val cards = listOf(TWO of HEARTS,
                 TWO of SPADES,
-                TWO of CLUB,
-                ACE of HEART,
-                TWO of DIAMOND)
+                TWO of CLUBS,
+                ACE of HEARTS,
+                TWO of DIAMONDS)
 
         val sortedCards = cards.sortedByDescending { it.score }
 
         assertEquals(listOf(
-                ACE of HEART,
-                TWO of CLUB,
-                TWO of HEART,
+                ACE of HEARTS,
+                TWO of CLUBS,
+                TWO of HEARTS,
                 TWO of SPADES,
-                TWO of DIAMOND), sortedCards)
+                TWO of DIAMONDS), sortedCards)
     }
 }

@@ -7,7 +7,7 @@ import poker.Value
 
 fun cardImage(card: Card): dynamic
         = if (card == null) backOfCardImage() else when(Suit.valueOf(card.suit)){
-    Suit.DIAMOND -> when (Value.valueOf(card.value)){
+    Suit.DIAMONDS -> when (Value.valueOf(card.value)){
         Value.TWO -> card2D
         Value.THREE -> card3D
         Value.FOUR -> card4D
@@ -37,7 +37,7 @@ fun cardImage(card: Card): dynamic
         Value.KING -> cardKS
         Value.ACE -> cardAS
     }
-    Suit.HEART -> when (Value.valueOf(card.value)){
+    Suit.HEARTS -> when (Value.valueOf(card.value)){
         Value.TWO -> card2H
         Value.THREE -> card3H
         Value.FOUR -> card4H
@@ -52,7 +52,7 @@ fun cardImage(card: Card): dynamic
         Value.KING -> cardKH
         Value.ACE -> cardAH
     }
-    Suit.CLUB -> when (Value.valueOf(card.value)){
+    Suit.CLUBS -> when (Value.valueOf(card.value)){
         Value.TWO -> card2H
         Value.THREE -> card3H
         Value.FOUR -> card4H

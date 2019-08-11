@@ -6,7 +6,7 @@ import io.tripled.poker.api.GameService
 import io.tripled.poker.api.GameUseCases
 import io.tripled.poker.api.TableService
 import io.tripled.poker.api.TableUseCases
-import io.tripled.poker.api.response.Suit.HEART
+import io.tripled.poker.api.response.Suit.HEARTS
 import io.tripled.poker.api.response.Value.*
 import io.tripled.poker.domain.*
 import org.junit.jupiter.api.Assertions
@@ -61,8 +61,8 @@ class StartGameUseCaseTests {
         expect(eventStore.newEvents).contains.inOrder.only.values(
                 GameStarted(listOf("Joe", "Jef")),
                 HandsAreDealt(DeckMother().deckOfHearts(), mapOf(
-                        "Joe" to Hand(TEN of HEART, ACE of HEART),
-                        "Jef" to Hand(KING of HEART, QUEEN of HEART)
+                        "Joe" to Hand(TEN of HEARTS, ACE of HEARTS),
+                        "Jef" to Hand(KING of HEARTS, QUEEN of HEARTS)
                 ))
         )
     }
