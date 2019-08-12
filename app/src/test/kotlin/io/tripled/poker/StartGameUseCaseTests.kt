@@ -15,7 +15,7 @@ import org.junit.jupiter.api.Test
 
 class StartGameUseCaseTests {
 
-    private val eventStore = DummyEventStore()
+    private val eventStore = TestPokerGame.DummyEventStore()
     private val deck = PredeterminedCardDeck(listOf())
     private val gameUseCases: GameService = GameUseCases(eventStore,{deck})
     private val tableUseCases: TableService = TableUseCases(eventStore, gameUseCases)
