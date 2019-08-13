@@ -7,39 +7,35 @@ import io.tripled.poker.domain.of
 import org.junit.jupiter.api.Test
 
 class HappyPokerTest {
-    private val pokerGame = TestPokerGame()
-
     @Test
-    internal fun `test all usecases and events to play game with two players`() {
+    internal fun `test all usecases and events to play game with two players`() = pokerTest {
         val Joe = "Joe"
         val Jef = "Jef"
 
-        pokerGame
-                .withCards(DeckMother().deckOfHearts())
-                .withPlayers(Joe, Jef)
-                .preflop(
-                        Joe to ((TEN of HEARTS) and (ACE of HEARTS)),
-                        Jef to ((KING of HEARTS) and (QUEEN of HEARTS))
-                ) {
-                    Joe.checks()
-                    Jef.checks()
-                }
-                .flop(NINE of HEARTS,
-                      EIGHT of HEARTS,
-                      SEVEN of HEARTS
-                ) {
-                    Joe.checks()
-                    Jef.checks()
-                }
-                .turn(SIX of HEARTS) {
-                    Joe.checks()
-                    Jef.checks()
-                }
-                .river(FIVE of HEARTS) {
-                    Joe.checks()
-                    Jef.checks()
-                }
-                .expectWinner(Jef)
-                .assertExpectedEventsToMatchActualEvents()
+        withCards(DeckMother().deckOfHearts())
+        withPlayers(Joe, Jef)
+        preflop(
+                Joe to ((TEN of HEARTS) and (ACE of HEARTS)),
+                Jef to ((KING of HEARTS) and (QUEEN of HEARTS))
+        ) {
+            Joe.checks()
+            Jef.checks()
+        }
+        flop(NINE of HEARTS,
+                EIGHT of HEARTS,
+                SEVEN of HEARTS
+        ) {
+            Joe.checks()
+            Jef.checks()
+        }
+        turn(SIX of HEARTS) {
+            Joe.checks()
+            Jef.checks()
+        }
+        river(FIVE of HEARTS) {
+            Joe.checks()
+            Jef.checks()
+        }
+        expectWinner(Jef)
     }
 }

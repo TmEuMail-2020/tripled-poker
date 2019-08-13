@@ -10,6 +10,9 @@ import io.tripled.poker.api.TableUseCases
 import io.tripled.poker.domain.*
 import io.tripled.poker.eventsourcing.EventStore
 
+fun pokerTestNoEventAssert(test: TestPokerGame.() -> Unit) = TestPokerGame().test()
+fun pokerTest(test: TestPokerGame.() -> Unit) = TestPokerGame().apply(test).assertExpectedEventsToMatchActualEvents()
+
 class TestPokerGame(private val deck: PredeterminedCardDeck = PredeterminedCardDeck(listOf()),
                     private val eventStore: DummyEventStore = DummyEventStore(),
                     private val gameUseCases: GameService = GameUseCases(eventStore,{deck}),
