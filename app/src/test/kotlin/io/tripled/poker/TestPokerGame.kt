@@ -108,10 +108,14 @@ class TestPokerGame(private val deck: PredeterminedCardDeck = PredeterminedCardD
 
     class GameAction(private val gameUseCases: GameService,
                      val expectedEvents: ArrayList<Event> = ArrayList()) {
-        fun check(playerId: PlayerId){
+
+        fun PlayerId.checks() = check(this)
+
+        private fun check(playerId: PlayerId){
             gameUseCases.check(playerId)
             expectedEvents.add(PlayerChecked(playerId))
         }
+
 
         // TODO fold, raise, all-in, etc
     }

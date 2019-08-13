@@ -21,23 +21,23 @@ class HappyPokerTest {
                         Joe to ((TEN of HEARTS) and (ACE of HEARTS)),
                         Jef to ((KING of HEARTS) and (QUEEN of HEARTS))
                 ) {
-                     check(Joe)
-                     check(Jef)
+                    Joe.checks()
+                    Jef.checks()
                 }
                 .flop(NINE of HEARTS,
                       EIGHT of HEARTS,
                       SEVEN of HEARTS
                 ) {
-                    check(Joe)
-                    check(Jef)
+                    Joe.checks()
+                    Jef.checks()
                 }
                 .turn(SIX of HEARTS) {
-                    check(Joe)
-                    check(Jef)
+                    Joe.checks()
+                    Jef.checks()
                 }
                 .river(FIVE of HEARTS) {
-                    check(Joe)
-                    check(Jef)
+                    Joe.checks()
+                    Jef.checks()
                 }
                 .expectWinner(Jef)
                 .assertExpectedEventsToMatchActualEvents()
