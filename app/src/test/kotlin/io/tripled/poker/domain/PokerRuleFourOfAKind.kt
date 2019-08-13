@@ -23,13 +23,13 @@ class PokerRuleFourOfAKindTest {
         @JvmStatic
         private fun fourOfAKindRule() = Stream.of(
                 Arguments.of("if 4 cards are the same we have 4 of a kind",
-                        listOf(KING of CLUB, KING of DIAMOND, KING of HEART, KING of SPADES), true),
+                        listOf(KING of CLUBS, KING of DIAMONDS, KING of HEARTS, KING of SPADES), true),
                 Arguments.of("if only 3 cards are the same we are not 4 of a kind",
-                        listOf(KING of CLUB, KING of DIAMOND, KING of HEART, ACE of SPADES), false),
+                        listOf(KING of CLUBS, KING of DIAMONDS, KING of HEARTS, ACE of SPADES), false),
                 Arguments.of("4 different cards are not 4 of a kind",
-                        listOf(JACK of CLUB, QUEEN of DIAMOND, KING of SPADES, ACE of SPADES), false),
+                        listOf(JACK of CLUBS, QUEEN of DIAMONDS, KING of SPADES, ACE of SPADES), false),
                 Arguments.of("One card is not 4 of a kind",
-                        listOf(KING of CLUB), false)
+                        listOf(KING of CLUBS), false)
         )
     }
 

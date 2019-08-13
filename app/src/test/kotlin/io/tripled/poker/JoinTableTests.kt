@@ -1,46 +1,36 @@
 package io.tripled.poker
 
-import ch.tutteli.atrium.api.cc.en_GB.isEmpty
+import ch.tutteli.atrium.api.cc.en_GB.*
 import ch.tutteli.atrium.verbs.expect
-import io.tripled.poker.api.GameUseCases
-import io.tripled.poker.api.TableUseCases
 import io.tripled.poker.domain.PlayerJoinedTable
-import io.tripled.poker.domain.PredeterminedCardDeck
-import org.junit.jupiter.api.Assertions.assertFalse
-import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 class JoinTableTests {
-
-    private val eventStore = DummyEventStore()
-    private val deck = PredeterminedCardDeck(listOf())
-    private val tableService = TableUseCases(eventStore, GameUseCases(eventStore,{deck}))
-
     @Test
-    internal fun `a player can join the table`() {
+    internal fun `a player can join the table`() = pokerTest {
+        val Joe = "Joe"
 
-        tableService.join("Joe")
-
-        assertTrue(eventStore.contains(PlayerJoinedTable("Joe")))
+        withPlayers(Joe)
     }
 
     @Test
-    internal fun `a player can't join the table with an empty name`() {
-        tableService.join("")
+    internal fun `a player can't join the table with an empty name`() = pokerTestNoEventAssert {
+        withPlayers("")
 
-        assertFalse(eventStore.contains(PlayerJoinedTable("")))
+        expect(newEvents).isEmpty()
     }
 
     @Test
-    internal fun `a player can't join twice with the same name`() {
-        eventStore.given {
-            playersJoin("jef")
+    internal fun `a player can't join twice with the same name`() = pokerTestNoEventAssert {
+        val Jef = "Jef"
+
+        given {
+            withPlayers(Jef)
         }
+        withPlayers(Jef)
 
-        tableService.join("jef")
-
-        expect(eventStore.newEvents).isEmpty()
+        expect(newEvents).isEmpty()
     }
-
 }
 
