@@ -1,5 +1,7 @@
 package io.tripled.poker
 
+import ch.tutteli.atrium.api.cc.en_GB.toBe
+import ch.tutteli.atrium.verbs.expect
 import io.tripled.poker.api.GameUseCases
 import io.tripled.poker.api.TableUseCases
 import io.tripled.poker.api.response.HiddenCards
@@ -16,59 +18,62 @@ class GetTableUseCasesTest {
     private var deck = PredeterminedCardDeck(listOf())
     private val tableUseCases = TableUseCases(eventStore, GameUseCases(eventStore,{deck}))
 
-    @Test
-    internal fun `a new table has no players`() {
-        val table = tableUseCases.getTable("Jef")
+    private val Jef = "Jef"
+    private val Joe = "Joe"
 
-        assertEquals(0, table.players.size)
+    @Test
+    internal fun `a new table has no players`() = pokerTest {
+        table(Jef){
+            assertEquals(0, players.size)
+        }
     }
 
     @Test
-    internal fun `a table with players`() {
-        eventStore.given {
-            playersJoin("Joe", "Jef")
+    internal fun `a table with players`() = pokerTest {
+        given {
+            withPlayers(Joe, Jef)
         }
 
-        val table = tableUseCases.getTable("Jef")
-
-        assertEquals(listOf(
-                Player("Joe"),
-                Player("Jef")
-        ), table.players)
+        table(Jef){
+            expect(players).toBe(listOf(
+                    Player(Joe),
+                    Player(Jef)
+            ))
+        }
     }
 
     @Test
     internal fun `a table with players and I can only see my own cards`() {
         eventStore.given {
-            startGame(deck.cards, "Joe" to suitedConnectors,
-                    "Jef" to suitedAceKing)
+            startGame(deck.cards, Joe to suitedConnectors,
+                    Jef to suitedAceKing)
         }
 
-        val table = tableUseCases.getTable("Joe")
+        val table = tableUseCases.getTable(Joe)
 
         assertEquals(listOf(
-                Player("Joe", VisibleCards(suitedConnectors.cards().map { it.mapToCard() })),
-                Player("Jef", HiddenCards(2))
+                Player(Joe, VisibleCards(suitedConnectors.cards().map { it.mapToCard() })),
+                Player(Jef, HiddenCards(2))
         ), table.players)
     }
 
     @Test
     internal fun `a table with a winner`() {
         eventStore.save(1, listOf(
-                PlayerJoinedTable("Joe"),
-                PlayerJoinedTable("Jef"),
-                GameStarted(listOf("Joe", "Jef")),
+                PlayerJoinedTable(Joe),
+                PlayerJoinedTable(Jef),
+                GameStarted(listOf(Joe, Jef)),
                 HandsAreDealt(deck.cards, mapOf(
-                        "Joe" to suitedConnectors,
-                        "Jef" to suitedAceKing
+                        Joe to suitedConnectors,
+                        Jef to suitedAceKing
                 )),
-                PlayerWonGame("Jef")
+                PlayerWonGame(Jef)
         )
         )
 
-        val table = tableUseCases.getTable("Joe")
+        val table = tableUseCases.getTable(Joe)
 
-        assertEquals(Player("Jef",
+        assertEquals(Player(Jef,
                 VisibleCards(suitedAceKing.cards().map { it.mapToCard() })),
                 table.winner)
 
@@ -77,20 +82,20 @@ class GetTableUseCasesTest {
     @Test
     internal fun `all cards are dealt`() {
         eventStore.save(1, listOf(
-                PlayerJoinedTable("Joe"),
-                PlayerJoinedTable("Jef"),
-                GameStarted(listOf("Joe", "Jef")),
+                PlayerJoinedTable(Joe),
+                PlayerJoinedTable(Jef),
+                GameStarted(listOf(Joe, Jef)),
                 HandsAreDealt(deck.cards, mapOf(
-                        "Joe" to suitedConnectors,
-                        "Jef" to suitedAceKing
+                        Joe to suitedConnectors,
+                        Jef to suitedAceKing
                 )),
-                PlayerWonGame("Jef")
+                PlayerWonGame(Jef)
         )
         )
 
-        val table = tableUseCases.getTable("Joe")
+        val table = tableUseCases.getTable(Joe)
 
-        assertEquals(Player("Jef",
+        assertEquals(Player(Jef,
                 VisibleCards(suitedAceKing.cards().map { it.mapToCard() })),
                 table.winner)
 
@@ -126,19 +131,19 @@ class GetTableUseCasesTest {
     @Test
     internal fun `player joins after cards are dealt`() {
         eventStore.save(1, listOf(
-                PlayerJoinedTable("Joe"),
-                GameStarted(listOf("Joe", "Jef")),
+                PlayerJoinedTable(Joe),
+                GameStarted(listOf(Joe, Jef)),
                 HandsAreDealt(deck.cards, mapOf(
-                        "Joe" to suitedConnectors
+                        Joe to suitedConnectors
                 )),
-                PlayerJoinedTable("Jef")
+                PlayerJoinedTable(Jef)
         ))
 
-        val table = tableUseCases.getTable("Joe")
+        val table = tableUseCases.getTable(Joe)
 
         assertEquals(listOf(
-                Player("Joe", VisibleCards(suitedConnectors.cards().map { it.mapToCard() })),
-                Player("Jef")
+                Player(Joe, VisibleCards(suitedConnectors.cards().map { it.mapToCard() })),
+                Player(Jef)
         ), table.players)
     }
 
@@ -146,19 +151,19 @@ class GetTableUseCasesTest {
     @Test
     internal fun `player joins after game started`() {
         eventStore.save(1, listOf(
-                PlayerJoinedTable("Joe"),
-                GameStarted(listOf("Joe", "Jef")),
-                PlayerJoinedTable("Jef"),
+                PlayerJoinedTable(Joe),
+                GameStarted(listOf(Joe, Jef)),
+                PlayerJoinedTable(Jef),
                 HandsAreDealt(deck.cards, mapOf(
-                        "Joe" to suitedConnectors
+                        Joe to suitedConnectors
                 ))
         ))
 
-        val table = tableUseCases.getTable("Joe")
+        val table = tableUseCases.getTable(Joe)
 
         assertEquals(listOf(
-                Player("Joe", VisibleCards(suitedConnectors.cards().map { it.mapToCard() })),
-                Player("Jef")
+                Player(Joe, VisibleCards(suitedConnectors.cards().map { it.mapToCard() })),
+                Player(Jef)
         ), table.players)
     }
 }

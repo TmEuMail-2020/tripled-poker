@@ -7,16 +7,23 @@ import io.tripled.poker.api.GameService
 import io.tripled.poker.api.GameUseCases
 import io.tripled.poker.api.TableService
 import io.tripled.poker.api.TableUseCases
+import io.tripled.poker.api.response.Table
 import io.tripled.poker.domain.*
 import io.tripled.poker.eventsourcing.EventStore
 
-fun pokerTestNoEventAssert(test: TestPokerGame.() -> Unit) = TestPokerGame().test()
-fun pokerTest(test: TestPokerGame.() -> Unit) = TestPokerGame().apply(test).assertExpectedEventsToMatchActualEvents()
+fun pokerTestNoEventAssert(test: TestPokerGame.() -> Unit)
+        = TestPokerGame().test()
+
+fun pokerTest(test: TestPokerGame.() -> Unit)
+        = TestPokerGame()
+                .apply(test)
+                .assertExpectedEventsToMatchActualEvents()
 
 class TestPokerGame(private val deck: PredeterminedCardDeck = PredeterminedCardDeck(listOf()),
                     private val eventStore: DummyEventStore = DummyEventStore(),
                     private val gameUseCases: GameService = GameUseCases(eventStore,{deck}),
-                    private val useCases: TableService = TableUseCases(eventStore, gameUseCases)) {
+                    private val useCases: TableService = TableUseCases(eventStore, gameUseCases),
+                    private val tableUseCases: TableUseCases = TableUseCases(eventStore, gameUseCases)) {
 
     private lateinit var players: List<PlayerId>
     private val expectedEvents = ArrayList<Event>()
@@ -97,6 +104,10 @@ class TestPokerGame(private val deck: PredeterminedCardDeck = PredeterminedCardD
         return this
     }
 
+    fun table(asPlayer: PlayerId, table: Table.() -> Unit){
+        table.invoke(tableUseCases.getTable(asPlayer))
+    }
+
     fun assertExpectedEventsToMatchActualEvents() {
         println("======================== EVENTS ========================")
         expectedEvents.forEachIndexed { index, event ->
@@ -147,7 +158,7 @@ class TestPokerGame(private val deck: PredeterminedCardDeck = PredeterminedCardD
         class EventBuilder {
             val events = mutableListOf<Event>()
 
-            fun playersJoin(vararg players: PlayerId) {
+             fun playersJoin(vararg players: PlayerId) {
                 events += players.map { PlayerJoinedTable(it) }
             }
 
