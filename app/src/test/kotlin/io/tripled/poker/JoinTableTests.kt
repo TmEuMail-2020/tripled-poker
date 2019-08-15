@@ -1,30 +1,26 @@
 package io.tripled.poker
 
-import ch.tutteli.atrium.api.cc.en_GB.*
+import ch.tutteli.atrium.api.cc.en_GB.isEmpty
 import ch.tutteli.atrium.verbs.expect
-import io.tripled.poker.domain.PlayerJoinedTable
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 class JoinTableTests {
-    @Test
-    internal fun `a player can join the table`() = pokerTest {
-        val Joe = "Joe"
+    private val Joe = "Joe"
+    private val Jef = "Jef"
 
+    @Test
+    internal fun `a player can join the table`() = pokerGameTest {
         withPlayers(Joe)
     }
 
     @Test
-    internal fun `a player can't join the table with an empty name`() = pokerTestNoEventAssert {
+    internal fun `a player can't join the table with an empty name`() = pokerGameNoEventAssert {
         withPlayers("")
-
         expect(newEvents).isEmpty()
     }
 
     @Test
-    internal fun `a player can't join twice with the same name`() = pokerTestNoEventAssert {
-        val Jef = "Jef"
-
+    internal fun `a player can't join twice with the same name`() = pokerGameNoEventAssert {
         given {
             withPlayers(Jef)
         }

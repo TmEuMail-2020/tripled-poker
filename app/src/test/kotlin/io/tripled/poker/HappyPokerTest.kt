@@ -7,11 +7,11 @@ import io.tripled.poker.domain.of
 import org.junit.jupiter.api.Test
 
 class HappyPokerTest {
-    @Test
-    internal fun `test all usecases and events to play game with two players`() = pokerTest {
-        val Joe = "Joe"
-        val Jef = "Jef"
+    private val Joe = "Joe"
+    private val Jef = "Jef"
 
+    @Test
+    internal fun `test all usecases and events to play game with two players`() = pokerGameTest {
         withCards(DeckMother().deckOfHearts())
         withPlayers(Joe, Jef)
         preflop(

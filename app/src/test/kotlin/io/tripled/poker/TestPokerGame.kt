@@ -11,19 +11,27 @@ import io.tripled.poker.api.response.Table
 import io.tripled.poker.domain.*
 import io.tripled.poker.eventsourcing.EventStore
 
-fun pokerTestNoEventAssert(test: TestPokerGame.() -> Unit)
+fun pokerGameNoEventAssert(test: TestPokerGame.() -> Unit)
         = TestPokerGame().test()
 
-fun pokerTest(test: TestPokerGame.() -> Unit)
+fun pokerGameTest(test: TestPokerGame.() -> Unit)
         = TestPokerGame()
                 .apply(test)
                 .assertExpectedEventsToMatchActualEvents()
 
-class TestPokerGame(private val deck: PredeterminedCardDeck = PredeterminedCardDeck(listOf()),
-                    private val eventStore: DummyEventStore = DummyEventStore(),
-                    private val gameUseCases: GameService = GameUseCases(eventStore,{deck}),
-                    private val useCases: TableService = TableUseCases(eventStore, gameUseCases),
-                    private val tableUseCases: TableUseCases = TableUseCases(eventStore, gameUseCases)) {
+fun pokerTableTest(test: TestPokerGame.TestPokerTable.() -> Unit)
+        = TestPokerGame.TestPokerTable()
+                .apply(test)
+                .assertExpectedEventsToMatchActualEvents()
+
+fun pokerTableTestNoEventAssert(test: TestPokerGame.TestPokerTable.() -> Unit)
+        = TestPokerGame.TestPokerTable()
+        .apply(test)
+
+open class TestPokerGame(private val deck: PredeterminedCardDeck = PredeterminedCardDeck(listOf()),
+                         private val eventStore: DummyEventStore = DummyEventStore(),
+                         private val gameUseCases: GameService = GameUseCases(eventStore,{deck}),
+                         private val useCases: TableService = TableUseCases(eventStore, gameUseCases)) {
 
     private lateinit var players: List<PlayerId>
     private val expectedEvents = ArrayList<Event>()
@@ -31,9 +39,10 @@ class TestPokerGame(private val deck: PredeterminedCardDeck = PredeterminedCardD
     val newEvents get() = eventStore.newEvents
 
     fun given(givenActions: TestPokerGame.() -> Unit): TestPokerGame {
-        val noopPokerGame = TestPokerGame(gameUseCases = DummyGameUseCases())
+        val noopPokerGame = TestPokerGame(gameUseCases = DummyGameUseCases(),
+                useCases = DummyTableUseCases())
         noopPokerGame.givenActions()
-        this.eventStore.given = noopPokerGame.newEvents
+        this.eventStore.given = noopPokerGame.expectedEvents
 
         return this
     }
@@ -54,11 +63,14 @@ class TestPokerGame(private val deck: PredeterminedCardDeck = PredeterminedCardD
         return this
     }
 
+    fun start(){
+
+    }
+
     fun preflop(vararg playersWithCards: Pair<PlayerId, Hand>, actions: GameAction.() -> Unit): TestPokerGame {
         useCases.startGame()
-        expectedEvents.add(GameStarted(players))
-
-        expectedEvents.add(HandsAreDealt(DeckMother().deckOfHearts(), mapOf(*playersWithCards)))
+        expectedEvents += GameStarted(players)
+        expectedEvents += HandsAreDealt(DeckMother().deckOfHearts(), mapOf(*playersWithCards))
 
         handleActions(actions)
 
@@ -89,10 +101,16 @@ class TestPokerGame(private val deck: PredeterminedCardDeck = PredeterminedCardD
         return this
     }
 
+    fun action(actions: GameAction.() -> Unit): TestPokerGame {
+        handleActions(actions)
+
+        return this
+    }
+
     private fun handleActions(actions: GameAction.() -> Unit) {
         val gameAction = GameAction(gameUseCases)
         actions.invoke(gameAction)
-        expectedEvents.addAll(gameAction.expectedEvents)
+        expectedEvents += gameAction.expectedEvents
 
         expectedEvents += RoundCompleted()
     }
@@ -102,10 +120,6 @@ class TestPokerGame(private val deck: PredeterminedCardDeck = PredeterminedCardD
         expectedEvents += PlayerWonGame(expectedWinner)
 
         return this
-    }
-
-    fun table(asPlayer: PlayerId, table: Table.() -> Unit){
-        table.invoke(tableUseCases.getTable(asPlayer))
     }
 
     fun assertExpectedEventsToMatchActualEvents() {
@@ -127,11 +141,24 @@ class TestPokerGame(private val deck: PredeterminedCardDeck = PredeterminedCardD
 
         private fun check(playerId: PlayerId){
             gameUseCases.check(playerId)
-            expectedEvents.add(PlayerChecked(playerId))
+            expectedEvents += PlayerChecked(playerId)
         }
 
 
         // TODO fold, raise, all-in, etc
+    }
+
+    class TestPokerTable (private val deck: PredeterminedCardDeck = PredeterminedCardDeck(listOf()),
+                          private val eventStore: DummyEventStore = DummyEventStore(),
+                          private val gameUseCases: GameService = GameUseCases(eventStore,{deck}),
+                          private val tableUseCases: TableService = TableUseCases(eventStore, gameUseCases))
+        : TestPokerGame(deck, eventStore, gameUseCases, TableUseCases(eventStore, gameUseCases)) {
+
+        fun table(asPlayer: PlayerId, table: Table.() -> Unit): TestPokerTable {
+            table.invoke(tableUseCases.getTable(asPlayer))
+
+            return this
+        }
     }
 
     class DummyEventStore(private val _newEvents: MutableList<Event> = mutableListOf()) : EventStore {
@@ -144,7 +171,7 @@ class TestPokerGame(private val deck: PredeterminedCardDeck = PredeterminedCardD
         }
 
         override fun save(id: Any, events: List<Event>) {
-            _newEvents.addAll(events)
+            _newEvents += events
         }
 
         override fun findById(id: Any): List<Event> {
@@ -174,5 +201,11 @@ class TestPokerGame(private val deck: PredeterminedCardDeck = PredeterminedCardD
     class DummyGameUseCases : GameService {
         override fun check(player: String) = Unit
         override fun startGame(players: List<PlayerId>) = Unit
+    }
+
+    class DummyTableUseCases : TableService {
+        override fun join(name: String) = Unit
+        override fun startGame() = Unit
+        override fun getTable(playerId: PlayerId): Table = null!!
     }
 }

@@ -1,90 +1,70 @@
 package io.tripled.poker
 
-import ch.tutteli.atrium.api.cc.en_GB.*
+import ch.tutteli.atrium.api.cc.en_GB.isEmpty
+import ch.tutteli.atrium.api.cc.en_GB.message
+import ch.tutteli.atrium.api.cc.en_GB.startsWith
+import ch.tutteli.atrium.api.cc.en_GB.toThrow
 import ch.tutteli.atrium.verbs.expect
-import io.tripled.poker.api.GameService
-import io.tripled.poker.api.GameUseCases
-import io.tripled.poker.api.TableService
-import io.tripled.poker.api.TableUseCases
 import io.tripled.poker.api.response.Suit.HEARTS
 import io.tripled.poker.api.response.Value.*
-import io.tripled.poker.domain.*
-import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.BeforeEach
+import io.tripled.poker.domain.DeckMother
+import io.tripled.poker.domain.of
 import org.junit.jupiter.api.Test
 
 class StartGameUseCaseTests {
-
-    private val eventStore = TestPokerGame.DummyEventStore()
-    private val deck = PredeterminedCardDeck(listOf())
-    private val gameUseCases: GameService = GameUseCases(eventStore,{deck})
-    private val tableUseCases: TableService = TableUseCases(eventStore, gameUseCases)
-
-    @BeforeEach
-    internal fun setUp() {
-        deck.queue.clear()
-    }
-
+    private val Joe = "Joe"
+    private val Jef = "Jef"
 
     @Test
-    internal fun `can't keep playing the game when it's done`() {
-        eventStore.given {
-            playersJoin("Joe", "Jef")
+    internal fun `can't keep playing the game when it's done`() = pokerTableTestNoEventAssert {
+        given {
+            withCards(DeckMother().deckOfHearts())
+            withPlayers(Joe, Jef)
+            preflop(
+                    Joe to ((TEN of HEARTS) and (ACE of HEARTS)),
+                    Jef to ((KING of HEARTS) and (QUEEN of HEARTS))
+            ) {
+                Joe.checks()
+                Jef.checks()
+            }
+            flop(NINE of HEARTS,
+                    EIGHT of HEARTS,
+                    SEVEN of HEARTS
+            ) {
+                Joe.checks()
+                Jef.checks()
+            }
+            turn(SIX of HEARTS) {
+                Joe.checks()
+                Jef.checks()
+            }
+            river(FIVE of HEARTS) {
+                Joe.checks()
+                Jef.checks()
+            }
         }
-        initDeck()
-
-        tableUseCases.startGame()
-
-        // TODO: refactor to separate tests
-        allPlayersCheck()
-        allPlayersCheck()
-        allPlayersCheck()
-        allPlayersCheck()
 
         expect {
             // -> execute action on done game
-            gameUseCases.check("Joe")
+            while (true){
+                action {
+                    Joe.checks()
+                    Jef.checks()
+                }
+            }
         }.toThrow<RuntimeException>{
             message { startsWith("t'is gedaan, zet u derover") }
         }
     }
 
     @Test
-    internal fun `Start game with two players`() {
-        eventStore.given {
-            playersJoin("Joe", "Jef")
+    internal fun `cannot start game with one player`() = pokerGameTest {
+        given {
+            withPlayers(Joe)
         }
-        initDeck()
 
-        tableUseCases.startGame()
+        start()
 
-        expect(eventStore.newEvents).contains.inOrder.only.values(
-                GameStarted(listOf("Joe", "Jef")),
-                HandsAreDealt(DeckMother().deckOfHearts(), mapOf(
-                        "Joe" to Hand(TEN of HEARTS, ACE of HEARTS),
-                        "Jef" to Hand(KING of HEARTS, QUEEN of HEARTS)
-                ))
-        )
+        expect(newEvents).isEmpty()
     }
-
-    private fun initDeck() {
-        deck.queue.addAll(DeckMother().deckOfHearts())
-    }
-
-    private fun allPlayersCheck() {
-        gameUseCases.check("Joe")
-        gameUseCases.check("Jef")
-    }
-
-    @Test
-    internal fun `cannot start game with one player`() {
-        eventStore.save(1, listOf(PlayerJoinedTable("Joe")))
-
-        tableUseCases.startGame()
-
-        Assertions.assertFalse(eventStoreContains(GameStarted(listOf())))
-    }
-
-    private fun eventStoreContains(element: Event) = eventStore.contains(element)
-
 }
