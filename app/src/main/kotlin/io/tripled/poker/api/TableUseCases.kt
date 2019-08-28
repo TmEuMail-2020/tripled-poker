@@ -6,34 +6,31 @@ import io.tripled.poker.projection.TableProjection
 
 interface TableService {
     fun join(name: String)
-    fun startGame()
+    fun startGame(): GameId
     fun getTable(playerId: PlayerId): io.tripled.poker.api.response.Table
-}
-
-interface GameService {
-    fun check(player: String)
-    fun startGame(players: List<PlayerId>)
-//    fun getGame(playerId: PlayerId): io.tripled.poker.api.response.Table
 }
 
 class TableUseCases(
         private val eventStore: EventStore,
         private val gameUseCases: GameService,
-        private val eventPublisher: EventPublisher? = null
+        private val eventPublisher: EventPublisher,
+        private val gameIdGenerator: () -> GameId
 ) : TableService {
-    /**COMMAND**/
+    /** COMMAND **/
 
     override fun join(name: String) {
         executeOnTable { join(name) }
     }
 
-    override fun startGame() {
-        val events = executeOnTable { startGame() }
+    override fun startGame(): GameId {
+        val events = executeOnTable { startGame(gameIdGenerator()) }
         val gameStartedEvent = events.lastEventOrNull<GameStarted>()
 
         gameStartedEvent?.apply {
-            gameUseCases.startGame(this.players)
+            gameUseCases.startGame(this.gameId, this.players)
         }
+
+        return gameStartedEvent!!.gameId
     }
 
     private fun executeOnTable(command: Table.() -> List<Event>): List<Event> {
@@ -46,43 +43,14 @@ class TableUseCases(
     private fun withTable() = Table(TableState.of(eventStore.findById(1)))
 
     private fun publish(events: List<Event>) {
-        eventPublisher?.publish(1, events)
+        eventPublisher.publish(1, events)
     }
 
     private fun save(events: List<Event>) {
         eventStore.save(1, events)
     }
 
-    /*QUERY**/
-    override fun getTable(name: PlayerId) = TableProjection().table(name, eventStore.findById(1))
+    /** QUERY **/
+    override fun getTable(playerId: PlayerId) = TableProjection().table(playerId, eventStore)
 
-}
-
-class GameUseCases(
-        private val eventStore: EventStore,
-        private val deckFactory: () -> Deck,
-        private val eventPublisher: EventPublisher? = null
-) : GameService {
-
-    override fun startGame(players: List<PlayerId>) {
-        executeOnGame { start(players, deckFactory.invoke()) }
-    }
-
-    override fun check(player: PlayerId) = executeOnGame { check(player) }
-
-    private fun executeOnGame(command: Game.() -> List<Event>) {
-        val events = withGame().command()
-        save(events)
-        publish(events)
-    }
-
-    private fun withGame() = Game(GameState.of(eventStore.findById(1)))
-
-    private fun publish(events: List<Event>) {
-        eventPublisher?.publish(1, events)
-    }
-
-    private fun save(events: List<Event>) {
-        eventStore.save(1, events)
-    }
 }

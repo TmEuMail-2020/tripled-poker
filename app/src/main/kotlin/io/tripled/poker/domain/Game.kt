@@ -8,6 +8,8 @@ data class FlopIsTurned(val card1: Card, val card2: Card, val card3: Card) : Eve
 data class TurnIsTurned(val card: Card) : Event
 data class RiverIsTurned(val card: Card) : Event
 
+typealias GameId = String
+
 class Game(gameState: GameState) {
     private val deck = PredeterminedCardDeck(gameState.remainingCards)
     private var countChecks = gameState.countChecks

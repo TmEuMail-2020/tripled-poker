@@ -3,7 +3,7 @@ package io.tripled.poker.domain
 typealias PlayerId = String
 
 data class PlayerJoinedTable(val name: String) : Event
-data class GameStarted(val players: List<PlayerId>) : Event
+data class GameStarted(val gameId: GameId, val players: List<PlayerId>) : Event
 
 class Table(tableState: TableState) {
 
@@ -13,9 +13,9 @@ class Table(tableState: TableState) {
 
     private fun valid(name: PlayerId) = name.isNotBlank() && !players.contains(name)
 
-    fun startGame() = sequence {
+    fun startGame(gameId: GameId) = sequence {
         if (players.size > 1)
-            yield(GameStarted(players))
+            yield(GameStarted(gameId, players))
     }.toList()
 
 

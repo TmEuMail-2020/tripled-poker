@@ -3,10 +3,21 @@ package io.tripled.poker.projection
 import io.tripled.poker.api.response.*
 import io.tripled.poker.api.response.Table
 import io.tripled.poker.domain.*
+import io.tripled.poker.eventsourcing.EventStore
 
 class TableProjection {
 
-    fun table(playerName: String, events: List<Event>) = InnerTableProjection(playerName, events).table
+    fun table(playerName: String, eventstore: EventStore): Table {
+        val tableEvents = eventstore.findById(1)
+        tableEvents
+                .filterEvents<GameStarted>()
+                .lastOrNull()?.apply {
+                    val currentlyActiveGameEvents = eventstore.findById(gameId)
+                    return InnerTableProjection(playerName, tableEvents.union(currentlyActiveGameEvents).toList()).table
+                }
+
+        return InnerTableProjection(playerName, tableEvents).table
+    }
 
     private class InnerTableProjection(private val playerName: String, events: List<Event>) {
         val table: Table

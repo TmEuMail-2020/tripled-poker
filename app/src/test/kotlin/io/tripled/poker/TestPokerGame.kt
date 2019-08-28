@@ -30,9 +30,11 @@ fun pokerTableTestNoEventAssert(test: TestPokerGame.TestPokerTable.() -> Unit)
 
 open class TestPokerGame(private val deck: PredeterminedCardDeck = PredeterminedCardDeck(listOf()),
                          private val eventStore: DummyEventStore = DummyEventStore(),
-                         private val gameUseCases: GameService = GameUseCases(eventStore,{deck}),
-                         private val useCases: TableService = TableUseCases(eventStore, gameUseCases)) {
+                         private val eventPublisher: EventPublisher = DummyEventPublisher(),
+                         private val gameUseCases: GameService = GameUseCases(eventStore,{deck}, eventPublisher),
+                         private val tableUseCases: TableService = TableUseCases(eventStore, gameUseCases, eventPublisher) { "gameId" }) {
 
+    private lateinit var gameId: GameId
     private lateinit var players: List<PlayerId>
     private val expectedEvents = ArrayList<Event>()
 
@@ -40,7 +42,7 @@ open class TestPokerGame(private val deck: PredeterminedCardDeck = Predetermined
 
     fun given(givenActions: TestPokerGame.() -> Unit): TestPokerGame {
         val noopPokerGame = TestPokerGame(gameUseCases = DummyGameUseCases(),
-                useCases = DummyTableUseCases())
+                tableUseCases = DummyTableUseCases())
         noopPokerGame.givenActions()
         this.eventStore.given = noopPokerGame.expectedEvents
 
@@ -56,7 +58,7 @@ open class TestPokerGame(private val deck: PredeterminedCardDeck = Predetermined
     fun withPlayers(vararg players: PlayerId): TestPokerGame {
         this.players = players.asList()
         players.forEach {
-            useCases.join(it)
+            tableUseCases.join(it)
             expectedEvents += PlayerJoinedTable(it)
         }
 
@@ -68,8 +70,8 @@ open class TestPokerGame(private val deck: PredeterminedCardDeck = Predetermined
     }
 
     fun preflop(vararg playersWithCards: Pair<PlayerId, Hand>, actions: GameAction.() -> Unit): TestPokerGame {
-        useCases.startGame()
-        expectedEvents += GameStarted(players)
+        gameId = tableUseCases.startGame()
+        expectedEvents += GameStarted(gameId, players)
         expectedEvents += HandsAreDealt(DeckMother().deckOfHearts(), mapOf(*playersWithCards))
 
         handleActions(actions)
@@ -108,7 +110,7 @@ open class TestPokerGame(private val deck: PredeterminedCardDeck = Predetermined
     }
 
     private fun handleActions(actions: GameAction.() -> Unit) {
-        val gameAction = GameAction(gameUseCases)
+        val gameAction = GameAction(gameId, gameUseCases)
         actions.invoke(gameAction)
         expectedEvents += gameAction.expectedEvents
 
@@ -134,13 +136,14 @@ open class TestPokerGame(private val deck: PredeterminedCardDeck = Predetermined
         expect(expectedEvents).toBe(eventStore.newEvents)
     }
 
-    class GameAction(private val gameUseCases: GameService,
+    class GameAction(private val gameId: GameId,
+                     private val gameUseCases: GameService,
                      val expectedEvents: ArrayList<Event> = ArrayList()) {
 
         fun PlayerId.checks() = check(this)
 
         private fun check(playerId: PlayerId){
-            gameUseCases.check(playerId)
+            gameUseCases.check(gameId, playerId)
             expectedEvents += PlayerChecked(playerId)
         }
 
@@ -150,9 +153,10 @@ open class TestPokerGame(private val deck: PredeterminedCardDeck = Predetermined
 
     class TestPokerTable (private val deck: PredeterminedCardDeck = PredeterminedCardDeck(listOf()),
                           private val eventStore: DummyEventStore = DummyEventStore(),
-                          private val gameUseCases: GameService = GameUseCases(eventStore,{deck}),
-                          private val tableUseCases: TableService = TableUseCases(eventStore, gameUseCases))
-        : TestPokerGame(deck, eventStore, gameUseCases, TableUseCases(eventStore, gameUseCases)) {
+                          private val eventPublisher: EventPublisher = DummyEventPublisher(),
+                          private val gameUseCases: GameService = GameUseCases(eventStore,{deck}, eventPublisher),
+                          private val tableUseCases: TableService = TableUseCases(eventStore, gameUseCases, eventPublisher) { "gameId" })
+        : TestPokerGame(deck, eventStore, eventPublisher, gameUseCases, tableUseCases) {
 
         fun table(asPlayer: PlayerId, table: Table.() -> Unit): TestPokerTable {
             table.invoke(tableUseCases.getTable(asPlayer))
@@ -189,23 +193,27 @@ open class TestPokerGame(private val deck: PredeterminedCardDeck = Predetermined
                 events += players.map { PlayerJoinedTable(it) }
             }
 
-            fun startGame(cardsInDeck: List<Card>, vararg playerHands: Pair<PlayerId, Hand>) {
+            fun startGame(gameId: GameId, cardsInDeck: List<Card>, vararg playerHands: Pair<PlayerId, Hand>) {
                 val playerIds = playerHands.map { p -> p.first }.toTypedArray()
                 playersJoin(*playerIds)
-                events += GameStarted(playerIds.toList())
+                events += GameStarted(gameId, playerIds.toList())
                 events += HandsAreDealt(cardsInDeck, mapOf(*playerHands))
             }
         }
     }
 
     class DummyGameUseCases : GameService {
-        override fun check(player: String) = Unit
-        override fun startGame(players: List<PlayerId>) = Unit
+        override fun check(gameId: GameId, player: String) = Unit
+        override fun startGame(gameId: GameId, players: List<PlayerId>) = Unit
     }
 
     class DummyTableUseCases : TableService {
         override fun join(name: String) = Unit
-        override fun startGame() = Unit
+        override fun startGame(): GameId = "gameId"
         override fun getTable(playerId: PlayerId): Table = null!!
+    }
+
+    class DummyEventPublisher : EventPublisher {
+        override fun publish(id: Any, events: List<Event>) = Unit
     }
 }

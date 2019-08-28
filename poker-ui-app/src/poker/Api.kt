@@ -12,7 +12,7 @@ class PokerApi(var playerName: String = "") {
 
     private val graphql = """
         mutation playRound(${'$'}name: String!) {
-            table: startRound(name: ${'$'}name) {
+            table: startGame(name: ${'$'}name) {
                 players {
                     name
                     cards {
