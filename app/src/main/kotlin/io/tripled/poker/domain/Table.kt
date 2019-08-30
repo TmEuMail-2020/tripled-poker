@@ -1,12 +1,12 @@
 package io.tripled.poker.domain
 
 typealias PlayerId = String
+typealias TableId = String
 
 data class PlayerJoinedTable(val name: String) : Event
 data class GameStarted(val gameId: GameId, val players: List<PlayerId>) : Event
 
 class Table(tableState: TableState) {
-
     private val players = tableState.players
 
     fun join(name: PlayerId) = if (valid(name)) listOf<Event>(PlayerJoinedTable(name)) else listOf()
@@ -17,12 +17,9 @@ class Table(tableState: TableState) {
         if (players.size > 1)
             yield(GameStarted(gameId, players))
     }.toList()
-
-
 }
 
 data class TableState(val players: List<PlayerId>) {
-
     companion object {
         fun of(events: List<Event>) = TableState(players(events))
 
@@ -30,6 +27,5 @@ data class TableState(val players: List<PlayerId>) {
                 .filterEvents<PlayerJoinedTable>()
                 .map { event -> event.name }
     }
-
 }
 

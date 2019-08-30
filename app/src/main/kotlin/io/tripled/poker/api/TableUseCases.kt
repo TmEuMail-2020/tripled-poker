@@ -2,6 +2,7 @@ package io.tripled.poker.api
 
 import io.tripled.poker.domain.*
 import io.tripled.poker.eventsourcing.EventStore
+import io.tripled.poker.projection.ActiveGames
 import io.tripled.poker.projection.TableProjection
 
 interface TableService {
@@ -16,8 +17,9 @@ class TableUseCases(
         private val eventPublisher: EventPublisher,
         private val gameIdGenerator: () -> GameId
 ) : TableService {
-    /** COMMAND **/
+    private val tableId: TableId = "1"
 
+    /** COMMAND **/
     override fun join(name: String) {
         executeOnTable { join(name) }
     }
@@ -27,7 +29,7 @@ class TableUseCases(
         val gameStartedEvent = events.lastEventOrNull<GameStarted>()
 
         gameStartedEvent?.apply {
-            gameUseCases.startGame(this.gameId, this.players)
+            gameUseCases.startGame(tableId, this.gameId, this.players)
         }
 
         return gameStartedEvent!!.gameId
@@ -43,11 +45,11 @@ class TableUseCases(
     private fun withTable() = Table(TableState.of(eventStore.findById(1)))
 
     private fun publish(events: List<Event>) {
-        eventPublisher.publish(1, events)
+        eventPublisher.publish(tableId, events)
     }
 
     private fun save(events: List<Event>) {
-        eventStore.save(1, events)
+        eventStore.save(tableId, events)
     }
 
     /** QUERY **/

@@ -7,16 +7,19 @@ import io.tripled.poker.eventsourcing.EventStore
 
 class TableProjection {
 
-    fun table(playerName: String, eventstore: EventStore): Table {
-        val tableEvents = eventstore.findById(1)
+    fun table(playerName: PlayerId, eventStore: EventStore): Table {
+        val tableEvents = mergeTableAndActiveGameStream(eventStore.findById(1), eventStore)
+        return InnerTableProjection(playerName, tableEvents).table
+    }
+
+    private fun mergeTableAndActiveGameStream(tableEvents: List<Event>, eventStore: EventStore): List<Event> {
         tableEvents
                 .filterEvents<GameStarted>()
                 .lastOrNull()?.apply {
-                    val currentlyActiveGameEvents = eventstore.findById(gameId)
-                    return InnerTableProjection(playerName, tableEvents.union(currentlyActiveGameEvents).toList()).table
+                    val currentlyActiveGameEvents = eventStore.findById(gameId)
+                   return tableEvents.union(currentlyActiveGameEvents).toList()
                 }
-
-        return InnerTableProjection(playerName, tableEvents).table
+        return tableEvents
     }
 
     private class InnerTableProjection(private val playerName: String, events: List<Event>) {

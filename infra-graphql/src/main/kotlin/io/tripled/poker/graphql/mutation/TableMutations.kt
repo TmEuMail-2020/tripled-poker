@@ -14,7 +14,7 @@ class TableMutations(private val tableUseCases: TableService, private val gameUs
 
     fun startGame(name: String) = executeTableUseCase(name) { startGame() }
 
-    fun check(gameId: GameId, name: String) = executeGameUseCase(name) { check(gameId, name) }
+    fun check(name: String) = executeGameUseCase(name) { check(name) }
 
     private fun executeTableUseCase(name: String, tableUseCase: TableService.() -> Unit): Table {
         tableUseCases.tableUseCase()

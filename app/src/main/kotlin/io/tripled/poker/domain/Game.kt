@@ -74,11 +74,11 @@ data class GameState(
         fun of(events: List<Event>) = GameState(players(events),
                 hands(events),
                 deck(events),
-                countChecks(events), phase(events))
+                countChecks(events),
+                phase(events))
 
         private fun countChecks(events: List<Event>): Int =
                 events.filterEvents<PlayerChecked>().size
-
 
         private fun players(events: List<Event>): List<PlayerId> = hands(events).keys.toList()
 
@@ -119,5 +119,4 @@ data class GameState(
                     }
                 })
     }
-
 }
