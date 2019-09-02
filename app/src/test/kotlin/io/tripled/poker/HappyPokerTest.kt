@@ -4,6 +4,7 @@ import io.tripled.poker.api.response.Suit.HEARTS
 import io.tripled.poker.api.response.Value.*
 import io.tripled.poker.domain.DeckMother
 import io.tripled.poker.domain.of
+import io.tripled.poker.dsl.pokerGameTest
 import org.junit.jupiter.api.Test
 
 class HappyPokerTest {

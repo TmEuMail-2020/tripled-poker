@@ -9,6 +9,8 @@ import io.tripled.poker.api.response.Suit.HEARTS
 import io.tripled.poker.api.response.Value.*
 import io.tripled.poker.domain.DeckMother
 import io.tripled.poker.domain.of
+import io.tripled.poker.dsl.pokerGameTest
+import io.tripled.poker.dsl.pokerTableTestNoEventAssert
 import org.junit.jupiter.api.Test
 
 class StartGameUseCaseTests {
@@ -46,13 +48,13 @@ class StartGameUseCaseTests {
 
         expect {
             // -> execute action on done game
-            while (true){
+            while (true) {
                 action {
                     Joe.checks()
                     Jef.checks()
                 }
             }
-        }.toThrow<RuntimeException>{
+        }.toThrow<RuntimeException> {
             message { startsWith("t'is gedaan, zet u derover") }
         }
     }

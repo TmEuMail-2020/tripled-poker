@@ -2,6 +2,8 @@ package io.tripled.poker
 
 import ch.tutteli.atrium.api.cc.en_GB.isEmpty
 import ch.tutteli.atrium.verbs.expect
+import io.tripled.poker.dsl.pokerGameNoEventAssert
+import io.tripled.poker.dsl.pokerGameTest
 import org.junit.jupiter.api.Test
 
 class JoinTableTests {

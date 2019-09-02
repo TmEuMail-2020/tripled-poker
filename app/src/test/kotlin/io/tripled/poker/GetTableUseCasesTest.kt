@@ -9,6 +9,8 @@ import io.tripled.poker.domain.ShuffledDeck
 import io.tripled.poker.domain.mapToCard
 import io.tripled.poker.domain.suitedAceKing
 import io.tripled.poker.domain.suitedConnectors
+import io.tripled.poker.dsl.pokerTableTest
+import io.tripled.poker.dsl.pokerTableTestNoEventAssert
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
@@ -18,7 +20,7 @@ class GetTableUseCasesTest {
 
     @Test
     internal fun `a new table has no players`() = pokerTableTest {
-        table(Jef){
+        table(Jef) {
             assertEquals(0, players.size)
         }
     }
@@ -29,7 +31,7 @@ class GetTableUseCasesTest {
             withPlayers(Joe, Jef)
         }
 
-        table(Jef){
+        table(Jef) {
             expect(players).toBe(listOf(
                     Player(Joe),
                     Player(Jef)
@@ -38,15 +40,15 @@ class GetTableUseCasesTest {
     }
 
     @Test
-    internal fun `a table with players and I can only see my own cards`() = pokerTableTest  {
+    internal fun `a table with players and I can only see my own cards`() = pokerTableTest {
         given {
             withPlayers(Joe, Jef)
             preflop(Joe to suitedConnectors,
-                    Jef to suitedAceKing){
+                    Jef to suitedAceKing) {
             }
         }
 
-        table(Joe){
+        table(Joe) {
             expect(players).toBe(listOf(
                     Player(Joe, VisibleCards(suitedConnectors.cards().map { it.mapToCard() })),
                     Player(Jef, HiddenCards(2))
@@ -59,12 +61,12 @@ class GetTableUseCasesTest {
         given {
             withPlayers(Joe, Jef)
             preflop(Joe to suitedConnectors,
-                    Jef to suitedAceKing){
+                    Jef to suitedAceKing) {
             }
             expectWinner(Jef)
         }
 
-        table(Joe){
+        table(Joe) {
             expect(winner).toBe(
                     Player(Jef, VisibleCards(suitedAceKing.cards().map { it.mapToCard() }))
             )
@@ -85,11 +87,11 @@ class GetTableUseCasesTest {
     internal fun `player joins after cards are dealt`() = pokerTableTest {
         given {
             withPlayers(Joe)
-            preflop(Joe to suitedConnectors){}
+            preflop(Joe to suitedConnectors) {}
             withPlayers(Jef)
         }
 
-        table(Joe){
+        table(Joe) {
             expect(players).toBe(listOf(
                     Player(Joe, VisibleCards(suitedConnectors.cards().map { it.mapToCard() })),
                     Player(Jef)
