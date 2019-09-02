@@ -66,9 +66,9 @@ class TableProjection {
         private fun getPlayerHand(events: List<Event>, player: String) =
                 events.lastEventOrNull<HandsAreDealt>()?.hands?.let { it[player] }
 
-        private fun io.tripled.poker.domain.Hand.asVisibleCards() = VisibleCards(mapToCards())
-        private fun io.tripled.poker.domain.Hand.asHiddenCards() = HiddenCards(cards().size)
-        private fun io.tripled.poker.domain.Hand.mapToCards() = cards().map { it.mapToCard() }
+        private fun Hand.asVisibleCards() = VisibleCards(mapToCards())
+        private fun Hand.asHiddenCards() = HiddenCards(cards().size)
+        private fun Hand.mapToCards() = cards().map { it.mapToCard() }
         private fun io.tripled.poker.domain.Card.mapToCard() = io.tripled.poker.api.response.Card(this.suit, this.value)
 
     }

@@ -10,7 +10,7 @@ import io.tripled.poker.domain.PlayerId
 import io.tripled.poker.domain.PredeterminedCardDeck
 
 class PokerTable(private val deck: PredeterminedCardDeck = PredeterminedCardDeck(listOf()),
-                 private val eventStore: DummyEventStore = DummyEventStore(),
+                 internal val eventStore: DummyEventStore = DummyEventStore(),
                  private val eventPublisher: EventPublisher = DummyEventPublisher(),
                  private val gameUseCases: GameService = GameUseCases(eventStore, { deck }, eventPublisher, DummyActiveGames()),
                  private val tableUseCases: TableService = TableUseCases(eventStore, gameUseCases, eventPublisher) { "gameId" })
