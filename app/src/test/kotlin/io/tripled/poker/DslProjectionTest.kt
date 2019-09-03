@@ -28,6 +28,13 @@ class DslProjectionTest {
                 Joe.checks()
                 Jef.checks()
             }
+            flop(NINE of HEARTS,
+                    EIGHT of HEARTS,
+                    SEVEN of HEARTS
+            ) {
+                Joe.checks()
+                Jef.checks()
+            }
         }
 
         val dsl = DslProjection().dsl(DummyEventStore(this.eventStore.given))
@@ -39,6 +46,13 @@ class DslProjectionTest {
             preflop(
                 Joe to ((TEN of HEARTS) and (ACE of HEARTS)),
                 Jef to ((KING of HEARTS) and (QUEEN of HEARTS))
+            ) {
+                Joe.checks()
+                Jef.checks()
+            }
+            flop(NINE of HEARTS,
+                    EIGHT of HEARTS,
+                    SEVEN of HEARTS
             ) {
                 Joe.checks()
                 Jef.checks()
