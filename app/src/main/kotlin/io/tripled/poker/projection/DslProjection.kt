@@ -39,11 +39,17 @@ class DslProjection {
             """preflop(
 ${tableEvents.filterEvents<HandsAreDealt>()
                     .map {
-                        it -> it.hands.map { pv ->
+                        it.hands.map { pv ->
                         "    ${pv.key} to ((${pv.value.card1.mapToDsl()}) and (${pv.value.card2.mapToDsl()}))"
                         }.joinToString(",\n")
                     }.first()}
 ) {
+${tableEvents.subList(0, tableEvents.indexOf(tableEvents.filterEvents<RoundCompleted>()[0])).map { 
+                when(it){
+                    is PlayerChecked -> "    ${it.name}.checks()"
+                    else -> ""
+                }}.filter { it.isNotBlank() }.joinToString("\n")
+}
 }""".trimIndent()
 
 

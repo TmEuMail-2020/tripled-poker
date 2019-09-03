@@ -25,6 +25,8 @@ class DslProjectionTest {
                 Joe to ((TEN of HEARTS) and (ACE of HEARTS)),
                 Jef to ((KING of HEARTS) and (QUEEN of HEARTS))
             ) {
+                Joe.checks()
+                Jef.checks()
             }
         }
 
@@ -38,6 +40,8 @@ class DslProjectionTest {
                 Joe to ((TEN of HEARTS) and (ACE of HEARTS)),
                 Jef to ((KING of HEARTS) and (QUEEN of HEARTS))
             ) {
+                Joe.checks()
+                Jef.checks()
             }
         """.trimIndent())
     }
