@@ -17,7 +17,7 @@ class DslProjectionTest {
             startGame(DeckMother().deckOfHearts())
         }
 
-        val dsl = DslProjection().dsl(DummyEventStore(this.eventStore.given.toMutableList() /* todo fixme */))
+        val dsl = DslProjection().dsl(DummyEventStore(this.eventStore.given))
 
         expect(dsl).toBe(
         """
