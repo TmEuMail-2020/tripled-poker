@@ -8,16 +8,24 @@ class DslProjection {
     fun dsl(eventStore: EventStore): String {
         val tableEvents = mergeTableAndActiveGameStream(eventStore.findById(1), eventStore)
 
+        val players = projectPlayers(tableEvents)
         val cards = projectCards(tableEvents)
 
-        return cards
+        return listOf(players, cards).joinToString("\n")
     }
+
+    private fun projectPlayers(tableEvents: List<Event>) =
+            "withPlayers(${tableEvents
+                    .filterEvents<PlayerJoinedTable>()
+                    .map {
+                        it -> it.name
+                    }.joinToString(", ")})"
 
     private fun projectCards(tableEvents: List<Event>) =
         tableEvents
                 .filterEvents<GameStarted>()
                 .map {
-                    it -> "withCards(${cards(it.cardsInDeck)})"
+                    it -> "startGame(${cards(it.cardsInDeck)})"
                 }.first()
 
     private fun cards(cardsInDeck: List<Card>)
