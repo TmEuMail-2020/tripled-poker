@@ -19,7 +19,7 @@ class DslProjectionTest {
     @Test
     internal fun `test to see if we can generated the dsl out of the event stream`() = pokerTableTest {
         given {
-            withPlayers()
+            withPlayers(Joe, Jef)
             startGame(DeckMother().deckOfHearts())
             preflop(
                 Joe to ((TEN of HEARTS) and (ACE of HEARTS)),
@@ -32,7 +32,7 @@ class DslProjectionTest {
 
         expect(dsl).toBe(
         """
-            withPlayers()
+            withPlayers(Joe, Jef)
             startGame(TEN of HEARTS,ACE of HEARTS,KING of HEARTS,QUEEN of HEARTS,NINE of HEARTS,EIGHT of HEARTS,SEVEN of HEARTS,SIX of HEARTS,FIVE of HEARTS)
             preflop(
                 Joe to ((TEN of HEARTS) and (ACE of HEARTS)),
