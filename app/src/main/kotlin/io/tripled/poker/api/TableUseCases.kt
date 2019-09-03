@@ -4,6 +4,7 @@ import io.tripled.poker.domain.*
 import io.tripled.poker.eventsourcing.EventStore
 import io.tripled.poker.projection.ActiveGames
 import io.tripled.poker.projection.TableProjection
+import java.lang.RuntimeException
 
 interface TableService {
     fun join(name: String)
@@ -14,6 +15,7 @@ interface TableService {
 class TableUseCases(
         private val eventStore: EventStore,
         private val gameUseCases: GameService,
+        private val deckFactory: () -> Deck,
         private val eventPublisher: EventPublisher,
         private val gameIdGenerator: () -> GameId
 ) : TableService {
@@ -25,14 +27,15 @@ class TableUseCases(
     }
 
     override fun startGame(): GameId {
-        val events = executeOnTable { startGame(gameIdGenerator()) }
+        val events = executeOnTable { startGame(gameIdGenerator(), deckFactory()) }
         val gameStartedEvent = events.lastEventOrNull<GameStarted>()
 
         gameStartedEvent?.apply {
-            gameUseCases.startGame(tableId, this.gameId, this.players)
+            gameUseCases.startGame(tableId, this.gameId, this.players, deckFactory())
+            return gameStartedEvent!!.gameId
         }
 
-        return gameStartedEvent!!.gameId
+        throw RuntimeException("Can't start a game with only 1 player")
     }
 
     private fun executeOnTable(command: Table.() -> List<Event>): List<Event> {

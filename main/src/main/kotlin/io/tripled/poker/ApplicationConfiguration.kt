@@ -21,13 +21,13 @@ class ApplicationConfiguration {
 
     @Bean
     fun tableUseCases(eventStore: EventStore, eventPublisher: EventPublisher, gameUseCases: GameService)
-            = TableUseCases(eventStore, gameUseCases, eventPublisher) {
+            = TableUseCases(eventStore, gameUseCases, { ShuffledDeck() }, eventPublisher) {
                 UUID.randomUUID().toString()
             }
 
     @Bean
     fun gameUseCases(eventStore: EventStore, eventPublisher: EventPublisher, activeGames: ActiveGames)
-            = GameUseCases(eventStore, { ShuffledDeck() }, eventPublisher, activeGames)
+            = GameUseCases(eventStore, eventPublisher, activeGames)
 
     @Bean
     fun activeGames() = object : ActiveGames {
@@ -46,5 +46,4 @@ class ConcreteEventPublisher(private val applicationEventPublisher: ApplicationE
             applicationEventPublisher.publishEvent(event)
         }
     }
-
 }

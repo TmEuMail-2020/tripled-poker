@@ -25,8 +25,8 @@ fun pokerTableTestNoEventAssert(test: PokerTable.() -> Unit) = PokerTable()
 open class TestPokerGame(private val deck: PredeterminedCardDeck = PredeterminedCardDeck(listOf()),
                          private val eventStore: DummyEventStore = DummyEventStore(),
                          private val eventPublisher: EventPublisher = DummyEventPublisher(),
-                         private val gameUseCases: GameService = GameUseCases(eventStore, { deck }, eventPublisher, DummyActiveGames()),
-                         private val tableUseCases: TableService = TableUseCases(eventStore, gameUseCases, eventPublisher) { "gameId" }) {
+                         private val gameUseCases: GameService = GameUseCases(eventStore, eventPublisher, DummyActiveGames()),
+                         private val tableUseCases: TableService = TableUseCases(eventStore, gameUseCases, { deck }, eventPublisher) { "gameId" }) {
 
     private lateinit var gameId: GameId
     private lateinit var players: List<PlayerId>
@@ -41,6 +41,16 @@ open class TestPokerGame(private val deck: PredeterminedCardDeck = Predetermined
         this.eventStore.given = noopPokerGame.expectedEvents
 
         return this
+    }
+
+    fun startGame(predefinedCards: List<Card>): TestPokerGame {
+        deck.provideNewCards(predefinedCards)
+
+        tableUseCases.startGame()
+        expectedEvents += GameStarted(gameId, players.toList(), DeckMother().deckOfHearts())
+
+        return this
+
     }
 
     fun withCards(predefinedCards: List<Card>): TestPokerGame {
@@ -59,14 +69,10 @@ open class TestPokerGame(private val deck: PredeterminedCardDeck = Predetermined
         return this
     }
 
-    fun start() {
-
-    }
-
     fun preflop(vararg playersWithCards: Pair<PlayerId, Hand>, actions: GameAction.() -> Unit): TestPokerGame {
         gameId = tableUseCases.startGame()
-        expectedEvents += GameStarted(gameId, players)
-        expectedEvents += HandsAreDealt(DeckMother().deckOfHearts(), mapOf(*playersWithCards))
+        expectedEvents += GameStarted(gameId, players, DeckMother().deckOfHearts())
+        expectedEvents += HandsAreDealt(mapOf(*playersWithCards))
 
         handleActions(actions)
 
@@ -121,9 +127,9 @@ open class TestPokerGame(private val deck: PredeterminedCardDeck = Predetermined
     fun assertExpectedEventsToMatchActualEvents() {
         println("======================== EVENTS ========================")
         expectedEvents.forEachIndexed { index, event ->
-            val same = event == eventStore.newEvents[index]
+            val same = eventStore.newEvents.size > index && event == eventStore.newEvents[index]
 
-            println("$index. $same => $event || ${eventStore.newEvents[index]}")
+            println("$index. $same => $event || ${eventStore.newEvents.getOrNull(index)}")
         }
         println("========================================================")
         expect(expectedEvents).hasSize(eventStore.newEvents.size)

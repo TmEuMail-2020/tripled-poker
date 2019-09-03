@@ -1,6 +1,6 @@
 package io.tripled.poker.domain
 
-data class HandsAreDealt(val cardsInDeck: List<Card>, val hands: Map<PlayerId, Hand>) : Event
+data class HandsAreDealt(val hands: Map<PlayerId, Hand>) : Event
 data class RoundCompleted(val Noop: String = "Guido") : Event
 data class PlayerChecked(val name: PlayerId) : Event
 data class PlayerWonGame(val name: PlayerId) : Event
@@ -40,7 +40,7 @@ class Game(gameState: GameState) {
         }
     }.toList()
 
-    private fun dealPlayerHands(players: List<PlayerId>, deck: Deck): HandsAreDealt = HandsAreDealt(deck.cards, players.associateWith { Hand(deck.dealCard(), deck.dealCard()) })
+    private fun dealPlayerHands(players: List<PlayerId>, deck: Deck): HandsAreDealt = HandsAreDealt(players.associateWith { Hand(deck.dealCard(), deck.dealCard()) })
 
     private fun flop(): List<Event> = listOf(dealFlop(deck))
 
@@ -90,7 +90,7 @@ data class GameState(
 
         private fun deck(events: List<Event>): List<Card> {
             val lastEventOrNull = events
-                    .lastEventOrNull<HandsAreDealt>() ?: return listOf()
+                    .lastEventOrNull<GameStarted>() ?: return listOf()
 
             val cards = lastEventOrNull.cardsInDeck.toMutableList()
             return events.fold(cards) { _, event ->

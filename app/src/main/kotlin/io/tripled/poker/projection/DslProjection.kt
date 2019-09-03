@@ -15,7 +15,7 @@ class DslProjection {
 
     private fun projectCards(tableEvents: List<Event>) =
         tableEvents
-                .filterEvents<HandsAreDealt>()
+                .filterEvents<GameStarted>()
                 .map {
                     it -> "withCards(${cards(it.cardsInDeck)})"
                 }.first()

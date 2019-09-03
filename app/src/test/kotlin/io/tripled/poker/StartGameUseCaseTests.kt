@@ -65,7 +65,11 @@ class StartGameUseCaseTests {
             withPlayers(Joe)
         }
 
-        start()
+        expect {
+            startGame(DeckMother().deckOfHearts())
+        }.toThrow<RuntimeException> {
+            message { startsWith("Can't start a game with only 1 player") }
+        }
 
         expect(newEvents).isEmpty()
     }

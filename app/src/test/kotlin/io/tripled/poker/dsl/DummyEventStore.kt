@@ -27,15 +27,15 @@ class DummyEventStore(private val _newEvents: MutableList<Event> = mutableListOf
     class EventBuilder {
         val events = mutableListOf<Event>()
 
-        fun playersJoin(vararg players: PlayerId) {
+        private fun playersJoin(vararg players: PlayerId) {
             events += players.map { PlayerJoinedTable(it) }
         }
 
         fun startGame(gameId: GameId, cardsInDeck: List<Card>, vararg playerHands: Pair<PlayerId, Hand>) {
             val playerIds = playerHands.map { p -> p.first }.toTypedArray()
             playersJoin(*playerIds)
-            events += GameStarted(gameId, playerIds.toList())
-            events += HandsAreDealt(cardsInDeck, mapOf(*playerHands))
+            events += GameStarted(gameId, playerIds.toList(), cardsInDeck)
+            events += HandsAreDealt(mapOf(*playerHands))
         }
     }
 }
