@@ -16,8 +16,8 @@ class HappyPokerTest {
         withPlayers(Joe, Jef)
         startGame(DeckMother().deckOfHearts())
         preflop(
-                Joe to ((TEN of HEARTS) and (ACE of HEARTS)),
-                Jef to ((KING of HEARTS) and (QUEEN of HEARTS))
+            Joe to ((TEN of HEARTS) and (ACE of HEARTS)),
+            Jef to ((KING of HEARTS) and (QUEEN of HEARTS))
         ) {
             Joe.checks()
             Jef.checks()
