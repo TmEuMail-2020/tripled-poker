@@ -13,8 +13,8 @@ class HappyPokerTest {
 
     @Test
     internal fun `test all usecases and events to play game with two players`() = pokerGameTest {
-        withCards(DeckMother().deckOfHearts())
         withPlayers(Joe, Jef)
+        startGame(DeckMother().deckOfHearts())
         preflop(
                 Joe to ((TEN of HEARTS) and (ACE of HEARTS)),
                 Jef to ((KING of HEARTS) and (QUEEN of HEARTS))

@@ -5,10 +5,8 @@ import ch.tutteli.atrium.verbs.expect
 import io.tripled.poker.api.response.HiddenCards
 import io.tripled.poker.api.response.Player
 import io.tripled.poker.api.response.VisibleCards
-import io.tripled.poker.domain.ShuffledDeck
+import io.tripled.poker.domain.*
 import io.tripled.poker.domain.mapToCard
-import io.tripled.poker.domain.suitedAceKing
-import io.tripled.poker.domain.suitedConnectors
 import io.tripled.poker.dsl.pokerTableTest
 import io.tripled.poker.dsl.pokerTableTestNoEventAssert
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -43,6 +41,7 @@ class GetTableUseCasesTest {
     internal fun `a table with players and I can only see my own cards`() = pokerTableTest {
         given {
             withPlayers(Joe, Jef)
+            startGame(DeckMother().deckOfHearts())
             preflop(Joe to suitedConnectors,
                     Jef to suitedAceKing) {
             }
@@ -60,6 +59,7 @@ class GetTableUseCasesTest {
     internal fun `a table with a winner`() = pokerTableTest {
         given {
             withPlayers(Joe, Jef)
+            startGame(DeckMother().deckOfHearts())
             preflop(Joe to suitedConnectors,
                     Jef to suitedAceKing) {
             }
@@ -87,6 +87,7 @@ class GetTableUseCasesTest {
     internal fun `player joins after cards are dealt`() = pokerTableTest {
         given {
             withPlayers(Joe)
+            startGame(DeckMother().deckOfHearts())
             preflop(Joe to suitedConnectors) {}
             withPlayers(Jef)
         }

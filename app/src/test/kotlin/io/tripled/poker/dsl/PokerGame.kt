@@ -70,8 +70,6 @@ open class TestPokerGame(private val deck: PredeterminedCardDeck = Predetermined
     }
 
     fun preflop(vararg playersWithCards: Pair<PlayerId, Hand>, actions: GameAction.() -> Unit): TestPokerGame {
-        gameId = tableUseCases.startGame()
-        expectedEvents += GameStarted(gameId, players, DeckMother().deckOfHearts())
         expectedEvents += HandsAreDealt(mapOf(*playersWithCards))
 
         handleActions(actions)
