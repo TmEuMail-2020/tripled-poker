@@ -10,16 +10,25 @@ class DslProjection {
 
         val withPlayers = withPlayers(tableEvents)
         val startGame = startGame(tableEvents)
-        val preflop = preflop(tableEvents)
-        val flop = flop(tableEvents)
+        val preflop = tableEvents.ifContaining<HandsAreDealt> { preflop(tableEvents) }
+        val flop = tableEvents.ifContaining<FlopIsTurned> { flop(tableEvents) }
+        val turn = tableEvents.ifContaining<TurnIsTurned> { turn(tableEvents) }
+        val river = tableEvents.ifContaining<RiverIsTurned> { river(tableEvents) }
+        val expectedWinner = tableEvents.ifContaining<PlayerWonGame> { expectedWinner(tableEvents) }
 
         return listOf(
                 withPlayers,
                 startGame,
                 preflop,
-                flop
-            ).joinToString("\n")
+                flop,
+                turn,
+                river,
+                expectedWinner
+            ).filter { it.isNotBlank() }.joinToString("\n")
     }
+
+    private fun expectedWinner(tableEvents: List<Event>) =
+            tableEvents.filterEvents<PlayerWonGame>().map { "expectWinner(${it.name})" }.first()
 
     private fun mergeTableAndActiveGameStream(tableEvents: List<Event>, eventStore: EventStore): List<Event> {
         tableEvents
@@ -79,7 +88,7 @@ ${`preflop actions`(tableEvents)}
                                 "        " + it.card2.mapToDsl(), 
                                 "        " + it.card3.mapToDsl())
                                 .joinToString(",\n") 
-                    }.first()}
+                    }.firstOrNull()}
 ) {
 ${`flop actions`(tableEvents)}
 }""".trimIndent()
@@ -92,6 +101,22 @@ ${`flop actions`(tableEvents)}
             }
         }.filter { it.isNotBlank() }.joinToString("\n")
     }
+
+    private fun turn(tableEvents: List<Event>) =
+            """turn(${tableEvents.filterEvents<TurnIsTurned>()
+                    .map {
+                        it.card.mapToDsl()
+                    }.firstOrNull()}) {
+${`flop actions`(tableEvents)}
+}""".trimIndent()
+
+    private fun river(tableEvents: List<Event>) =
+            """river(${tableEvents.filterEvents<RiverIsTurned>()
+                    .map {
+                        it.card.mapToDsl()
+                    }.firstOrNull()}) {
+${`flop actions`(tableEvents)}
+}""".trimIndent()
 
     private fun Card.mapToDsl() = "$value of $suit"
 
