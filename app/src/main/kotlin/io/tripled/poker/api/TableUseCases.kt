@@ -32,7 +32,7 @@ class TableUseCases(
 
         gameStartedEvent?.apply {
             gameUseCases.startGame(tableId, this.gameId, this.players, deckFactory())
-            return gameStartedEvent!!.gameId
+            return gameStartedEvent.gameId
         }
 
         throw RuntimeException("Can't start a game with only 1 player")

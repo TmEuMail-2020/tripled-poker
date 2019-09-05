@@ -8,8 +8,8 @@ class DslProjection {
     fun dsl(eventStore: EventStore): String {
         val tableEvents = mergeTableAndActiveGameStream(eventStore.findById(1), eventStore)
 
-        val withPlayers = withPlayers(tableEvents)
-        val startGame = startGame(tableEvents)
+        val withPlayers = tableEvents.ifContaining<PlayerJoinedTable> { withPlayers(tableEvents) }
+        val startGame = tableEvents.ifContaining<GameStarted> { startGame(tableEvents) }
         val preflop = tableEvents.ifContaining<HandsAreDealt> { preflop(tableEvents) }
         val flop = tableEvents.ifContaining<FlopIsTurned> { flop(tableEvents) }
         val turn = tableEvents.ifContaining<TurnIsTurned> { turn(tableEvents) }
@@ -63,8 +63,9 @@ ${`players and their cards`(tableEvents)}
 ${`preflop actions`(tableEvents)}
 }""".trimIndent()
 
-    private fun `preflop actions`(tableEvents: List<Event>): String {
-        return tableEvents.subList(0, tableEvents.indexOf(tableEvents.filterEvents<RoundCompleted>()[0])).map {
+    private fun `preflop actions`(tableEvents: List<Event>): String
+        = tableEvents.ifContaining<RoundCompleted> {
+        tableEvents.subList(0, tableEvents.indexOf(tableEvents.filterEvents<RoundCompleted>()[0])).map {
             when (it) {
                 is PlayerChecked -> "    ${it.name}.checks()"
                 else -> ""

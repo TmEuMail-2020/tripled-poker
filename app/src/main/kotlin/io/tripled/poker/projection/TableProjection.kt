@@ -9,8 +9,11 @@ class TableProjection {
 
     fun table(playerName: PlayerId, eventStore: EventStore): Table {
         val tableEvents = mergeTableAndActiveGameStream(eventStore.findById(1), eventStore)
-        return InnerTableProjection(playerName, tableEvents).table
+        return InnerTableProjection(playerName, dsl(eventStore), tableEvents).table
     }
+
+    private fun dsl(eventStore: EventStore): String = DslProjection().dsl(eventStore)
+
 
     private fun mergeTableAndActiveGameStream(tableEvents: List<Event>, eventStore: EventStore): List<Event> {
         tableEvents
@@ -22,11 +25,11 @@ class TableProjection {
         return tableEvents
     }
 
-    private class InnerTableProjection(private val playerName: String, events: List<Event>) {
+    private class InnerTableProjection(private val playerName: String, dsl: String, events: List<Event>) {
         val table: Table
 
         init {
-            table = Table(players(events), winner(events))
+            table = Table(players(events), dsl, winner(events))
         }
 
         private fun winner(events: List<Event>): Player? {
