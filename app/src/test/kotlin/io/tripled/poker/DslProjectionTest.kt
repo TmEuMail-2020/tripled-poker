@@ -46,7 +46,7 @@ class DslProjectionTest {
             expectWinner(Jef)
         }
 
-        val dsl = DslProjection().dsl(DummyEventStore(this.eventStore.given))
+        val dsl = DslProjection(DummyEventStore(this.eventStore.given)).dsl()
 
         expect(dsl).toBe(
         """
@@ -93,7 +93,7 @@ class DslProjectionTest {
             }
         }
 
-        val dsl = DslProjection().dsl(DummyEventStore(this.eventStore.given))
+        val dsl = DslProjection(DummyEventStore(this.eventStore.given)).dsl()
 
         expect(dsl).toBe(
                 """

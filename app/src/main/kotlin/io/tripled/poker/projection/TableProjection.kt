@@ -12,7 +12,7 @@ class TableProjection {
         return InnerTableProjection(playerName, dsl(eventStore), tableEvents).table
     }
 
-    private fun dsl(eventStore: EventStore): String = DslProjection().dsl(eventStore)
+    private fun dsl(eventStore: EventStore): String = DslProjection(eventStore).dsl()
 
 
     private fun mergeTableAndActiveGameStream(tableEvents: List<Event>, eventStore: EventStore): List<Event> {

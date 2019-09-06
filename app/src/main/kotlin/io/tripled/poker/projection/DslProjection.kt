@@ -3,11 +3,24 @@ package io.tripled.poker.projection
 import io.tripled.poker.domain.*
 import io.tripled.poker.eventsourcing.EventStore
 
-class DslProjection {
+class DslProjection(private val eventStore: EventStore) {
 
-    fun dsl(eventStore: EventStore): String {
-        val tableEvents = mergeTableAndActiveGameStream(eventStore.findById(1), eventStore)
+    fun dsl(): String {
+        val tableEvents = eventStore.findById(1)
+        tableEvents
+                .filterEvents<GameStarted>()
+                .lastOrNull()?.apply {
+                    return dsl(mergeTableAndActiveGameStream(tableEvents, eventStore, gameId))
+                }
+        return dsl(tableEvents)
+    }
 
+    fun dsl(gameId: GameId): String {
+        val tableEvents = eventStore.findById(1)
+        return dsl(mergeTableAndActiveGameStream(tableEvents, eventStore, gameId))
+    }
+
+    private fun dsl(tableEvents: List<Event>): String {
         val withPlayers = tableEvents.ifContaining<PlayerJoinedTable> { withPlayers(tableEvents) }
         val startGame = tableEvents.ifContaining<GameStarted> { startGame(tableEvents) }
         val preflop = tableEvents.ifContaining<HandsAreDealt> { preflop(tableEvents) }
@@ -24,20 +37,15 @@ class DslProjection {
                 turn,
                 river,
                 expectedWinner
-            ).filter { it.isNotBlank() }.joinToString("\n")
+        ).filter { it.isNotBlank() }.joinToString("\n")
     }
 
     private fun expectedWinner(tableEvents: List<Event>) =
             tableEvents.filterEvents<PlayerWonGame>().map { "expectWinner(${it.name})" }.first()
 
-    private fun mergeTableAndActiveGameStream(tableEvents: List<Event>, eventStore: EventStore): List<Event> {
-        tableEvents
-                .filterEvents<GameStarted>()
-                .lastOrNull()?.apply {
-                    val currentlyActiveGameEvents = eventStore.findById(gameId)
-                    return tableEvents.union(currentlyActiveGameEvents).toList()
-                }
-        return tableEvents
+    private fun mergeTableAndActiveGameStream(tableEvents: List<Event>, eventStore: EventStore, gameId: GameId): List<Event> {
+        val currentlyActiveGameEvents = eventStore.findById(gameId)
+        return tableEvents.union(currentlyActiveGameEvents).toList()
     }
 
     private fun withPlayers(tableEvents: List<Event>) =

@@ -2,9 +2,14 @@ package io.tripled.poker.infra.eventsourcing.mongostore
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo
 import io.tripled.poker.domain.Event
+import io.tripled.poker.domain.GameId
+import io.tripled.poker.projection.DslProjection
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.repository.MongoRepository
 import org.springframework.stereotype.Repository
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.RestController
 import java.util.*
 
 data class PersistedEvent<AggregateId, Payload>(@Id val eventId: UUID = UUID.randomUUID(),
@@ -26,4 +31,14 @@ class EventStore(val eventRepo: MongoEventRepository) : io.tripled.poker.eventso
 
 interface MongoEventRepository : MongoRepository<PersistedEvent<Any, Event>, UUID> {
     fun findByAggregateId(aggregateId: Any): List<PersistedEvent<Any, Event>>
+}
+
+@RestController
+class EventController(private val eventRepo: MongoEventRepository,
+                      private val eventStore: io.tripled.poker.eventsourcing.EventStore){
+    @GetMapping("/events/{eventId}")
+    fun events(@PathVariable eventId: Any) = eventRepo.findByAggregateId(eventId)
+
+    @GetMapping("/events/{eventId}?dsl")
+    fun gameDsl(@PathVariable gameId: GameId) = DslProjection(eventStore).dsl(gameId)
 }
