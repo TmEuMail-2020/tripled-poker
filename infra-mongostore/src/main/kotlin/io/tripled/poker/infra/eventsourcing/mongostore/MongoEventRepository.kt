@@ -39,6 +39,6 @@ class EventController(private val eventRepo: MongoEventRepository,
     @GetMapping("/events/{eventId}")
     fun events(@PathVariable eventId: Any) = eventRepo.findByAggregateId(eventId)
 
-    @GetMapping("/events/{gameId}?dsl")
+    @GetMapping("/dsl/{gameId}")
     fun gameDsl(@PathVariable gameId: GameId) = DslProjection(eventStore).dsl(gameId)
 }
