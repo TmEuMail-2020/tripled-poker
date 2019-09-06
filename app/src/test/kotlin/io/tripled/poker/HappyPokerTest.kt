@@ -1,6 +1,6 @@
 package io.tripled.poker
 
-import io.tripled.poker.api.response.Suit.HEARTS
+import io.tripled.poker.api.response.Suit.*
 import io.tripled.poker.api.response.Value.*
 import io.tripled.poker.domain.DeckMother
 import io.tripled.poker.domain.of

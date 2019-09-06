@@ -50,7 +50,6 @@ open class TestPokerGame(private val deck: PredeterminedCardDeck = Predetermined
         expectedEvents += GameStarted(gameId, players.toList(), DeckMother().deckOfHearts())
 
         return this
-
     }
 
     fun withCards(predefinedCards: List<Card>): TestPokerGame {

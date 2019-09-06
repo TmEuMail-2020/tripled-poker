@@ -48,13 +48,13 @@ class DslProjection {
                     }.joinToString(", ")})"
 
     private fun startGame(tableEvents: List<Event>) =
-            "startGame(${tableEvents
+            "startGame(listOf(${tableEvents
                 .filterEvents<GameStarted>()
                 .map {
                     it -> it.cardsInDeck.map {
                         card -> card.mapToDsl()
                     }.joinToString(",")
-                }.first()})"
+                }.first()}))"
 
     private fun preflop(tableEvents: List<Event>) =
             """preflop(
