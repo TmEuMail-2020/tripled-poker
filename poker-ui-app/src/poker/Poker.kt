@@ -31,15 +31,17 @@ class PokerTableRepresentation : RComponent<RProps, RState>() {
     private var table: Table = Table()
     private var playerName = ""
     private var tableEvents: Array<dynamic> = emptyArray()
+    private var selectedGameId: String = ""
     private var gameEvents: Array<dynamic> = emptyArray()
     private var gameDsl: String = ""
 
     override fun componentDidMount() {
         pokerApi.getTable(::updateTable)
-        eventApi.events({ data -> setState { tableEvents = data }}, "1")
     }
 
     private fun updateTable(returnedTable: Table) {
+        eventApi.events({ data -> setState { tableEvents = data }}, "1")
+        updateGameStream()
         setState {
             table = returnedTable
         }
@@ -133,8 +135,8 @@ class PokerTableRepresentation : RComponent<RProps, RState>() {
                             attrs {
                                 onClickFunction = {
                                     clickEvent ->
-                                    eventApi.events({ data -> setState { gameEvents = data } }, e.payload.gameId as String)
-                                    eventApi.dsl({ data -> setState { gameDsl = data } }, e.payload.gameId as String)
+                                    selectedGameId = e.payload.gameId as String
+                                    updateGameStream()
                                 }
                                 href = "#gamestream"
                             }
@@ -151,6 +153,10 @@ class PokerTableRepresentation : RComponent<RProps, RState>() {
         }
     }
 
+    private fun updateGameStream(){
+        eventApi.events({ data -> setState { gameEvents = data } }, selectedGameId)
+        eventApi.dsl({ data -> setState { gameDsl = data } }, selectedGameId)
+    }
 }
 
 interface PlayerListProps : RProps {
