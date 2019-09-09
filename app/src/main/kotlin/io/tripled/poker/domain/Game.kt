@@ -73,7 +73,7 @@ data class GameState(
     companion object {
         fun of(events: List<Event>) = GameState(players(events),
                 hands(events),
-                deck(events),
+                remainingCards(events),
                 countChecks(events),
                 phase(events))
 
@@ -88,7 +88,7 @@ data class GameState(
             return lastEventOrNull?.hands ?: mapOf()
         }
 
-        private fun deck(events: List<Event>): List<Card> {
+        private fun remainingCards(events: List<Event>): List<Card> {
             val lastEventOrNull = events
                     .lastEventOrNull<GameStarted>() ?: return listOf()
 

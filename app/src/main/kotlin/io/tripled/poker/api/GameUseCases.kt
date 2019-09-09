@@ -37,7 +37,10 @@ class GameUseCases(
         publish(gameId, events)
     }
 
-    private fun withGame(gameId: GameId) = Game(GameState.of(eventStore.findById(gameId)))
+    private fun withGame(gameId: GameId) = Game(
+            GameState.of(eventStore.findById(gameId) +
+            eventStore.findById("1").filterIsInstance<GameStarted>().filter { gs -> gs.gameId == gameId })
+    )
 
     private fun publish(gameId: GameId, events: List<Event>) {
         eventPublisher.publish(gameId, events)
