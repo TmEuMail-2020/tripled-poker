@@ -3,6 +3,7 @@ package poker
 import deck.backOfCardImage
 import deck.cardImage
 import kotlinx.html.InputType
+import kotlinx.html.id
 import kotlinx.html.js.onChangeFunction
 import kotlinx.html.js.onClickFunction
 import kotlinx.html.js.onKeyPressFunction
@@ -26,11 +27,16 @@ fun RBuilder.pokerTable() = child(PokerTableRepresentation::class) {}
 
 class PokerTableRepresentation : RComponent<RProps, RState>() {
     private val pokerApi = PokerApi()
+    private val eventApi = EventStreamApi()
     private var table: Table = Table()
     private var playerName = ""
+    private var tableEvents: Array<dynamic> = emptyArray()
+    private var gameEvents: Array<dynamic> = emptyArray()
+    private var gameDsl: String = ""
 
     override fun componentDidMount() {
         pokerApi.getTable(::updateTable)
+        eventApi.events({ data -> setState { tableEvents = data }}, "1")
     }
 
     private fun updateTable(returnedTable: Table) {
@@ -80,6 +86,69 @@ class PokerTableRepresentation : RComponent<RProps, RState>() {
             cards(table.winner?.cards!!)
         }
         playerList(table)
+
+        table(classes = "table") {
+            thead {
+                tr {
+                    th {
+                        + "Table stream"
+                    }
+                    th {
+                        + "Game stream"
+                    }
+                    th {
+                        + "DSL"
+                    }
+                }
+            }
+            tbody {
+                tr {
+                    td {
+                        eventStream(tableEvents)
+                    }
+                    td {
+                        a {
+                            attrs {
+                                id = "gamestream"
+                            }
+                        }
+                        eventStream(gameEvents)
+                    }
+                    td {
+                        pre {
+                            + gameDsl
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun RBuilder.eventStream(events: Array<dynamic>) {
+        ol {
+            events.map { e ->
+                li(classes = "tilesWrap") {
+                    if (JSON.stringify(e.payload).contains("GameStarted")) {
+                        a {
+                            attrs {
+                                onClickFunction = {
+                                    clickEvent ->
+                                    eventApi.events({ data -> setState { gameEvents = data } }, e.payload.gameId as String)
+                                    eventApi.dsl({ data -> setState { gameDsl = data } }, e.payload.gameId as String)
+                                }
+                                href = "#gamestream"
+                            }
+                            +"gameId :: ${e.eventId}"
+                        }
+                    } else {
+                        p {
+                            +"eventId :: ${e.eventId}"
+                        }
+                    }
+                    pre { +JSON.stringify(e.payload, null, 4) }
+                }
+            }
+        }
     }
 
 }

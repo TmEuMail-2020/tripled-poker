@@ -23,3 +23,26 @@ body {
   vertical-align: top;
   padding: 10px;
 }
+
+.table {
+  border: 1px solid #333333;
+}
+
+th {
+  background-color: coral;
+}
+
+td {
+  vertical-align: top;
+}
+
+tr {
+  background-color: #EAF2F5;
+}
+
+li { background: #3c92cf; }
+li:nth-child(odd) { background: #ffc520; }
+
+li:hover { background: #aaffaa; }
+
+pre { background-color: #EAF2F5; }

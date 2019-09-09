@@ -158,3 +158,26 @@ class PokerApi(var playerName: String = "") {
         }
         """.trimIndent()
 }
+
+class EventStreamApi {
+
+    fun dsl(f: (String) -> Unit, eventId: String){
+        axios<String>(jsObject {
+            method = "get"
+            url = "/dsl/$eventId"
+            timeout = 3000
+        }).then { response ->
+            f.invoke(response.data)
+        }
+    }
+
+    fun events(f: (Array<dynamic>) -> Unit, eventId: String){
+        axios<Array<dynamic>>(jsObject {
+            method = "get"
+            url = "/events/$eventId"
+            timeout = 3000
+        }).then { response ->
+            f.invoke(response.data)
+        }
+    }
+}
