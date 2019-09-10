@@ -29,8 +29,20 @@ class TableProjection {
         val table: Table
 
         init {
-            table = Table(players(events), dsl, winner(events))
+            table = Table(players(events), flop(events), turn(events), river(events), winner(events), dsl)
         }
+
+        private fun flop(events: List<Event>): Cards = events.filterEvents<FlopIsTurned>()
+                .map { t -> VisibleCards(listOf(t.card1.mapToCard(), t.card2.mapToCard(), t.card3.mapToCard())) }
+                .firstOrNull() ?: HiddenCards(3)
+
+        private fun turn(events: List<Event>): Cards = events.filterEvents<TurnIsTurned>()
+                .map { t -> VisibleCards(listOf(t.card.mapToCard())) }
+                .firstOrNull() ?: HiddenCards(1)
+
+        private fun river(events: List<Event>): Cards = events.filterEvents<RiverIsTurned>()
+                .map { t -> VisibleCards(listOf(t.card.mapToCard())) }
+                .firstOrNull() ?: HiddenCards(1)
 
         private fun winner(events: List<Event>): Player? {
             return when (val winner = playerWonGame(events)) {

@@ -87,6 +87,20 @@ class PokerTableRepresentation : RComponent<RProps, RState>() {
         if (table.winner != null){
             cards(table.winner?.cards!!)
         }
+
+        table {
+            thead {
+                th { + "Flop" }
+                th { + "Turn" }
+                th { + "River" }
+            }
+            tbody {
+                td { }
+                td { }
+                td { }
+            }
+        }
+
         playerList(table)
 
         table(classes = "table") {

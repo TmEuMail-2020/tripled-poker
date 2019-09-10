@@ -2,7 +2,6 @@ package io.tripled.poker.api
 
 import io.tripled.poker.domain.*
 import io.tripled.poker.eventsourcing.EventStore
-import io.tripled.poker.projection.ActiveGames
 import io.tripled.poker.projection.TableProjection
 import java.lang.RuntimeException
 
