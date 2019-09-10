@@ -21,7 +21,12 @@ data class Card(val value: String, val suit: String){
 }
 data class Cards(val numberOfCards: Int, val visibleCards: Array<Card> = emptyArray())
 data class Player(val name: String, val cards: Cards)
-data class Table(val players: Array<Player> = emptyArray(), val winner: Player? = null)
+data class Table(val players: Array<Player> = emptyArray(),
+                 val flop: Cards = Cards(0),
+                 val turn: Cards = Cards(0),
+                 val river: Cards = Cards(0),
+                 val winner: Player? = null,
+                 val dsl: String = "")
 
 fun RBuilder.pokerTable() = child(PokerTableRepresentation::class) {}
 
@@ -90,14 +95,18 @@ class PokerTableRepresentation : RComponent<RProps, RState>() {
 
         table {
             thead {
-                th { + "Flop" }
-                th { + "Turn" }
-                th { + "River" }
+                tr {
+                    th { + "Flop" }
+                    th { + "Turn" }
+                    th { + "River" }
+                }
             }
             tbody {
-                td { }
-                td { }
-                td { }
+                tr {
+                    td { cards(table.flop) }
+                    td { cards(table.turn) }
+                    td { cards(table.river) }
+                }
             }
         }
 

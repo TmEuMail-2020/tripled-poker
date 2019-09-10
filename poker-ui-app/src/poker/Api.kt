@@ -98,6 +98,27 @@ class PokerApi(var playerName: String = "") {
                         }
                     }
                 }
+                flop {
+                  numberOfCards
+                  visibleCards {
+                    suit
+                    value
+                  }
+                }
+                turn {
+                  numberOfCards
+                  visibleCards {
+                    suit
+                    value
+                  }
+                }
+                river {
+                  numberOfCards
+                  visibleCards {
+                    suit
+                    value
+                  }
+                }
                 winner {
                     name
                     cards {
