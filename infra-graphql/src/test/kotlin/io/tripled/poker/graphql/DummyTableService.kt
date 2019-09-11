@@ -1,9 +1,11 @@
 package io.tripled.poker.graphql
 
 import io.tripled.poker.api.TableService
+import io.tripled.poker.api.response.HiddenCards
 import io.tripled.poker.api.response.Player
 import io.tripled.poker.api.response.Table
 import io.tripled.poker.domain.GameId
+import io.tripled.poker.domain.PlayerId
 import org.springframework.stereotype.Component
 
 @Component
@@ -19,7 +21,7 @@ class DummyTableService : TableService {
         players += Player(name)
     }
 
-    override fun getTable(name: String): Table = Table(players, "")
+    override fun getTable(playerId: PlayerId): Table = Table(players, HiddenCards(0), HiddenCards(0), HiddenCards(0), null, "")
 
     fun clear() {
         players.clear()
