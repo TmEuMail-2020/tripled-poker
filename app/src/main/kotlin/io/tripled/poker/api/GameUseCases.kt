@@ -5,9 +5,8 @@ import io.tripled.poker.eventsourcing.EventStore
 import io.tripled.poker.projection.ActiveGames
 
 interface GameService {
-    fun check(player: String)
+    fun check(tableId: TableId, player: PlayerId)
     fun startGame(tableId: TableId, gameId: GameId, players: List<PlayerId>)
-//    fun getGame(playerId: PlayerId): io.tripled.poker.api.response.Table
 }
 
 class GameUseCases(
@@ -17,7 +16,6 @@ class GameUseCases(
         private val deckFactory: () -> Deck
 
 ) : GameService {
-    private val tableId: TableId = "1"
 
     override fun startGame(tableId: TableId, gameId: GameId, players: List<PlayerId>) {
         projectCurrentlyActiveGame(tableId, gameId)
@@ -28,7 +26,7 @@ class GameUseCases(
         activeGames.save(tableId, gameId)
     }
 
-    override fun check(player: PlayerId) = executeOnGame(tableId) { check(player) }
+    override fun check(tableId: TableId, player: PlayerId) = executeOnGame(tableId) { check(player) }
 
     private fun executeOnGame(tableId: TableId, command: Game.() -> List<Event>) {
         val gameId = activeGames.activeGame(tableId)

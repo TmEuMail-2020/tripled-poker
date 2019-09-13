@@ -31,7 +31,7 @@ class TableUseCases(
         publish(events)
     }
 
-    private fun withTable() = Table(TableState.of(eventStore.findById("1")))
+    private fun withTable() = Table(TableState.of(eventStore.findById(tableId)))
 
     private fun publish(events: List<Event>) {
         eventPublisher.publish(tableId, events)

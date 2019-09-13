@@ -26,7 +26,7 @@ open class TestPokerGame(private val deck: PredeterminedCardDeck = Predetermined
                          private val eventPublisher: EventPublisher = DummyEventPublisher(),
                          private val gameUseCases: GameService = GameUseCases(eventStore, eventPublisher, DummyActiveGames(), { deck }),
                          private val tableUseCases: TableService = TableUseCases(eventStore, gameUseCases, eventPublisher) { "gameId" }) {
-
+    private val tableId: TableId = "1"
     private var gameId: GameId = "gameId"
     private var players: List<PlayerId>? = null
     private val expectedEvents = ArrayList<Event>()
@@ -54,7 +54,7 @@ open class TestPokerGame(private val deck: PredeterminedCardDeck = Predetermined
     }
 
     private fun startGame(playersList: List<PlayerId>) {
-        gameUseCases.startGame("1", gameId, playersList)
+        gameUseCases.startGame(tableId, gameId, playersList)
         expectedEvents += GameStarted(playersList, DeckMother().deckOfHearts())
     }
 
@@ -118,7 +118,7 @@ open class TestPokerGame(private val deck: PredeterminedCardDeck = Predetermined
     }
 
     private fun handleActions(actions: GameAction.() -> Unit) {
-        val gameAction = GameAction(gameId!!, gameUseCases)
+        val gameAction = GameAction("1",gameId!!, gameUseCases)
         actions.invoke(gameAction)
         expectedEvents += gameAction.expectedEvents
 
