@@ -7,6 +7,6 @@ import io.tripled.poker.domain.PlayerId
 
 internal class DummyTableUseCases : TableService {
     override fun join(name: String) = Unit
-    override fun createGame(): GameId = "gameId"
+    override fun createGame() = Unit
     override fun getTable(playerId: PlayerId): Table = null!!
 }

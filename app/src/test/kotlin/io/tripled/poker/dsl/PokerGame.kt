@@ -27,7 +27,7 @@ open class TestPokerGame(private val deck: PredeterminedCardDeck = Predetermined
                          private val gameUseCases: GameService = GameUseCases(eventStore, eventPublisher, DummyActiveGames(), { deck }),
                          private val tableUseCases: TableService = TableUseCases(eventStore, gameUseCases, eventPublisher) { "gameId" }) {
 
-    private var gameId: GameId? = null
+    private var gameId: GameId = "gameId"
     private var players: List<PlayerId>? = null
     private val expectedEvents = ArrayList<Event>()
 
@@ -45,7 +45,7 @@ open class TestPokerGame(private val deck: PredeterminedCardDeck = Predetermined
     fun startGame(predefinedCards: List<Card>): TestPokerGame {
         deck.provideNewCards(predefinedCards)
 
-        gameId = tableUseCases.createGame()
+        tableUseCases.createGame()
         expectedEvents += GameCreated(gameId!!, players!!.toList())
         expectedEvents += GameStarted(players!!.toList(), DeckMother().deckOfHearts())
 

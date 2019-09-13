@@ -16,6 +16,8 @@ class Table(tableState: TableState) {
     fun createGame(gameId: GameId) = sequence {
         if (players.size > 1) {
             yield(GameCreated(gameId, players))
+        } else {
+            throw RuntimeException("Can't start a game with only 1 player")
         }
     }.toList()
 }
