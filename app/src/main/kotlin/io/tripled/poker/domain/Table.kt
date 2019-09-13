@@ -13,9 +13,10 @@ class Table(tableState: TableState) {
 
     private fun valid(name: PlayerId) = name.isNotBlank() && !players.contains(name)
 
-    fun startGame(gameId: GameId) = sequence {
-        if (players.size > 1)
+    fun createGame(gameId: GameId) = sequence {
+        if (players.size > 1) {
             yield(GameCreated(gameId, players))
+        }
     }.toList()
 }
 

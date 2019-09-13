@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component
 @Component
 class DummyTableService : TableService {
 
-    override fun startGame(): GameId {
+    override fun createGame(): GameId {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 

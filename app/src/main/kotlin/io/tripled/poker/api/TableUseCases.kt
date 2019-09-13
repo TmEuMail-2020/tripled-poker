@@ -7,7 +7,7 @@ import java.lang.RuntimeException
 
 interface TableService {
     fun join(name: String)
-    fun startGame(): GameId
+    fun createGame(): GameId
     fun getTable(playerId: PlayerId): io.tripled.poker.api.response.Table
 }
 
@@ -24,13 +24,13 @@ class TableUseCases(
         executeOnTable { join(name) }
     }
 
-    override fun startGame(): GameId {
-        val events = executeOnTable { startGame(gameIdGenerator()) }
-        val gameStartedEvent = events.lastEventOrNull<GameCreated>()
+    override fun createGame(): GameId {
+        val events = executeOnTable { createGame(gameIdGenerator()) }
+        val gameCreatedEvent = events.lastEventOrNull<GameCreated>()
 
-        gameStartedEvent?.apply {
+        gameCreatedEvent?.apply {
             gameUseCases.startGame(tableId, this.gameId, this.players)
-            return gameStartedEvent.gameId
+            return gameCreatedEvent.gameId
         }
 
         throw RuntimeException("Can't start a game with only 1 player")
