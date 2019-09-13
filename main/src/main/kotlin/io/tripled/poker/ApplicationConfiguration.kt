@@ -9,6 +9,8 @@ import io.tripled.poker.projection.ActiveGames
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.context.event.EventListener
+import org.springframework.stereotype.Component
 import java.util.*
 import kotlin.collections.HashMap
 
@@ -44,6 +46,23 @@ class ConcreteEventPublisher(private val applicationEventPublisher: ApplicationE
     override fun publish(id: Any, events: List<Event>) {
         events.forEach { event ->
             applicationEventPublisher.publishEvent(event)
+
+            domainToApplicationEvents(event, id)
         }
     }
+
+    private fun domainToApplicationEvents(event: Event, id: Any) {
+        when (event) {
+            is GameCreated -> applicationEventPublisher.publishEvent(GameStartedEvent(id as TableId, event.gameId, event.players))
+        }
+    }
+}
+
+// POLICY
+data class GameStartedEvent(val tableId: TableId, val gameId: GameId, val players: List<PlayerId>)
+
+@Component
+class Policy (private val gameUseCases: GameService) {
+    @EventListener
+    fun startGameAfterCreation(event: GameStartedEvent) = gameUseCases.startGame(event.tableId, event.gameId, event.players)
 }
