@@ -24,8 +24,8 @@ fun pokerTableTestNoEventAssert(test: PokerTable.() -> Unit) = PokerTable().test
 open class TestPokerGame(private val deck: PredeterminedCardDeck = PredeterminedCardDeck(listOf()),
                          private val eventStore: DummyEventStore = DummyEventStore(),
                          private val eventPublisher: EventPublisher = DummyEventPublisher(),
-                         private val gameUseCases: GameService = GameUseCases(eventStore, eventPublisher, DummyActiveGames()),
-                         private val tableUseCases: TableService = TableUseCases(eventStore, gameUseCases, { deck }, eventPublisher) { "gameId" }) {
+                         private val gameUseCases: GameService = GameUseCases(eventStore, eventPublisher, DummyActiveGames(), { deck }),
+                         private val tableUseCases: TableService = TableUseCases(eventStore, gameUseCases, eventPublisher) { "gameId" }) {
 
     private var gameId: GameId? = null
     private var players: List<PlayerId>? = null
@@ -46,7 +46,7 @@ open class TestPokerGame(private val deck: PredeterminedCardDeck = Predetermined
         deck.provideNewCards(predefinedCards)
 
         gameId = tableUseCases.startGame()
-        expectedEvents += GameCreated(gameId!!, players!!.toList(), DeckMother().deckOfHearts())
+        expectedEvents += GameCreated(gameId!!, players!!.toList())
         expectedEvents += GameStarted(players!!.toList(), DeckMother().deckOfHearts())
 
         return this

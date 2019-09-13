@@ -14,7 +14,6 @@ interface TableService {
 class TableUseCases(
         private val eventStore: EventStore,
         private val gameUseCases: GameService,
-        private val deckFactory: () -> Deck,
         private val eventPublisher: EventPublisher,
         private val gameIdGenerator: () -> GameId
 ) : TableService {
@@ -26,11 +25,11 @@ class TableUseCases(
     }
 
     override fun startGame(): GameId {
-        val events = executeOnTable { startGame(gameIdGenerator(), deckFactory()) }
+        val events = executeOnTable { startGame(gameIdGenerator()) }
         val gameStartedEvent = events.lastEventOrNull<GameCreated>()
 
         gameStartedEvent?.apply {
-            gameUseCases.startGame(tableId, this.gameId, this.players, deckFactory())
+            gameUseCases.startGame(tableId, this.gameId, this.players)
             return gameStartedEvent.gameId
         }
 

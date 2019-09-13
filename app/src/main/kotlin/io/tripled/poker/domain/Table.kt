@@ -4,7 +4,7 @@ typealias PlayerId = String
 typealias TableId = String
 
 data class PlayerJoinedTable(val name: String) : Event
-data class GameCreated(val gameId: GameId, val players: List<PlayerId>, val cardsInDeck: List<Card>) : Event
+data class GameCreated(val gameId: GameId, val players: List<PlayerId>) : Event
 
 class Table(tableState: TableState) {
     private val players = tableState.players
@@ -13,9 +13,9 @@ class Table(tableState: TableState) {
 
     private fun valid(name: PlayerId) = name.isNotBlank() && !players.contains(name)
 
-    fun startGame(gameId: GameId, deck: Deck) = sequence {
+    fun startGame(gameId: GameId) = sequence {
         if (players.size > 1)
-            yield(GameCreated(gameId, players, deck.cards))
+            yield(GameCreated(gameId, players))
     }.toList()
 }
 

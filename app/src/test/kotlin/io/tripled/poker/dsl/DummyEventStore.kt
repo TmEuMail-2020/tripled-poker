@@ -37,8 +37,8 @@ class DummyEventStore(var given: MutableMap<Any, List<Event>> = mutableMapOf()) 
             val playerIds = playerHands.map { p -> p.first }.toTypedArray()
             playersJoin(*playerIds)
             events.putIfAbsent(gameId, mutableListOf())
-            events["1"] = events["1"]!! + GameCreated(gameId, playerIds.toList(), cardsInDeck)
-            events[gameId] = events[gameId]!! + GameCreated(gameId, playerIds.toList(), cardsInDeck)
+            events["1"] = events["1"]!! + GameCreated(gameId, playerIds.toList())
+            events[gameId] = events[gameId]!! + GameCreated(gameId, playerIds.toList())
             events[gameId] = events[gameId]!! + HandsAreDealt(mapOf(*playerHands))
         }
     }

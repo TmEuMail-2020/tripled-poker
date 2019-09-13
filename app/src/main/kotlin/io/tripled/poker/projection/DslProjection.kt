@@ -57,7 +57,7 @@ class DslProjection(private val eventStore: EventStore) {
 
     private fun startGame(tableEvents: List<Event>) =
             "startGame(listOf(${tableEvents
-                .filterEvents<GameCreated>()
+                .filterEvents<GameStarted>()
                 .map {
                     it -> it.cardsInDeck.map {
                         card -> card.mapToDsl()
@@ -71,9 +71,9 @@ ${`players and their cards`(tableEvents)}
 ${`preflop actions`(tableEvents)}
 }""".trimIndent()
 
-    private fun `preflop actions`(tableEvents: List<Event>): String
-        = tableEvents.ifContaining<RoundCompleted> {
-        tableEvents.subList(0, tableEvents.indexOf(tableEvents.filterEvents<RoundCompleted>()[0])).map {
+    private fun `preflop actions`(tableAndGameEvents: List<Event>): String
+        = tableAndGameEvents.ifContaining<RoundCompleted> {
+        tableAndGameEvents.subList(0, tableAndGameEvents.indexOf(tableAndGameEvents.filterEvents<RoundCompleted>()[0])).map {
             when (it) {
                 is PlayerChecked -> "    ${it.name}.checks()"
                 else -> ""
