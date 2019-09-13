@@ -4,6 +4,7 @@ import io.tripled.poker.api.GameService
 import io.tripled.poker.api.GameUseCases
 import io.tripled.poker.api.TableUseCases
 import io.tripled.poker.domain.*
+import io.tripled.poker.eventpublishing.EventPublisher
 import io.tripled.poker.eventsourcing.EventStore
 import io.tripled.poker.projection.ActiveGames
 import org.springframework.context.ApplicationEventPublisher

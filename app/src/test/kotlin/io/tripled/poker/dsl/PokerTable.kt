@@ -5,7 +5,7 @@ import io.tripled.poker.api.GameUseCases
 import io.tripled.poker.api.TableService
 import io.tripled.poker.api.TableUseCases
 import io.tripled.poker.api.response.Table
-import io.tripled.poker.domain.EventPublisher
+import io.tripled.poker.eventpublishing.EventPublisher
 import io.tripled.poker.domain.PlayerId
 import io.tripled.poker.domain.PredeterminedCardDeck
 

@@ -1,6 +1,7 @@
 package io.tripled.poker.api
 
 import io.tripled.poker.domain.*
+import io.tripled.poker.eventpublishing.EventPublisher
 import io.tripled.poker.eventsourcing.EventStore
 import io.tripled.poker.projection.TableProjection
 
@@ -18,7 +19,6 @@ class TableUseCases(
 ) : TableService {
     private val tableId: TableId = "1"
 
-    /** COMMAND **/
     override fun join(name: String) {
         executeOnTable { join(name) }
     }
@@ -41,7 +41,6 @@ class TableUseCases(
         eventStore.save(tableId, events)
     }
 
-    /** QUERY **/
     override fun getTable(playerId: PlayerId) = TableProjection().table(playerId, eventStore)
 
 }

@@ -1,12 +1,13 @@
 package io.tripled.poker.api
 
 import io.tripled.poker.domain.*
+import io.tripled.poker.eventpublishing.EventPublisher
 import io.tripled.poker.eventsourcing.EventStore
 import io.tripled.poker.projection.ActiveGames
 
 interface GameService {
-    fun check(tableId: TableId, player: PlayerId)
     fun startGame(tableId: TableId, gameId: GameId, players: List<PlayerId>)
+    fun check(tableId: TableId, player: PlayerId)
 }
 
 class GameUseCases(
@@ -14,7 +15,6 @@ class GameUseCases(
         private val eventPublisher: EventPublisher,
         private val activeGames: ActiveGames,
         private val deckFactory: () -> Deck
-
 ) : GameService {
 
     override fun startGame(tableId: TableId, gameId: GameId, players: List<PlayerId>) {
@@ -22,9 +22,7 @@ class GameUseCases(
         executeOnGame(tableId) { start(players, deckFactory()) }
     }
 
-    private fun projectCurrentlyActiveGame(tableId: TableId, gameId: GameId) {
-        activeGames.save(tableId, gameId)
-    }
+    private fun projectCurrentlyActiveGame(tableId: TableId, gameId: GameId) = activeGames.save(tableId, gameId)
 
     override fun check(tableId: TableId, player: PlayerId) = executeOnGame(tableId) { check(player) }
 

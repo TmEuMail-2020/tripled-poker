@@ -8,6 +8,7 @@ import io.tripled.poker.api.GameUseCases
 import io.tripled.poker.api.TableService
 import io.tripled.poker.api.TableUseCases
 import io.tripled.poker.domain.*
+import io.tripled.poker.eventpublishing.EventPublisher
 
 fun pokerGameNoEventAssert(test: TestPokerGame.() -> Unit) = TestPokerGame().test()
 

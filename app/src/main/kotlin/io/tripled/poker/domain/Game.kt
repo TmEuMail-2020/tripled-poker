@@ -19,10 +19,10 @@ class Game(gameState: GameState) {
     private val hands = gameState.hands
     private val players = gameState.players
 
-    fun start(players: List<PlayerId>, deck: Deck) = sequence {
-        yield(GameStarted(players, deck.cards))
-        yield(dealPlayerHands(players, deck))
-    }.toList()
+    fun start(players: List<PlayerId>, deck: Deck) = listOf(
+            GameStarted(players, deck.cards),
+            dealPlayerHands(players, deck)
+    )
 
     fun check(player: PlayerId) = sequence {
         if (GamePhase.DONE == gamePhase) {

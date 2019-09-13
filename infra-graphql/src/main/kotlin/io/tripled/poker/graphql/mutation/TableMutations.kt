@@ -3,26 +3,25 @@ package io.tripled.poker.graphql.mutation
 import io.tripled.poker.api.GameService
 import io.tripled.poker.api.TableService
 import io.tripled.poker.api.response.Table
-import io.tripled.poker.domain.TableId
 import io.tripled.poker.graphql.Mutation
 import org.springframework.stereotype.Component
 
 @Component
 class TableMutations(private val tableUseCases: TableService, private val gameUseCases: GameService) : Mutation {
 
-    fun joinTable(name: String) = executeTableUseCase(name) { join(name) }
+    fun joinTable(name: String) = executeTableUseCase(name) { this.join(name) }
 
     fun startGame(name: String) = executeTableUseCase(name) { createGame() }
 
     fun check(name: String) = executeGameUseCase(name) { check("1",name) }
 
-    private fun executeTableUseCase(name: String, tableUseCase: TableService.() -> Unit): Table {
-        tableUseCases.tableUseCase()
+    private fun executeTableUseCase(name: String, command: TableService.() -> Unit): Table {
+        tableUseCases.command()
         return tableUseCases.getTable(name)
     }
 
-    private fun executeGameUseCase(name: String, gameUseCase: GameService.() -> Unit): Table {
-        gameUseCases.gameUseCase()
+    private fun executeGameUseCase(name: String, command: GameService.() -> Unit): Table {
+        gameUseCases.command()
         return tableUseCases.getTable(name)
     }
 }
