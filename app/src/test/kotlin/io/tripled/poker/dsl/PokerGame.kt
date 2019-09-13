@@ -22,7 +22,7 @@ fun pokerTableTest(test: PokerTable.() -> Unit) = PokerTable()
 
 fun pokerTableTestNoEventAssert(test: PokerTable.() -> Unit) = PokerTable().test()
 
-open class TestPokerGame(private val deck: PredeterminedCardDeck = PredeterminedCardDeck(listOf()),
+open class TestPokerGame(private val deck: PredeterminedCardTestDeck = PredeterminedCardTestDeck(listOf()),
                          private val eventStore: DummyEventStore = DummyEventStore(),
                          private val eventPublisher: EventPublisher = DummyEventPublisher(),
                          private val gameUseCases: GameService = GameUseCases(eventStore, eventPublisher, DummyActiveGames(), { deck }),
