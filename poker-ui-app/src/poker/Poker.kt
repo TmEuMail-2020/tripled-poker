@@ -153,7 +153,7 @@ class PokerTableRepresentation : RComponent<RProps, RState>() {
         ol {
             events.map { e ->
                 li(classes = "tilesWrap") {
-                    if (JSON.stringify(e.payload).contains("GameStarted")) {
+                    if (JSON.stringify(e.payload).contains("GameCreated")) {
                         a {
                             attrs {
                                 onClickFunction = {
