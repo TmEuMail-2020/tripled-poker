@@ -22,7 +22,6 @@ class StartGameUseCaseTests {
     @Disabled
     internal fun `can't keep playing the game when it's done`() = pokerTableTestNoEventAssert {
         given {
-            // withCards(DeckMother().deckOfHearts())
             withPlayers(Joe, Jef)
             startGame(DeckMother().deckOfHearts())
             preflop(

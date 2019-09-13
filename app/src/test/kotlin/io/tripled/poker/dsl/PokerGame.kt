@@ -38,18 +38,29 @@ open class TestPokerGame(private val deck: PredeterminedCardDeck = Predetermined
                 tableUseCases = DummyTableUseCases())
         noopPokerGame.givenActions()
         this.eventStore.given = mutableMapOf("1" to noopPokerGame.expectedEvents)
+        this.players = noopPokerGame.players
 
         return this
     }
 
     fun startGame(predefinedCards: List<Card>): TestPokerGame {
         deck.provideNewCards(predefinedCards)
+        val playersList = players!!.toList()
 
-        tableUseCases.createGame()
-        expectedEvents += GameCreated(gameId!!, players!!.toList())
-        expectedEvents += GameStarted(players!!.toList(), DeckMother().deckOfHearts())
+        createGame(playersList)
+        startGame(playersList)
 
         return this
+    }
+
+    private fun startGame(playersList: List<PlayerId>) {
+        gameUseCases.startGame("1", gameId, playersList)
+        expectedEvents += GameStarted(playersList, DeckMother().deckOfHearts())
+    }
+
+    private fun createGame(playersList: List<PlayerId>) {
+        tableUseCases.createGame()
+        expectedEvents += GameCreated(gameId, playersList)
     }
 
     fun withCards(predefinedCards: List<Card>): TestPokerGame {

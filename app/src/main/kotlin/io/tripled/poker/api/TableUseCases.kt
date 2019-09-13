@@ -23,21 +23,12 @@ class TableUseCases(
         executeOnTable { join(name) }
     }
 
-    override fun createGame() {
-        val events = executeOnTable { createGame(gameIdGenerator()) }
-        val gameCreatedEvent = events.lastEventOrNull<GameCreated>()
+    override fun createGame() = executeOnTable { createGame(gameIdGenerator()) }
 
-        gameCreatedEvent?.apply {
-            gameUseCases.startGame(tableId, this.gameId, this.players)
-        }
-
-    }
-
-    private fun executeOnTable(command: Table.() -> List<Event>): List<Event> {
+    private fun executeOnTable(command: Table.() -> List<Event>) {
         val events = withTable().command()
         save(events)
         publish(events)
-        return events
     }
 
     private fun withTable() = Table(TableState.of(eventStore.findById("1")))
