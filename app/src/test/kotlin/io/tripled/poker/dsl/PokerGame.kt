@@ -19,8 +19,7 @@ fun pokerTableTest(test: PokerTable.() -> Unit) = PokerTable()
         .apply(test)
         .assertExpectedEventsToMatchActualEvents()
 
-fun pokerTableTestNoEventAssert(test: PokerTable.() -> Unit) = PokerTable()
-        .apply(test)
+fun pokerTableTestNoEventAssert(test: PokerTable.() -> Unit) = PokerTable().test()
 
 open class TestPokerGame(private val deck: PredeterminedCardDeck = PredeterminedCardDeck(listOf()),
                          private val eventStore: DummyEventStore = DummyEventStore(),
@@ -28,8 +27,8 @@ open class TestPokerGame(private val deck: PredeterminedCardDeck = Predetermined
                          private val gameUseCases: GameService = GameUseCases(eventStore, eventPublisher, DummyActiveGames()),
                          private val tableUseCases: TableService = TableUseCases(eventStore, gameUseCases, { deck }, eventPublisher) { "gameId" }) {
 
-    private lateinit var gameId: GameId
-    private lateinit var players: List<PlayerId>
+    private var gameId: GameId? = null
+    private var players: List<PlayerId>? = null
     private val expectedEvents = ArrayList<Event>()
 
     val newEvents get() = eventStore.newEvents
@@ -38,7 +37,7 @@ open class TestPokerGame(private val deck: PredeterminedCardDeck = Predetermined
         val noopPokerGame = TestPokerGame(gameUseCases = DummyGameUseCases(),
                 tableUseCases = DummyTableUseCases())
         noopPokerGame.givenActions()
-        this.eventStore.given = noopPokerGame.expectedEvents
+        this.eventStore.given = mutableMapOf("1" to noopPokerGame.expectedEvents)
 
         return this
     }
@@ -47,7 +46,8 @@ open class TestPokerGame(private val deck: PredeterminedCardDeck = Predetermined
         deck.provideNewCards(predefinedCards)
 
         gameId = tableUseCases.startGame()
-        expectedEvents += GameStarted(gameId, players.toList(), DeckMother().deckOfHearts())
+        expectedEvents += GameStarted(gameId!!, players!!.toList(), DeckMother().deckOfHearts())
+        expectedEvents += GameStartedRENAMEME(players!!.toList(), DeckMother().deckOfHearts())
 
         return this
     }
@@ -68,7 +68,7 @@ open class TestPokerGame(private val deck: PredeterminedCardDeck = Predetermined
         return this
     }
 
-    fun preflop(vararg playersWithCards: Pair<PlayerId, Hand>, actions: GameAction.() -> Unit): TestPokerGame {
+    fun preflop(vararg playersWithCards: Pair<PlayerId, Hand>, actions: GameAction.() -> Unit = {}): TestPokerGame {
         expectedEvents += HandsAreDealt(mapOf(*playersWithCards))
 
         handleActions(actions)
@@ -76,7 +76,7 @@ open class TestPokerGame(private val deck: PredeterminedCardDeck = Predetermined
         return this
     }
 
-    fun flop(card1: Card, card2: Card, card3: Card, actions: GameAction.() -> Unit): TestPokerGame {
+    fun flop(card1: Card, card2: Card, card3: Card, actions: GameAction.() -> Unit = {}): TestPokerGame {
         expectedEvents += FlopIsTurned(card1, card2, card3)
 
         handleActions(actions)
@@ -107,7 +107,7 @@ open class TestPokerGame(private val deck: PredeterminedCardDeck = Predetermined
     }
 
     private fun handleActions(actions: GameAction.() -> Unit) {
-        val gameAction = GameAction(gameId, gameUseCases)
+        val gameAction = GameAction(gameId!!, gameUseCases)
         actions.invoke(gameAction)
         expectedEvents += gameAction.expectedEvents
 

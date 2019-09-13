@@ -3,8 +3,8 @@ package io.tripled.poker.dsl
 import io.tripled.poker.domain.*
 import io.tripled.poker.eventsourcing.EventStore
 
-class DummyEventStore(var given: List<Event> = listOf()) : EventStore {
-    private val newlyDispatchedEvents = given.toMutableList()
+class DummyEventStore(var given: MutableMap<Any, List<Event>> = mutableMapOf()) : EventStore {
+    private val newlyDispatchedEvents = given.toMutableMap()
 
     fun given(pokerBuilder: EventBuilder.() -> Unit) {
         val builder = EventBuilder()
@@ -13,29 +13,36 @@ class DummyEventStore(var given: List<Event> = listOf()) : EventStore {
     }
 
     override fun save(id: Any, events: List<Event>) {
-        newlyDispatchedEvents += events
+        newlyDispatchedEvents.append(id, events)
     }
 
     override fun findById(id: Any): List<Event> {
-        return given + newlyDispatchedEvents
+        val givenEvents = given[id] ?: listOf()
+        val newEvents = newlyDispatchedEvents[id] ?: listOf()
+        return givenEvents + newEvents
     }
 
-    val newEvents get() = newlyDispatchedEvents.toList()
+    val newEvents get() = newlyDispatchedEvents.flatMap { it.value }.toList()
 
     fun contains(element: Event) = this.newlyDispatchedEvents.contains(element)
 
     class EventBuilder {
-        val events = mutableListOf<Event>()
+        val events = mutableMapOf<Any, List<Event>>()
 
         private fun playersJoin(vararg players: PlayerId) {
-            events += players.map { PlayerJoinedTable(it) }
+            events.append("id", players.map { PlayerJoinedTable(it) })
         }
 
         fun startGame(gameId: GameId, cardsInDeck: List<Card>, vararg playerHands: Pair<PlayerId, Hand>) {
             val playerIds = playerHands.map { p -> p.first }.toTypedArray()
             playersJoin(*playerIds)
-            events += GameStarted(gameId, playerIds.toList(), cardsInDeck)
-            events += HandsAreDealt(mapOf(*playerHands))
+            events.putIfAbsent(gameId, mutableListOf())
+            events["1"] = events["1"]!! + GameStarted(gameId, playerIds.toList(), cardsInDeck)
+            events[gameId] = events[gameId]!! + GameStarted(gameId, playerIds.toList(), cardsInDeck)
+            events[gameId] = events[gameId]!! + HandsAreDealt(mapOf(*playerHands))
         }
     }
 }
+
+fun <Id,Value> MutableMap<Id, List<Value>>.append(id: Id, items: List<Value>) =
+        this.merge(id, items) { t, u -> t + u }

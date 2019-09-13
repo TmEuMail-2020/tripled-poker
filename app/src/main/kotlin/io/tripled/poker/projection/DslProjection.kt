@@ -6,7 +6,7 @@ import io.tripled.poker.eventsourcing.EventStore
 class DslProjection(private val eventStore: EventStore) {
 
     fun dsl(): String {
-        val tableEvents = eventStore.findById(1)
+        val tableEvents = eventStore.findById("1")
         tableEvents
                 .filterEvents<GameStarted>()
                 .lastOrNull()?.apply {
@@ -16,7 +16,7 @@ class DslProjection(private val eventStore: EventStore) {
     }
 
     fun dsl(gameId: GameId): String {
-        val tableEvents = eventStore.findById(1)
+        val tableEvents = eventStore.findById("1")
         return dsl(mergeTableAndActiveGameStream(tableEvents, eventStore, gameId))
     }
 
