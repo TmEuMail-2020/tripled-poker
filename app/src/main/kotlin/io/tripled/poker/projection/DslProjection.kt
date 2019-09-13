@@ -8,7 +8,7 @@ class DslProjection(private val eventStore: EventStore) {
     fun dsl(): String {
         val tableEvents = eventStore.findById("1")
         tableEvents
-                .filterEvents<GameStarted>()
+                .filterEvents<GameCreated>()
                 .lastOrNull()?.apply {
                     return dsl(mergeTableAndActiveGameStream(tableEvents, eventStore, gameId))
                 }
@@ -22,7 +22,7 @@ class DslProjection(private val eventStore: EventStore) {
 
     private fun dsl(tableEvents: List<Event>): String {
         val withPlayers = tableEvents.ifContaining<PlayerJoinedTable> { withPlayers(tableEvents) }
-        val startGame = tableEvents.ifContaining<GameStarted> { startGame(tableEvents) }
+        val startGame = tableEvents.ifContaining<GameCreated> { startGame(tableEvents) }
         val preflop = tableEvents.ifContaining<HandsAreDealt> { preflop(tableEvents) }
         val flop = tableEvents.ifContaining<FlopIsTurned> { flop(tableEvents) }
         val turn = tableEvents.ifContaining<TurnIsTurned> { turn(tableEvents) }
@@ -57,7 +57,7 @@ class DslProjection(private val eventStore: EventStore) {
 
     private fun startGame(tableEvents: List<Event>) =
             "startGame(listOf(${tableEvents
-                .filterEvents<GameStarted>()
+                .filterEvents<GameCreated>()
                 .map {
                     it -> it.cardsInDeck.map {
                         card -> card.mapToDsl()

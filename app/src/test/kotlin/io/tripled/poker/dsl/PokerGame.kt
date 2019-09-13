@@ -46,8 +46,8 @@ open class TestPokerGame(private val deck: PredeterminedCardDeck = Predetermined
         deck.provideNewCards(predefinedCards)
 
         gameId = tableUseCases.startGame()
-        expectedEvents += GameStarted(gameId!!, players!!.toList(), DeckMother().deckOfHearts())
-        expectedEvents += GameStartedRENAMEME(players!!.toList(), DeckMother().deckOfHearts())
+        expectedEvents += GameCreated(gameId!!, players!!.toList(), DeckMother().deckOfHearts())
+        expectedEvents += GameStarted(players!!.toList(), DeckMother().deckOfHearts())
 
         return this
     }

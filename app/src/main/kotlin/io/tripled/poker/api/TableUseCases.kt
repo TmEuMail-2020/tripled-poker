@@ -27,7 +27,7 @@ class TableUseCases(
 
     override fun startGame(): GameId {
         val events = executeOnTable { startGame(gameIdGenerator(), deckFactory()) }
-        val gameStartedEvent = events.lastEventOrNull<GameStarted>()
+        val gameStartedEvent = events.lastEventOrNull<GameCreated>()
 
         gameStartedEvent?.apply {
             gameUseCases.startGame(tableId, this.gameId, this.players, deckFactory())

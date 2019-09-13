@@ -1,6 +1,6 @@
 package io.tripled.poker.domain
 
-data class GameStartedRENAMEME(val players: List<PlayerId>, val cardsInDeck: List<Card>) : Event
+data class GameStarted(val players: List<PlayerId>, val cardsInDeck: List<Card>) : Event
 data class HandsAreDealt(val hands: Map<PlayerId, Hand>) : Event
 data class RoundCompleted(val Noop: String = "Guido") : Event
 data class PlayerChecked(val name: PlayerId) : Event
@@ -20,7 +20,7 @@ class Game(gameState: GameState) {
     private val players = gameState.players
 
     fun start(players: List<PlayerId>, deck: Deck) = sequence {
-        yield(GameStartedRENAMEME(players, deck.cards))
+        yield(GameStarted(players, deck.cards))
         yield(dealPlayerHands(players, deck))
     }.toList()
 
@@ -94,7 +94,7 @@ data class GameState(
 
         private fun remainingCards(events: List<Event>): List<Card> {
             val lastEventOrNull = events
-                    .lastEventOrNull<GameStartedRENAMEME>() ?: return listOf()
+                    .lastEventOrNull<GameStarted>() ?: return listOf()
 
             val cards = lastEventOrNull.cardsInDeck.toMutableList()
             return events.fold(cards) { _, event ->

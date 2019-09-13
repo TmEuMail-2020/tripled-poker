@@ -16,7 +16,7 @@ class TableProjection {
 
     private fun mergeTableAndActiveGameStream(tableEvents: List<Event>, eventStore: EventStore): List<Event> {
         tableEvents
-                .filterEvents<GameStarted>()
+                .filterEvents<GameCreated>()
                 .lastOrNull()?.apply {
                     val currentlyActiveGameEvents = eventStore.findById(gameId)
                    return tableEvents.union(currentlyActiveGameEvents).toList()
