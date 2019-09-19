@@ -1,7 +1,6 @@
 package poker
 
-import deck.backOfCardImage
-import deck.cardImage
+import deck.*
 import kotlinx.html.InputType
 import kotlinx.html.id
 import kotlinx.html.js.onChangeFunction
@@ -103,9 +102,9 @@ class PokerTableRepresentation : RComponent<RProps, RState>() {
             }
             tbody {
                 tr {
-                    td { cards(table.flop) }
-                    td { cards(table.turn) }
-                    td { cards(table.river) }
+                    td { cards(table.flop, card1BRed) }
+                    td { cards(table.turn, card1BGreen) }
+                    td { cards(table.river, card1BBlue) }
                 }
             }
         }
@@ -245,9 +244,13 @@ class JoinGame : RComponent<JoinGameProps, RState>() {
     }
 }
 
-fun RBuilder.cards(cards: Cards) = child(CardComponent::class) { attrs.cards = cards }
+fun RBuilder.cards(cards: Cards, backOfCard: dynamic = backOfCardImage()) = child(CardComponent::class) {
+    attrs.cards = cards
+    attrs.backOfCard = backOfCard
+}
 
 interface CardProps : RProps {
+    var backOfCard: dynamic
     var cards: Cards
 }
 
@@ -256,7 +259,7 @@ class CardComponent : RComponent<CardProps, RState>() {
         val visibleCards = props.cards.visibleCards
         if (visibleCards.isEmpty()) {
             (1..props.cards.numberOfCards).map {
-                img(src = backOfCardImage()){ }
+                img(src = props.backOfCard){ }
             }
         } else {
             visibleCards.map {

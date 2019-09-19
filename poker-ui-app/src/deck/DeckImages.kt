@@ -71,6 +71,12 @@ fun cardImage(card: Card): dynamic
 
 fun backOfCardImage() = card1B
 
+@JsModule("src/deck/1B-red.svg")
+external val card1BRed: dynamic
+@JsModule("src/deck/1B-green.svg")
+external val card1BGreen: dynamic
+@JsModule("src/deck/1B-blue.svg")
+external val card1BBlue: dynamic
 @JsModule("src/deck/1B.svg")
 external val card1B: dynamic
 @JsModule("src/deck/2C.svg")
