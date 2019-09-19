@@ -1,5 +1,7 @@
 package io.tripled.poker.domain
 
+import io.tripled.poker.vocabulary.PlayerId
+
 class WinnerDeterminer {
     fun determineWinner(playerCards: Map<PlayerId, Hand>, commonCards: List<Card>): PlayerId {
         return determineWinner(playerCards)

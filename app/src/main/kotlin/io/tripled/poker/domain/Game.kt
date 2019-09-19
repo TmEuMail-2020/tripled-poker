@@ -1,5 +1,7 @@
 package io.tripled.poker.domain
 
+import io.tripled.poker.vocabulary.PlayerId
+
 data class GameStarted(val players: List<PlayerId>, val cardsInDeck: List<Card>) : Event
 data class HandsAreDealt(val hands: Map<PlayerId, Hand>) : Event
 data class RoundCompleted(val Noop: String = "Guido") : Event
@@ -8,8 +10,6 @@ data class PlayerWonGame(val name: PlayerId) : Event
 data class FlopIsTurned(val card1: Card, val card2: Card, val card3: Card) : Event
 data class TurnIsTurned(val card: Card) : Event
 data class RiverIsTurned(val card: Card) : Event
-
-typealias GameId = String
 
 class Game(gameState: GameState) {
     private val deck = PredeterminedCardDeck(gameState.remainingCards)
@@ -40,6 +40,7 @@ class Game(gameState: GameState) {
                 GamePhase.FLOP -> yieldAll(turn())
                 GamePhase.TURN -> yieldAll(river())
                 GamePhase.RIVER -> yieldAll(determineWinner())
+                GamePhase.DONE -> Unit
             }
         }
     }.toList()

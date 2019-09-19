@@ -2,6 +2,7 @@ package io.tripled.poker.projection
 
 import io.tripled.poker.domain.*
 import io.tripled.poker.eventsourcing.EventStore
+import io.tripled.poker.vocabulary.GameId
 
 class DslProjection(private val eventStore: EventStore) {
 

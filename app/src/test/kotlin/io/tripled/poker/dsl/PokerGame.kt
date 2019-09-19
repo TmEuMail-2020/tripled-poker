@@ -9,6 +9,9 @@ import io.tripled.poker.api.TableService
 import io.tripled.poker.api.TableUseCases
 import io.tripled.poker.domain.*
 import io.tripled.poker.eventpublishing.EventPublisher
+import io.tripled.poker.vocabulary.GameId
+import io.tripled.poker.vocabulary.PlayerId
+import io.tripled.poker.vocabulary.TableId
 
 fun pokerGameNoEventAssert(test: TestPokerGame.() -> Unit) = TestPokerGame().test()
 
@@ -25,8 +28,8 @@ fun pokerTableTestNoEventAssert(test: PokerTable.() -> Unit) = PokerTable().test
 open class TestPokerGame(private val deck: PredeterminedCardTestDeck = PredeterminedCardTestDeck(listOf()),
                          private val eventStore: DummyEventStore = DummyEventStore(),
                          private val eventPublisher: EventPublisher = DummyEventPublisher(),
-                         private val gameUseCases: GameService = GameUseCases(eventStore, eventPublisher, DummyActiveGames(), { deck }),
-                         private val tableUseCases: TableService = TableUseCases(eventStore, gameUseCases, eventPublisher) { "gameId" }) {
+                         private val gameUseCases: GameService = GameUseCases(eventStore, eventPublisher, DummyActiveGames()) { deck },
+                         private val tableUseCases: TableService = TableUseCases(eventStore, eventPublisher) { "gameId" }) {
     private val tableId: TableId = "1"
     private var gameId: GameId = "gameId"
     private var players: List<PlayerId>? = null
@@ -119,7 +122,7 @@ open class TestPokerGame(private val deck: PredeterminedCardTestDeck = Predeterm
     }
 
     private fun handleActions(actions: GameAction.() -> Unit) {
-        val gameAction = GameAction("1",gameId!!, gameUseCases)
+        val gameAction = GameAction("1",gameId, gameUseCases)
         actions.invoke(gameAction)
         expectedEvents += gameAction.expectedEvents
 

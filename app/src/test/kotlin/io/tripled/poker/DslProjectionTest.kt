@@ -2,8 +2,8 @@ package io.tripled.poker
 
 import ch.tutteli.atrium.api.cc.en_GB.toBe
 import ch.tutteli.atrium.verbs.expect
-import io.tripled.poker.api.response.Suit.*
-import io.tripled.poker.api.response.Value.*
+import io.tripled.poker.vocabulary.Suit.*
+import io.tripled.poker.vocabulary.Value.*
 import io.tripled.poker.domain.DeckMother
 import io.tripled.poker.domain.of
 import io.tripled.poker.dsl.DummyEventStore

@@ -1,9 +1,14 @@
 package io.tripled.poker.api
 
-import io.tripled.poker.domain.*
+import io.tripled.poker.domain.Event
+import io.tripled.poker.domain.Table
+import io.tripled.poker.domain.TableState
 import io.tripled.poker.eventpublishing.EventPublisher
 import io.tripled.poker.eventsourcing.EventStore
 import io.tripled.poker.projection.TableProjection
+import io.tripled.poker.vocabulary.GameId
+import io.tripled.poker.vocabulary.PlayerId
+import io.tripled.poker.vocabulary.TableId
 
 interface TableService {
     fun join(name: String)
@@ -13,7 +18,6 @@ interface TableService {
 
 class TableUseCases(
         private val eventStore: EventStore,
-        private val gameUseCases: GameService,
         private val eventPublisher: EventPublisher,
         private val gameIdGenerator: () -> GameId
 ) : TableService {

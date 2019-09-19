@@ -1,7 +1,7 @@
 package io.tripled.poker.domain
 
-import io.tripled.poker.api.response.Suit.HEARTS
-import io.tripled.poker.api.response.Value.*
+import io.tripled.poker.vocabulary.Value.*
+import io.tripled.poker.vocabulary.Suit.*
 
 class DeckMother {
     fun deckOfHearts(): List<Card> {

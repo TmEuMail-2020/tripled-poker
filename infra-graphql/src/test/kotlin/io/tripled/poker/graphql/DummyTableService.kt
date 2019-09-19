@@ -4,8 +4,7 @@ import io.tripled.poker.api.TableService
 import io.tripled.poker.api.response.HiddenCards
 import io.tripled.poker.api.response.Player
 import io.tripled.poker.api.response.Table
-import io.tripled.poker.domain.GameId
-import io.tripled.poker.domain.PlayerId
+import io.tripled.poker.vocabulary.PlayerId
 import org.springframework.stereotype.Component
 
 @Component

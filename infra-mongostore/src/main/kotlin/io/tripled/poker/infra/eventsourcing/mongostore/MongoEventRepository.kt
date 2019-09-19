@@ -2,8 +2,8 @@ package io.tripled.poker.infra.eventsourcing.mongostore
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo
 import io.tripled.poker.domain.Event
-import io.tripled.poker.domain.GameId
 import io.tripled.poker.projection.DslProjection
+import io.tripled.poker.vocabulary.GameId
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.repository.MongoRepository
 import org.springframework.stereotype.Repository

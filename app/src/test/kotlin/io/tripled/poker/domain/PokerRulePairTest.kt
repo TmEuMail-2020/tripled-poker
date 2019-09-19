@@ -2,9 +2,9 @@ package io.tripled.poker.domain
 
 import ch.tutteli.atrium.api.cc.en_GB.toBe
 import ch.tutteli.atrium.verbs.expect
-import io.tripled.poker.api.response.Suit.*
-import io.tripled.poker.api.response.Value
-import io.tripled.poker.api.response.Value.*
+import io.tripled.poker.vocabulary.Value
+import io.tripled.poker.vocabulary.Value.*
+import io.tripled.poker.vocabulary.Suit.*
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
@@ -64,9 +64,6 @@ class PokerRulePairTest {
                         } + (Value.values()[6] of HEARTS), false)
         )
     }
-
-
-
 }
 
 class PairRule(private val amountOfPairs: Int) {

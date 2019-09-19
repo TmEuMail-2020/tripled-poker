@@ -25,6 +25,7 @@ class CustomGraphqlConfiguration {
                     "io.tripled.poker.graphql.query",
                     "io.tripled.poker.graphql.mutation",
                     "io.tripled.poker.graphql.subscription",
+                    "io.tripled.poker.vocabulary",
                     "io.tripled.poker.api.response"
             )
     )

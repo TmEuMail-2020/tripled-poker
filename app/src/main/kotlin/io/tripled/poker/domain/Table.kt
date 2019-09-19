@@ -1,7 +1,8 @@
 package io.tripled.poker.domain
 
-typealias PlayerId = String
-typealias TableId = String
+import io.tripled.poker.vocabulary.GameId
+import io.tripled.poker.vocabulary.PlayerId
+
 
 data class PlayerJoinedTable(val name: String) : Event
 data class GameCreated(val gameId: GameId, val players: List<PlayerId>) : Event

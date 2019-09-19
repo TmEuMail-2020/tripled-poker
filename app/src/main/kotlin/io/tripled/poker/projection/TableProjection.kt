@@ -4,6 +4,7 @@ import io.tripled.poker.api.response.*
 import io.tripled.poker.api.response.Table
 import io.tripled.poker.domain.*
 import io.tripled.poker.eventsourcing.EventStore
+import io.tripled.poker.vocabulary.PlayerId
 
 class TableProjection {
 
@@ -83,7 +84,7 @@ class TableProjection {
         private fun Hand.asVisibleCards() = VisibleCards(mapToCards())
         private fun Hand.asHiddenCards() = HiddenCards(cards().size)
         private fun Hand.mapToCards() = cards().map { it.mapToCard() }
-        private fun io.tripled.poker.domain.Card.mapToCard() = io.tripled.poker.api.response.Card(this.suit, this.value)
+        private fun io.tripled.poker.domain.Card.mapToCard() = io.tripled.poker.vocabulary.Card(this.suit, this.value)
 
     }
 }

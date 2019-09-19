@@ -1,10 +1,9 @@
 package io.tripled.poker.domain
 
-import io.tripled.poker.api.response.Suit.CLUBS
-import io.tripled.poker.api.response.Suit.DIAMONDS
-import io.tripled.poker.api.response.Value.*
+import io.tripled.poker.vocabulary.Value.*
+import io.tripled.poker.vocabulary.Suit.*
 
 val suitedConnectors = (EIGHT of DIAMONDS) and ( NINE of DIAMONDS)
 val suitedAceKing = (KING of CLUBS) and (ACE of CLUBS)
 
-internal fun Card.mapToCard() = io.tripled.poker.api.response.Card(this.suit, this.value)
+internal fun Card.mapToCard() = io.tripled.poker.vocabulary.Card(this.suit, this.value)

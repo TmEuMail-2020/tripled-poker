@@ -2,6 +2,8 @@ package io.tripled.poker.dsl
 
 import io.tripled.poker.domain.*
 import io.tripled.poker.eventsourcing.EventStore
+import io.tripled.poker.vocabulary.GameId
+import io.tripled.poker.vocabulary.PlayerId
 
 class DummyEventStore(var given: MutableMap<Any, List<Event>> = mutableMapOf()) : EventStore {
     private val newlyDispatchedEvents = given.toMutableMap()

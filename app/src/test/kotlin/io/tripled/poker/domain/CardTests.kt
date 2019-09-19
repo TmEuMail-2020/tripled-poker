@@ -1,8 +1,7 @@
 package io.tripled.poker.domain
 
-import io.tripled.poker.api.response.Suit.*
-import io.tripled.poker.api.response.Value.ACE
-import io.tripled.poker.api.response.Value.TWO
+import io.tripled.poker.vocabulary.Value.*
+import io.tripled.poker.vocabulary.Suit.*
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 

@@ -1,7 +1,7 @@
 package io.tripled.poker.domain
 
-import io.tripled.poker.api.response.Suit
-import io.tripled.poker.api.response.Value
+import io.tripled.poker.vocabulary.Suit
+import io.tripled.poker.vocabulary.Value
 
 data class Card(val suit: Suit, val value: Value) {
     val score: Int

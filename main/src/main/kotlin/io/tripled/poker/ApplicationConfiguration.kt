@@ -7,6 +7,9 @@ import io.tripled.poker.domain.*
 import io.tripled.poker.eventpublishing.EventPublisher
 import io.tripled.poker.eventsourcing.EventStore
 import io.tripled.poker.projection.ActiveGames
+import io.tripled.poker.vocabulary.GameId
+import io.tripled.poker.vocabulary.PlayerId
+import io.tripled.poker.vocabulary.TableId
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -23,8 +26,8 @@ class ApplicationConfiguration {
             = ConcreteEventPublisher(applicationEventPublisher)
 
     @Bean
-    fun tableUseCases(eventStore: EventStore, eventPublisher: EventPublisher, gameUseCases: GameService)
-            = TableUseCases(eventStore, gameUseCases, eventPublisher) {
+    fun tableUseCases(eventStore: EventStore, eventPublisher: EventPublisher)
+            = TableUseCases(eventStore, eventPublisher) {
                 UUID.randomUUID().toString()
             }
 

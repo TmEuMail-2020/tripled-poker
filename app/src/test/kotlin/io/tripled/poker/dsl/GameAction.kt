@@ -2,6 +2,9 @@ package io.tripled.poker.dsl
 
 import io.tripled.poker.api.GameService
 import io.tripled.poker.domain.*
+import io.tripled.poker.vocabulary.GameId
+import io.tripled.poker.vocabulary.PlayerId
+import io.tripled.poker.vocabulary.TableId
 
 class GameAction(private val tableId: TableId,
                  private val gameId: GameId,
