@@ -11,12 +11,14 @@ import io.tripled.poker.vocabulary.PlayerId
 class PokerTable(private val deck: PredeterminedCardTestDeck = PredeterminedCardTestDeck(listOf()),
                  internal val eventStore: DummyEventStore = DummyEventStore(),
                  private val eventPublisher: EventPublisher = DummyEventPublisher(),
-                 gameUseCases: GameService = GameUseCases(eventStore, eventPublisher, DummyActiveGames()) { deck },
-                 private val tableUseCases: TableService = TableUseCases(eventStore, eventPublisher) { "gameId" })
-    : TestPokerGame(deck, eventStore, eventPublisher, gameUseCases, tableUseCases) {
+                 private val assumeUser: AssumeUser = AssumeUser(),
+                 private val gameUseCases: GameService = GameUseCases(eventStore, eventPublisher, DummyActiveGames(), assumeUser) { deck },
+                 private val tableUseCases: TableService = TableUseCases(eventStore, eventPublisher, assumeUser) { "gameId" })
+    : TestPokerGame(deck, eventStore, eventPublisher, assumeUser, gameUseCases, tableUseCases) {
 
     fun table(asPlayer: PlayerId, table: Table.() -> Unit): PokerTable {
-        table.invoke(tableUseCases.getTable(asPlayer))
+        assumeUser.assumedPlayerId = asPlayer
+        table.invoke(tableUseCases.getTable())
 
         return this
     }

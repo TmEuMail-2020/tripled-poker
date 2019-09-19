@@ -26,14 +26,14 @@ class ApplicationConfiguration {
             = ConcreteEventPublisher(applicationEventPublisher)
 
     @Bean
-    fun tableUseCases(eventStore: EventStore, eventPublisher: EventPublisher)
-            = TableUseCases(eventStore, eventPublisher) {
+    fun tableUseCases(eventStore: EventStore, eventPublisher: EventPublisher, users: Users)
+            = TableUseCases(eventStore, eventPublisher, users) {
                 UUID.randomUUID().toString()
             }
 
     @Bean
-    fun gameUseCases(eventStore: EventStore, eventPublisher: EventPublisher, activeGames: ActiveGames)
-            = GameUseCases(eventStore, eventPublisher, activeGames, { ShuffledDeck() })
+    fun gameUseCases(eventStore: EventStore, eventPublisher: EventPublisher, activeGames: ActiveGames, users: Users)
+            = GameUseCases(eventStore, eventPublisher, activeGames, users) { ShuffledDeck() }
 
     @Bean
     fun activeGames() = object : ActiveGames {

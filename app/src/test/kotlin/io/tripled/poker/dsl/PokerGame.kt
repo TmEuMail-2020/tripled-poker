@@ -28,8 +28,9 @@ fun pokerTableTestNoEventAssert(test: PokerTable.() -> Unit) = PokerTable().test
 open class TestPokerGame(private val deck: PredeterminedCardTestDeck = PredeterminedCardTestDeck(listOf()),
                          private val eventStore: DummyEventStore = DummyEventStore(),
                          private val eventPublisher: EventPublisher = DummyEventPublisher(),
-                         private val gameUseCases: GameService = GameUseCases(eventStore, eventPublisher, DummyActiveGames()) { deck },
-                         private val tableUseCases: TableService = TableUseCases(eventStore, eventPublisher) { "gameId" }) {
+                         private val assumeUser: AssumeUser = AssumeUser(),
+                         private val gameUseCases: GameService = GameUseCases(eventStore, eventPublisher, DummyActiveGames(), assumeUser) { deck },
+                         private val tableUseCases: TableService = TableUseCases(eventStore, eventPublisher, assumeUser) { "gameId" }) {
     private val tableId: TableId = "1"
     private var gameId: GameId = "gameId"
     private var players: List<PlayerId>? = null
@@ -76,7 +77,8 @@ open class TestPokerGame(private val deck: PredeterminedCardTestDeck = Predeterm
     fun withPlayers(vararg players: PlayerId): TestPokerGame {
         this.players = players.asList()
         players.forEach {
-            tableUseCases.join(it)
+            assumeUser.assumedPlayerId = it
+            tableUseCases.join()
             expectedEvents += PlayerJoinedTable(it)
         }
 
@@ -122,7 +124,7 @@ open class TestPokerGame(private val deck: PredeterminedCardTestDeck = Predeterm
     }
 
     private fun handleActions(actions: GameAction.() -> Unit) {
-        val gameAction = GameAction("1",gameId, gameUseCases)
+        val gameAction = GameAction("1", gameUseCases, assumeUser)
         actions.invoke(gameAction)
         expectedEvents += gameAction.expectedEvents
 

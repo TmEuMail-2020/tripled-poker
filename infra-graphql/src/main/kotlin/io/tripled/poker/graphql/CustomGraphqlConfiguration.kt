@@ -63,4 +63,6 @@ class CustomGraphqlConfiguration {
             .withGraphQLErrorHandler(GraphQLErrorHandler { it })
             .build()
 
+    @Bean
+    fun assumeUser() = AssumeUser()
 }

@@ -4,11 +4,10 @@ import io.tripled.poker.api.TableService
 import io.tripled.poker.api.response.HiddenCards
 import io.tripled.poker.api.response.Player
 import io.tripled.poker.api.response.Table
-import io.tripled.poker.vocabulary.PlayerId
 import org.springframework.stereotype.Component
 
 @Component
-class DummyTableService : TableService {
+class DummyTableService(private val assumeUser: AssumeUser) : TableService {
 
     override fun createGame() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
@@ -16,11 +15,11 @@ class DummyTableService : TableService {
 
     private val players = mutableListOf<Player>()
 
-    override fun join(name: String) {
-        players += Player(name)
+    override fun join() {
+        players += Player(assumeUser.assumedPlayerId)
     }
 
-    override fun getTable(playerId: PlayerId): Table = Table(players, HiddenCards(0), HiddenCards(0), HiddenCards(0), null, "")
+    override fun getTable(): Table = Table(players, HiddenCards(0), HiddenCards(0), HiddenCards(0), null, "")
 
     fun clear() {
         players.clear()

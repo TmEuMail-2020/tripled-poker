@@ -6,5 +6,5 @@ import org.springframework.context.annotation.Bean
 @SpringBootApplication
 class GraphqlTestApplication {
     @Bean
-    fun tableService() = DummyTableService()
+    fun tableService(assumeUser: AssumeUser) = DummyTableService(assumeUser)
 }

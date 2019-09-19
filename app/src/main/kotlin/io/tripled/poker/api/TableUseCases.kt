@@ -3,28 +3,29 @@ package io.tripled.poker.api
 import io.tripled.poker.domain.Event
 import io.tripled.poker.domain.Table
 import io.tripled.poker.domain.TableState
+import io.tripled.poker.domain.Users
 import io.tripled.poker.eventpublishing.EventPublisher
 import io.tripled.poker.eventsourcing.EventStore
 import io.tripled.poker.projection.TableProjection
 import io.tripled.poker.vocabulary.GameId
-import io.tripled.poker.vocabulary.PlayerId
 import io.tripled.poker.vocabulary.TableId
 
 interface TableService {
-    fun join(name: String)
+    fun join()
     fun createGame()
-    fun getTable(playerId: PlayerId): io.tripled.poker.api.response.Table
+    fun getTable(): io.tripled.poker.api.response.Table
 }
 
 class TableUseCases(
         private val eventStore: EventStore,
         private val eventPublisher: EventPublisher,
+        private val users: Users,
         private val gameIdGenerator: () -> GameId
 ) : TableService {
     private val tableId: TableId = "1"
 
-    override fun join(name: String) {
-        executeOnTable { join(name) }
+    override fun join() {
+        executeOnTable { join(users.currentUser.playerId) }
     }
 
     override fun createGame() = executeOnTable { createGame(gameIdGenerator()) }
@@ -45,6 +46,6 @@ class TableUseCases(
         eventStore.save(tableId, events)
     }
 
-    override fun getTable(playerId: PlayerId) = TableProjection().table(playerId, eventStore)
+    override fun getTable() = TableProjection().table(users.currentUser.playerId, eventStore)
 
 }
