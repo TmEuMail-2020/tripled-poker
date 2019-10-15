@@ -14,29 +14,42 @@ We assume most people are familiar with texas holdem, poker, here's an eventstor
 There is also a video on how to play:
 [![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/GAoR9ji8D6A/0.jpg)](https://www.youtube.com/watch?v=GAoR9ji8D6A)
 
-## Initial setup
 
-https://start.spring.io
-* gradle, kotlin, spring-boot
-* web, embedded mongo, actuator
+## Getting started
 
-https://github.com/graphql-java-kickstart/graphql-spring-boot
-* graphql & graphiql
-
-https://docs.spring.io/spring-metrics/docs/current/public/prometheus
-* business & technical metrics
-* grafana spring boot dashboard: https://grafana.com/dashboards/4701
-
-## getting started
-
-### build it
+### Build & run the backend
 * ./gradlew assemble check jacocoTestReport detekt
 * ./gradlew build
 * ./gradlew bootRun
 
-### Serve to 
-* localhost:8080/graphiql
-* localhost:8080/api/businessMetric
+##$ Build & run the front-end
+
+* cd poker-ui-app
+* npm run build of yarn build
+* npm start of yarn start
+
+
+### Use It 
+* localhost:3000 for the hosted frontend
+* localhost:8080/graphiql for direct graphiql api on the backend
+* localhost:8080/api/businessMetric for businessMetric of the backend
+
+
+## Technical Setup
+### Technologies
+
+* Gradle
+* Kotlin
+* Spring-boot
+    * actuator
+    * web
+* Embedded mongo
+* Graphql & graphiql
+    * [See GraphQl with Spring boot](https://github.com/graphql-java-kickstart/graphql-spring-boot)
+* [Prometheus](https://docs.spring.io/spring-metrics/docs/current/public/prometheus)
+    * business & technical metrics
+* [Grafana spring boot dashboard](https://grafana.com/dashboards/4701)
+
 
 ### Infrastructure
 #### Runtime infra
