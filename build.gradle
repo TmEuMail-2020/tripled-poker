@@ -1,7 +1,7 @@
 buildscript {
 	ext {
 		kotlinVersion = '1.3.50'
-		springBootVersion = '2.1.9.RELEASE'
+		springBootVersion = '2.2.0.RELEASE'
 		junitVersion = '5.3.2'
 	}
     ext['kotlin.version'] = '1.3.50'
@@ -216,7 +216,7 @@ project(':infra-graphql') {
 		implementation 'org.springframework.boot:spring-boot-starter-websocket'
 		implementation 'org.springframework.boot:spring-boot-starter-webflux'
 		implementation 'com.graphql-java-kickstart:graphql-spring-boot-starter:5.10.0'
-		implementation 'com.graphql-java-kickstart:graphiql-spring-boot-starter:5.6.0'
+		implementation 'com.graphql-java-kickstart:graphiql-spring-boot-starter:5.10.0'
 		implementation 'com.graphql-java-kickstart:voyager-spring-boot-starter:5.10.0'
 		implementation 'com.expedia:graphql-kotlin:0.6.0'
 
@@ -247,9 +247,9 @@ project(':main') {
 		//implementation("com.okta.spring:okta-spring-boot-starter:1.2.1")
 		implementation 'org.springframework.boot:spring-boot-starter-web'
 		implementation 'org.springframework.boot:spring-boot-starter-websocket'
-		implementation 'io.sentry:sentry-spring:1.7.16'
-		implementation 'io.opentracing.contrib:opentracing-spring-jaeger-cloud-starter:2.0.0'
-		implementation 'io.opentracing.contrib:opentracing-spring-cloud-starter:0.3.2'
+		implementation 'io.sentry:sentry-spring:1.7.28'
+		implementation 'io.opentracing.contrib:opentracing-spring-jaeger-cloud-starter:2.0.3'
+		implementation 'io.opentracing.contrib:opentracing-spring-cloud-starter:0.3.7'
 		developmentOnly("org.springframework.boot:spring-boot-devtools")
 
 		implementation project(':app')
