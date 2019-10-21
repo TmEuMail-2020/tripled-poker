@@ -62,7 +62,9 @@ class FoldingBehaviourTests {
         joeFolds()
 
         expect { joeFolds() }
-                .toThrow<RuntimeException> { }
+                .toThrow<RuntimeException> {
+                    message { startsWith("gast, ge speelt nimeer mee") }
+                }
     }
 
     private fun joeFolds() {

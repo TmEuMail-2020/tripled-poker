@@ -27,6 +27,7 @@ class Game(gameState: GameState) {
 
     fun fold(currentPlayer: PlayerId) = sequence {
         ensurePlayerStillInGame(currentPlayer)
+        ensurePlayersTurn(currentPlayer)
         yield(PlayerFolded(currentPlayer))
 
         if (players.size == 2) yield(PlayerWonGame(players.find { p -> p != currentPlayer }!!))
@@ -34,7 +35,7 @@ class Game(gameState: GameState) {
 
     private fun ensurePlayerStillInGame(player: PlayerId) {
         if (!players.contains(player)) {
-            throw RuntimeException()
+            throw RuntimeException("gast, ge speelt nimeer mee")
         }
     }
 
@@ -61,7 +62,7 @@ class Game(gameState: GameState) {
     private fun ensurePlayersTurn(currentPlayer: PlayerId) {
         val playersTurn = players[(players.indexOf(lastPlayer) + 1) % players.size]
         if (currentPlayer != playersTurn) {
-            throw RuntimeException("t'is niet aan u")
+            throw RuntimeException("t'is nie oan aaa e")
         }
     }
 

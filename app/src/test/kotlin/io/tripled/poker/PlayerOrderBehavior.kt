@@ -3,6 +3,7 @@ package io.tripled.poker
 import ch.tutteli.atrium.api.cc.en_GB.message
 import ch.tutteli.atrium.api.cc.en_GB.startsWith
 import ch.tutteli.atrium.api.cc.en_GB.toThrow
+import ch.tutteli.atrium.creating.Assert
 import ch.tutteli.atrium.domain.builders.creating.CharSequenceAssertionsBuilder.startsWith
 import ch.tutteli.atrium.verbs.expect
 import io.tripled.poker.api.GameService
@@ -36,15 +37,35 @@ class PlayerOrderBehavior {
     }
 
     @Test
-    internal fun `cant play out of order`() {
+    internal fun `cant check out of order`() {
         expect {
             jefChecks()
-        }.toThrow<RuntimeException> {}
+        }.toThrow<RuntimeException> {
+            assertMessage()
+        }
     }
 
     @Test
-    internal fun `can play in order`() {
+    internal fun `can check in order`() {
         joeChecks()
+    }
+
+    @Test
+    internal fun `cant fold out of order`() {
+        expect {
+            jefFolds()
+        }.toThrow<RuntimeException> {
+            assertMessage()
+        }
+    }
+
+    @Test
+    internal fun `can fold in order`() {
+        joeFolds()
+    }
+
+    private fun Assert<RuntimeException>.assertMessage() {
+        message { startsWith("t'is nie oan aaa e") }
     }
 
     private fun jefChecks() {
@@ -55,5 +76,15 @@ class PlayerOrderBehavior {
     private fun joeChecks() {
         assumeUser.assumedPlayerId = "Joe"
         gameUseCases.check("1")
+    }
+
+    private fun jefFolds() {
+        assumeUser.assumedPlayerId = "Jef"
+        gameUseCases.fold("1")
+    }
+
+    private fun joeFolds() {
+        assumeUser.assumedPlayerId = "Joe"
+        gameUseCases.fold("1")
     }
 }
