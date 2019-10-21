@@ -21,7 +21,7 @@ class GameIdActiveGame : ActiveGames {
 
 }
 
-class HappyFoldTest {
+class FoldingBehaviourTests {
     private lateinit var preFoldingEvents: List<Event>
     private val eventStore = DummyEventStore()
     private var deck = PredeterminedCardDeck(listOf())
@@ -33,7 +33,7 @@ class HappyFoldTest {
     @BeforeEach
     internal fun setUp() {
         deck = PredeterminedCardDeck(DeckMother().fullDeck())
-        gameUseCases.startGame("1", "gameId", listOf("Joe", "Jef"))
+        gameUseCases.startGame("1", "gameId", listOf("Joe", "Jef", "Olivier"))
         preFoldingEvents = eventStore.newEvents.map { t -> t }.toList()
     }
 
@@ -42,6 +42,19 @@ class HappyFoldTest {
         joeFolds()
 
         expect(eventStore.newEvents - preFoldingEvents).contains.inOrder.only.value(PlayerFolded("Joe"))
+    }
+
+    @Test
+    internal fun `last player not folding wins`() {
+        joeFolds()
+        jefFolds()
+
+        expect(eventStore.newEvents - preFoldingEvents)
+                .contains.inOrder.only.values(
+                PlayerFolded("Joe"),
+                PlayerFolded("Jef"),
+                PlayerWonGame("Olivier")
+        )
     }
 
     @Test
@@ -54,6 +67,11 @@ class HappyFoldTest {
 
     private fun joeFolds() {
         assumeUser.assumedPlayerId = "Joe"
+        gameUseCases.fold("1")
+    }
+
+    private fun jefFolds() {
+        assumeUser.assumedPlayerId = "Jef"
         gameUseCases.fold("1")
     }
 

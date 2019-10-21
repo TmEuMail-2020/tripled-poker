@@ -25,11 +25,11 @@ class Game(gameState: GameState) {
             dealPlayerHands(players, deck)
     )
 
-    fun fold(player: PlayerId) = sequence {
-        ensurePlayerStillInGame(player)
+    fun fold(currentPlayer: PlayerId) = sequence {
+        ensurePlayerStillInGame(currentPlayer)
+        yield(PlayerFolded(currentPlayer))
 
-        yield(PlayerFolded(player))
-
+        yieldAll(determineWinner(currentPlayer))
     }.toList()
 
     private fun ensurePlayerStillInGame(player: PlayerId) {
@@ -38,13 +38,13 @@ class Game(gameState: GameState) {
         }
     }
 
-    fun check(player: PlayerId) = sequence {
+    fun check(currentPlayer: PlayerId) = sequence {
         if (GamePhase.DONE == gamePhase) {
             throw RuntimeException("t'is gedaan, zet u derover")
         }
 
         countChecks++
-        yield(PlayerChecked(player))
+        yield(PlayerChecked(currentPlayer))
 
         if (everybodyCheckedThisRound()) {
             yield(RoundCompleted())
@@ -53,7 +53,7 @@ class Game(gameState: GameState) {
                 GamePhase.PRE_FLOP -> yieldAll(flop())
                 GamePhase.FLOP -> yieldAll(turn())
                 GamePhase.TURN -> yieldAll(river())
-                GamePhase.RIVER -> yieldAll(determineWinner())
+                GamePhase.RIVER -> yieldAll(determineWinner(currentPlayer))
                 GamePhase.DONE -> Unit
             }
         }
@@ -67,7 +67,12 @@ class Game(gameState: GameState) {
 
     private fun river(): List<Event> = listOf(dealRiver(deck))
 
-    private fun determineWinner(): List<Event> = listOf(determineWinnerEvent())
+    private fun determineWinner(currentPlayer: PlayerId): List<Event> {
+        if (gamePhase == GamePhase.RIVER) return listOf(determineWinnerEvent())
+        if (players.size == 2) return listOf(PlayerWonGame(players.find { p -> p != currentPlayer }!!))
+
+        return emptyList()
+    }
 
     private fun everybodyCheckedThisRound() = (countChecks % players.size) == 0
 

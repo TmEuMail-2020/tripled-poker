@@ -45,27 +45,4 @@ class HappyPokerTest {
         }
         expectWinner(Jef)
     }
-
-    @Test
-    internal fun `player can't fold after folding`() = pokerTableTestNoEventAssert {
-        given {
-            withPlayers(Joe, Jef, Kris)
-            startGame(DeckMother().fullDeck())
-        }
-
-
-        preflop(
-                Joe to ((TEN of HEARTS) and (ACE of HEARTS)),
-                Jef to ((KING of HEARTS) and (QUEEN of HEARTS)),
-                Kris to ((NINE of HEARTS) and (EIGHT of HEARTS))
-        ) {
-            Kris.folds()
-            expect {
-                Kris.folds()
-            }.toThrow<RuntimeException> {
-                message { startsWith("t'is gedaan, zet u derover") }
-            }
-        }
-
-    }
 }
