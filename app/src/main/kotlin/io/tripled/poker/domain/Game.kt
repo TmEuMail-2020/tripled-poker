@@ -15,7 +15,7 @@ class Game(gameState: GameState) {
     private val deck = PredeterminedCardDeck(gameState.remainingCards)
     private var countChecks = gameState.countChecks
     private val gamePhase = gameState.gamePhase
-    private val winnerDeterminer = WinnerDeterminer()
+    private val bestHandsCalculator = BestHandsCalculator()
     private val hands = gameState.hands
     private val players = gameState.players
 
@@ -50,7 +50,7 @@ class Game(gameState: GameState) {
                 GamePhase.PRE_FLOP -> yieldAll(flop())
                 GamePhase.FLOP -> yieldAll(turn())
                 GamePhase.TURN -> yieldAll(river())
-                GamePhase.RIVER -> yieldAll(determineWinner())
+                GamePhase.RIVER -> yield(PlayerWonGame(bestHandsCalculator.calculateBest(hands, listOf())))
                 GamePhase.DONE -> Unit
             }
         }
@@ -64,12 +64,7 @@ class Game(gameState: GameState) {
 
     private fun river(): List<Event> = listOf(dealRiver(deck))
 
-    private fun determineWinner(): List<Event> = listOf(determineWinnerEvent())
-
     private fun everybodyCheckedThisRound() = (countChecks % players.size) == 0
-
-    private fun determineWinnerEvent() =
-            PlayerWonGame(winnerDeterminer.determineWinner(hands, listOf()))
 
     private fun dealFlop(deck: Deck): FlopIsTurned = FlopIsTurned(deck.dealCard(), deck.dealCard(), deck.dealCard())
 
@@ -98,7 +93,7 @@ data class GameState(
 
         private fun players(events: List<Event>): List<PlayerId> {
             val allPlayers = hands(events).keys.toList()
-            val foldedPlayers = events.filterEvents<PlayerFolded>().map { t -> t.name };
+            val foldedPlayers = events.filterEvents<PlayerFolded>().map { t -> t.name }
 
             return allPlayers - foldedPlayers
         }
