@@ -12,6 +12,7 @@ data class TurnIsTurned(val card: Card) : Event
 data class RiverIsTurned(val card: Card) : Event
 
 class Game(gameState: GameState) {
+    private val lastPlayer = gameState.lastPlayer
     private val deck = PredeterminedCardDeck(gameState.remainingCards)
     private var countChecks = gameState.countChecks
     private val gamePhase = gameState.gamePhase
@@ -38,6 +39,7 @@ class Game(gameState: GameState) {
     }
 
     fun check(currentPlayer: PlayerId) = sequence {
+        ensurePlayersTurn(currentPlayer)
         if (GamePhase.DONE == gamePhase) {
             throw RuntimeException("t'is gedaan, zet u derover")
         }
@@ -55,6 +57,13 @@ class Game(gameState: GameState) {
             }
         }
     }.toList()
+
+    private fun ensurePlayersTurn(currentPlayer: PlayerId) {
+        val playersTurn = players[(players.indexOf(lastPlayer) + 1) % players.size]
+        if (currentPlayer != playersTurn) {
+            throw RuntimeException("t'is niet aan u")
+        }
+    }
 
     private fun dealPlayerHands(players: List<PlayerId>, deck: Deck): HandsAreDealt = HandsAreDealt(players.associateWith { Hand(deck.dealCard(), deck.dealCard()) })
 
@@ -79,17 +88,30 @@ data class GameState(
         val hands: Map<PlayerId, Hand>,
         val remainingCards: List<Card>,
         val countChecks: Int,
-        val gamePhase: GamePhase) {
+        val gamePhase: GamePhase,
+        val lastPlayer: PlayerId?) {
 
     companion object {
         fun of(events: List<Event>) = GameState(players(events),
                 hands(events),
                 remainingCards(events),
                 countChecks(events),
-                phase(events))
+                phase(events),
+                lastPlayer(events))
 
         private fun countChecks(events: List<Event>): Int =
                 events.filterEvents<PlayerChecked>().size
+
+        private fun lastPlayer(events: List<Event>): PlayerId? {
+            return events.filter { e -> e is PlayerFolded || e is PlayerChecked }.lastOrNull { e ->
+                return when (e) {
+                    is PlayerFolded -> e.name
+                    is PlayerChecked -> e.name
+                    else -> ""
+                }
+            }?.toString() ?: players(events).lastOrNull()
+
+        }
 
         private fun players(events: List<Event>): List<PlayerId> {
             val allPlayers = hands(events).keys.toList()

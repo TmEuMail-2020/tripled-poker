@@ -5,12 +5,12 @@ import ch.tutteli.atrium.api.cc.en_GB.message
 import ch.tutteli.atrium.api.cc.en_GB.startsWith
 import ch.tutteli.atrium.api.cc.en_GB.toThrow
 import ch.tutteli.atrium.verbs.expect
-import io.tripled.poker.vocabulary.Value.*
-import io.tripled.poker.vocabulary.Suit.*
 import io.tripled.poker.domain.DeckMother
 import io.tripled.poker.domain.of
 import io.tripled.poker.dsl.pokerGameTest
 import io.tripled.poker.dsl.pokerTableTestNoEventAssert
+import io.tripled.poker.vocabulary.Suit.HEARTS
+import io.tripled.poker.vocabulary.Value.*
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 
