@@ -6,6 +6,7 @@ data class GameStarted(val players: List<PlayerId>, val cardsInDeck: List<Card>)
 data class HandsAreDealt(val hands: Map<PlayerId, Hand>) : Event
 data class RoundCompleted(val Noop: String = "Guido") : Event
 data class PlayerChecked(val name: PlayerId) : Event
+data class PlayerFolded(val name: PlayerId) : Event
 data class PlayerWonGame(val name: PlayerId) : Event
 data class FlopIsTurned(val card1: Card, val card2: Card, val card3: Card) : Event
 data class TurnIsTurned(val card: Card) : Event
@@ -23,6 +24,19 @@ class Game(gameState: GameState) {
             GameStarted(players, deck.cards),
             dealPlayerHands(players, deck)
     )
+
+    fun fold(player: PlayerId) = sequence {
+        ensurePlayerStillInGame(player)
+
+        yield(PlayerFolded(player))
+
+    }.toList()
+
+    private fun ensurePlayerStillInGame(player: PlayerId) {
+        if (!players.contains(player)) {
+            throw RuntimeException()
+        }
+    }
 
     fun check(player: PlayerId) = sequence {
         if (GamePhase.DONE == gamePhase) {
@@ -85,7 +99,12 @@ data class GameState(
         private fun countChecks(events: List<Event>): Int =
                 events.filterEvents<PlayerChecked>().size
 
-        private fun players(events: List<Event>): List<PlayerId> = hands(events).keys.toList()
+        private fun players(events: List<Event>): List<PlayerId> {
+            val allPlayers = hands(events).keys.toList()
+            val foldedPlayers = events.filterEvents<PlayerFolded>().map { t -> t.name };
+
+            return allPlayers - foldedPlayers
+        }
 
         private fun hands(events: List<Event>): Map<PlayerId, Hand> {
             val lastEventOrNull = events

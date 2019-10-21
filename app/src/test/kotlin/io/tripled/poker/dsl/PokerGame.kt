@@ -9,6 +9,7 @@ import io.tripled.poker.api.TableService
 import io.tripled.poker.api.TableUseCases
 import io.tripled.poker.domain.*
 import io.tripled.poker.eventpublishing.EventPublisher
+import io.tripled.poker.projection.ActiveGames
 import io.tripled.poker.vocabulary.GameId
 import io.tripled.poker.vocabulary.PlayerId
 import io.tripled.poker.vocabulary.TableId
@@ -29,7 +30,8 @@ open class TestPokerGame(private val deck: PredeterminedCardTestDeck = Predeterm
                          private val eventStore: DummyEventStore = DummyEventStore(),
                          private val eventPublisher: EventPublisher = DummyEventPublisher(),
                          private val assumeUser: AssumeUser = AssumeUser(),
-                         private val gameUseCases: GameService = GameUseCases(eventStore, eventPublisher, DummyActiveGames(), assumeUser) { deck },
+                         private val activeGames: ActiveGames = DummyActiveGames(),
+                         private val gameUseCases: GameService = GameUseCases(eventStore, eventPublisher, activeGames, assumeUser) { deck },
                          private val tableUseCases: TableService = TableUseCases(eventStore, eventPublisher, assumeUser) { "gameId" }) {
     private val tableId: TableId = "1"
     private var gameId: GameId = "gameId"
@@ -40,7 +42,7 @@ open class TestPokerGame(private val deck: PredeterminedCardTestDeck = Predeterm
 
     fun given(givenActions: TestPokerGame.() -> Unit): TestPokerGame {
         val noopPokerGame = TestPokerGame(gameUseCases = DummyGameUseCases(),
-                tableUseCases = DummyTableUseCases())
+                tableUseCases = DummyTableUseCases(), activeGames = activeGames)
         noopPokerGame.givenActions()
         this.eventStore.given = mutableMapOf("1" to noopPokerGame.expectedEvents)
         this.players = noopPokerGame.players
@@ -53,14 +55,16 @@ open class TestPokerGame(private val deck: PredeterminedCardTestDeck = Predeterm
         val playersList = players!!.toList()
 
         createGame(playersList)
-        startGame(playersList)
+        startGame(playersList, predefinedCards)
+
+        activeGames.save(tableId, gameId)
 
         return this
     }
 
-    private fun startGame(playersList: List<PlayerId>) {
+    private fun startGame(playersList: List<PlayerId>, predefinedCards: List<Card>) {
         gameUseCases.startGame(tableId, gameId, playersList)
-        expectedEvents += GameStarted(playersList, DeckMother().deckOfHearts())
+        expectedEvents += GameStarted(playersList, predefinedCards)
     }
 
     private fun createGame(playersList: List<PlayerId>) {
@@ -146,6 +150,11 @@ open class TestPokerGame(private val deck: PredeterminedCardTestDeck = Predeterm
             println("$index. $same => $event || ${eventStore.newEvents.getOrNull(index)}")
         }
         println("========================================================")
+        if (eventStore.newEvents.size > expectedEvents.size){
+            println("Extra events")
+            eventStore.newEvents.subList(expectedEvents.size, eventStore.newEvents.size).forEach(System.out::println)
+        }
+
         expect(expectedEvents).hasSize(eventStore.newEvents.size)
         expect(expectedEvents).toBe(eventStore.newEvents)
     }

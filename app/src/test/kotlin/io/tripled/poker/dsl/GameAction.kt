@@ -10,14 +10,21 @@ class GameAction(private val tableId: TableId,
                  private val assumeUser: AssumeUser,
                  val expectedEvents: ArrayList<Event> = ArrayList()) {
 
-    fun PlayerId.checks() = check(this)
+    fun PlayerId.checks() = checkIt(this)
 
-    private fun check(playerId: PlayerId) {
+    fun PlayerId.folds() = foldIt(this)
+
+    private fun checkIt(playerId: PlayerId) {
         assumeUser.assumedPlayerId = playerId
         gameUseCases.check(tableId)
         expectedEvents += PlayerChecked(playerId)
     }
 
+    private fun foldIt(playerId: PlayerId) {
+        assumeUser.assumedPlayerId = playerId
+        gameUseCases.fold(tableId)
+    }
 
-    // TODO fold, raise, all-in, etc
+
+        // TODO fold, raise, all-in, etc
 }

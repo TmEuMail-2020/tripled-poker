@@ -11,6 +11,7 @@ import io.tripled.poker.vocabulary.TableId
 interface GameService {
     fun startGame(tableId: TableId, gameId: GameId, players: List<PlayerId>)
     fun check(tableId: TableId)
+    fun fold(tableId: TableId)
 }
 
 class GameUseCases(
@@ -29,6 +30,10 @@ class GameUseCases(
     private fun projectCurrentlyActiveGame(tableId: TableId, gameId: GameId) = activeGames.save(tableId, gameId)
 
     override fun check(tableId: TableId) = executeOnGame(tableId) { check(users.currentUser.playerId) }
+
+    override fun fold(tableId: TableId) = executeOnGame(tableId) {
+        fold(users.currentUser.playerId)
+    }
 
     private fun executeOnGame(tableId: TableId, command: Game.() -> List<Event>) {
         val gameId = activeGames.activeGame(tableId)
