@@ -73,8 +73,8 @@ ${`preflop actions`(tableEvents)}
 }""".trimIndent()
 
     private fun `preflop actions`(tableAndGameEvents: List<Event>): String
-        = tableAndGameEvents.ifContaining<RoundCompleted> {
-        tableAndGameEvents.subList(0, tableAndGameEvents.indexOf(tableAndGameEvents.filterEvents<RoundCompleted>()[0])).map {
+        = tableAndGameEvents.ifContaining<GameStarted> {
+        tableAndGameEvents.subList(0, tableAndGameEvents.indexOf(tableAndGameEvents.filterEvents<GameStarted>()[0])).map {
             when (it) {
                 is PlayerChecked -> "    ${it.name}.checks()"
                 else -> ""

@@ -51,13 +51,12 @@ class DslProjectionTest {
         expect(dsl).toBe(
         """
             withPlayers(Joe, Jef)
-            startGame(listOf(TEN of HEARTS,ACE of HEARTS,KING of HEARTS,QUEEN of HEARTS,NINE of HEARTS,EIGHT of HEARTS,SEVEN of HEARTS,SIX of HEARTS,FIVE of HEARTS))
+            startGame(listOf(TEN of HEARTS,ACE of HEARTS,KING of HEARTS,QUEEN of HEARTS,NINE of HEARTS,EIGHT of HEARTS,SEVEN of HEARTS,SIX of HEARTS,FIVE of HEARTS,FOUR of HEARTS,THREE of HEARTS,TWO of HEARTS))
             preflop(
                 Joe to ((TEN of HEARTS) and (ACE of HEARTS)),
                 Jef to ((KING of HEARTS) and (QUEEN of HEARTS))
             ) {
-                Joe.checks()
-                Jef.checks()
+
             }
             flop(NINE of HEARTS,
                     EIGHT of HEARTS,
@@ -98,13 +97,12 @@ class DslProjectionTest {
         expect(dsl).toBe(
                 """
             withPlayers(Joe, Jef)
-            startGame(listOf(TEN of HEARTS,ACE of HEARTS,KING of HEARTS,QUEEN of HEARTS,NINE of HEARTS,EIGHT of HEARTS,SEVEN of HEARTS,SIX of HEARTS,FIVE of HEARTS))
+            startGame(listOf(TEN of HEARTS,ACE of HEARTS,KING of HEARTS,QUEEN of HEARTS,NINE of HEARTS,EIGHT of HEARTS,SEVEN of HEARTS,SIX of HEARTS,FIVE of HEARTS,FOUR of HEARTS,THREE of HEARTS,TWO of HEARTS))
             preflop(
                 Joe to ((TEN of HEARTS) and (ACE of HEARTS)),
                 Jef to ((KING of HEARTS) and (QUEEN of HEARTS))
             ) {
-                Joe.checks()
-                Jef.checks()
+
             }
         """.trimIndent())
     }

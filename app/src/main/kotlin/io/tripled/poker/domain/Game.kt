@@ -4,7 +4,6 @@ import io.tripled.poker.vocabulary.PlayerId
 
 data class GameStarted(val players: List<PlayerId>, val cardsInDeck: List<Card>) : Event
 data class HandsAreDealt(val hands: Map<PlayerId, Hand>) : Event
-data class RoundCompleted(val Noop: String = "Guido") : Event
 data class PlayerChecked(val name: PlayerId) : Event
 data class PlayerFolded(val name: PlayerId) : Event
 data class PlayerWonGame(val name: PlayerId) : Event
@@ -47,8 +46,6 @@ class Game(gameState: GameState) {
         yield(PlayerChecked(currentPlayer))
 
         if (everybodyCheckedThisRound()) {
-            yield(RoundCompleted())
-
             when (gamePhase) {
                 GamePhase.PRE_FLOP -> yieldAll(flop())
                 GamePhase.FLOP -> yieldAll(turn())

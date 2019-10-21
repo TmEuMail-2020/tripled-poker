@@ -131,8 +131,6 @@ open class TestPokerGame(private val deck: PredeterminedCardTestDeck = Predeterm
         val gameAction = GameAction("1", gameUseCases, assumeUser)
         actions.invoke(gameAction)
         expectedEvents += gameAction.expectedEvents
-
-        expectedEvents += RoundCompleted()
     }
 
     // todo expectPlayersHaving(playerId, evaluatedRuleResult)
