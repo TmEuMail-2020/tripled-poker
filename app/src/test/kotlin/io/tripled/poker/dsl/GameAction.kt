@@ -23,6 +23,7 @@ class GameAction(private val tableId: TableId,
     private fun foldIt(playerId: PlayerId) {
         assumeUser.assumedPlayerId = playerId
         gameUseCases.fold(tableId)
+        expectedEvents += PlayerFolded(playerId)
     }
 
 

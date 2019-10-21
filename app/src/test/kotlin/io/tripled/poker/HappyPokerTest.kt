@@ -47,7 +47,6 @@ class HappyPokerTest {
         expectWinner(Jef)
     }
 
-    @Disabled
     @Test
     internal fun `test all usecases and events to play game with two players 2`() = pokerGameTest {
         withPlayers(Joe, Jef)
@@ -74,6 +73,6 @@ class HappyPokerTest {
             Joe.checks()
             Jef.folds()
         }
-        expectWinner(Jef)
+        expectWinner(Joe)
     }
 }
