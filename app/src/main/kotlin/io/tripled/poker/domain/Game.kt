@@ -1,6 +1,7 @@
 package io.tripled.poker.domain
 
 import io.tripled.poker.vocabulary.PlayerId
+import java.lang.Thread.yield
 
 data class GameStarted(val players: List<PlayerId>, val cardsInDeck: List<Card>) : Event
 data class HandsAreDealt(val hands: Map<PlayerId, Hand>) : Event
@@ -25,12 +26,16 @@ class Game(gameState: GameState) {
             dealPlayerHands(players, deck)
     )
 
-    fun fold(currentPlayer: PlayerId) = sequence {
-        ensurePlayerStillInGame(currentPlayer)
-        ensurePlayersTurn(currentPlayer)
+    fun fold(currentPlayer: PlayerId) = safeGameAction(currentPlayer){
         yield(PlayerFolded(currentPlayer))
 
         if (players.size == 2) yield(PlayerWonGame(players.find { p -> p != currentPlayer }!!))
+    }
+
+    private fun safeGameAction(currentPlayer: PlayerId, gameAction: suspend SequenceScope<Event>.() -> Unit): List<Event> = sequence<Event> {
+        ensurePlayerStillInGame(currentPlayer)
+        ensurePlayersTurn(currentPlayer)
+        gameAction()
     }.toList()
 
     private fun ensurePlayerStillInGame(player: PlayerId) {
@@ -39,8 +44,7 @@ class Game(gameState: GameState) {
         }
     }
 
-    fun check(currentPlayer: PlayerId) = sequence {
-        ensurePlayersTurn(currentPlayer)
+    fun check(currentPlayer: PlayerId) = safeGameAction(currentPlayer){
         if (GamePhase.DONE == gamePhase) {
             throw RuntimeException("t'is gedaan, zet u derover")
         }
