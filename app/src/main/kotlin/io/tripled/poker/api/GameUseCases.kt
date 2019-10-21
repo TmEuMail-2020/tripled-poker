@@ -31,6 +31,7 @@ class GameUseCases(
     override fun check(tableId: TableId) = executeOnGame(tableId) { check(users.currentUser.playerId) }
 
     private fun executeOnGame(tableId: TableId, command: Game.() -> List<Event>) {
+        //TODO should we depend on a projection to retrieve our data?
         val gameId = activeGames.activeGame(tableId)
         val events = withGame(gameId).command()
         save(gameId, events)

@@ -14,7 +14,6 @@ class PredeterminedCardTestDeck(
 
     override fun dealCard() = queue.pop()
 
-
     fun provideNewCards(newCards: List<Card>) {
         queue.clear()
         queue.addAll(newCards)
