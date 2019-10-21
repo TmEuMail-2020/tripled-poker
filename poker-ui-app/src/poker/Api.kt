@@ -103,6 +103,52 @@ class PokerApi(var playerName: String = "") {
             }
         }
         
+        mutation fold(${'$'}name: String!) {
+            table: fold(name: ${'$'}name) {
+                players {
+                    name
+                    cards {
+                        numberOfCards
+                        visibleCards {
+                            suit
+                            value
+                        }
+                    }
+                }
+                flop {
+                  numberOfCards
+                  visibleCards {
+                    suit
+                    value
+                  }
+                }
+                turn {
+                  numberOfCards
+                  visibleCards {
+                    suit
+                    value
+                  }
+                }
+                river {
+                  numberOfCards
+                  visibleCards {
+                    suit
+                    value
+                  }
+                }
+                winner {
+                    name
+                    cards {
+                        numberOfCards
+                        visibleCards {
+                            suit
+                            value
+                        }
+                    }
+                }
+            }
+        }
+        
         mutation check(${'$'}name: String!) {
             table: check(name: ${'$'}name) {
                 players {
@@ -209,6 +255,8 @@ class PokerApi(var playerName: String = "") {
     fun playRound(f: (Table) -> Unit) = post(f, "playRound")
 
     fun check(f: (Table) -> Unit)  = post(f, "check")
+
+    fun fold(f: (Table) -> Unit)  = post(f, "fold")
 
     private fun post(f: (Table) -> Unit, operation: String): Promise<Unit> {
         return axios<GraphqlResponse>(jsObject {

@@ -18,6 +18,8 @@ class TableMutations(private val tableUseCases: TableService,
 
     fun check(name: String) = executeGameUseCase(name) { check("1") }
 
+    fun fold(name: String) = executeGameUseCase(name) { fold("1") }
+
     private fun executeTableUseCase(name: String, command: TableService.() -> Unit): Table {
         assumeUser.assumedPlayerId = name
         tableUseCases.command()

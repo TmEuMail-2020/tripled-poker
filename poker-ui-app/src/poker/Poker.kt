@@ -73,6 +73,14 @@ class PokerTableRepresentation : RComponent<RProps, RState>() {
         }
         input(type = InputType.button) {
             attrs {
+                value = "Fold"
+                onClickFunction = { event: Event ->
+                    pokerApi.fold(::updateTable)
+                }
+            }
+        }
+        input(type = InputType.button) {
+            attrs {
                 value = "Play round"
                 onClickFunction = { event: Event ->
                     pokerApi.playRound(::updateTable)
