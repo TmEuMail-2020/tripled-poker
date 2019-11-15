@@ -4,7 +4,6 @@ import ch.tutteli.atrium.api.cc.en_GB.message
 import ch.tutteli.atrium.api.cc.en_GB.startsWith
 import ch.tutteli.atrium.api.cc.en_GB.toThrow
 import ch.tutteli.atrium.creating.Assert
-import ch.tutteli.atrium.domain.builders.creating.CharSequenceAssertionsBuilder.startsWith
 import ch.tutteli.atrium.verbs.expect
 import io.tripled.poker.api.GameService
 import io.tripled.poker.api.GameUseCases

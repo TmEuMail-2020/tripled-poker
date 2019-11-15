@@ -2,13 +2,13 @@ package io.tripled.poker
 
 import ch.tutteli.atrium.api.cc.en_GB.toBe
 import ch.tutteli.atrium.verbs.expect
-import io.tripled.poker.vocabulary.Suit.*
-import io.tripled.poker.vocabulary.Value.*
 import io.tripled.poker.domain.DeckMother
 import io.tripled.poker.domain.of
 import io.tripled.poker.dsl.DummyEventStore
 import io.tripled.poker.dsl.pokerTableTest
 import io.tripled.poker.projection.DslProjection
+import io.tripled.poker.vocabulary.Suit.HEARTS
+import io.tripled.poker.vocabulary.Value.*
 import org.junit.jupiter.api.Test
 
 class DslProjectionTest {

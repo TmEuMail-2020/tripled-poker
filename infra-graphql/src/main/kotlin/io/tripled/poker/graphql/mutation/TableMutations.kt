@@ -1,9 +1,9 @@
 package io.tripled.poker.graphql.mutation
 
-import io.tripled.poker.graphql.AssumeUser
 import io.tripled.poker.api.GameService
 import io.tripled.poker.api.TableService
 import io.tripled.poker.api.response.Table
+import io.tripled.poker.graphql.AssumeUser
 import io.tripled.poker.graphql.Mutation
 import org.springframework.stereotype.Component
 

@@ -2,13 +2,15 @@ package io.tripled.poker
 
 import ch.tutteli.atrium.api.cc.en_GB.toBe
 import ch.tutteli.atrium.verbs.expect
-import io.tripled.poker.api.response.*
-import io.tripled.poker.vocabulary.Value.*
-import io.tripled.poker.vocabulary.Suit.*
+import io.tripled.poker.api.response.HiddenCards
+import io.tripled.poker.api.response.Player
+import io.tripled.poker.api.response.VisibleCards
 import io.tripled.poker.domain.*
 import io.tripled.poker.dsl.pokerTableTest
 import io.tripled.poker.dsl.pokerTableTestNoEventAssert
 import io.tripled.poker.vocabulary.Card
+import io.tripled.poker.vocabulary.Suit.HEARTS
+import io.tripled.poker.vocabulary.Value.*
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test

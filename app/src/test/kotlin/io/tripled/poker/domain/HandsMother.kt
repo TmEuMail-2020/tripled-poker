@@ -1,7 +1,8 @@
 package io.tripled.poker.domain
 
+import io.tripled.poker.vocabulary.Suit.CLUBS
+import io.tripled.poker.vocabulary.Suit.DIAMONDS
 import io.tripled.poker.vocabulary.Value.*
-import io.tripled.poker.vocabulary.Suit.*
 
 val suitedConnectors = (EIGHT of DIAMONDS) and ( NINE of DIAMONDS)
 val suitedAceKing = (KING of CLUBS) and (ACE of CLUBS)

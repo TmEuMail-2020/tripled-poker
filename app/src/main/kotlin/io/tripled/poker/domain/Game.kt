@@ -1,7 +1,6 @@
 package io.tripled.poker.domain
 
 import io.tripled.poker.vocabulary.PlayerId
-import java.lang.Thread.yield
 
 data class GameStarted(val players: List<PlayerId>, val cardsInDeck: List<Card>) : Event
 data class HandsAreDealt(val hands: Map<PlayerId, Hand>) : Event

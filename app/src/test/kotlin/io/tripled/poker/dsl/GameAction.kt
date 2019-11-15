@@ -1,7 +1,9 @@
 package io.tripled.poker.dsl
 
 import io.tripled.poker.api.GameService
-import io.tripled.poker.domain.*
+import io.tripled.poker.domain.Event
+import io.tripled.poker.domain.PlayerChecked
+import io.tripled.poker.domain.PlayerFolded
 import io.tripled.poker.vocabulary.PlayerId
 import io.tripled.poker.vocabulary.TableId
 
