@@ -14,6 +14,7 @@ import io.tripled.poker.domain.PredeterminedCardDeck
 import io.tripled.poker.dsl.AssumeUser
 import io.tripled.poker.dsl.DummyEventPublisher
 import io.tripled.poker.dsl.DummyEventStore
+import io.tripled.poker.dsl.DummyGameRepository
 import io.tripled.poker.eventpublishing.EventPublisher
 import io.tripled.poker.projection.ActiveGames
 import org.junit.jupiter.api.BeforeEach
@@ -26,7 +27,7 @@ class PlayerOrderBehavior {
     private val eventPublisher: EventPublisher = DummyEventPublisher()
     private val assumeUser: AssumeUser = AssumeUser()
     private val activeGames: ActiveGames = GameIdActiveGame()
-    private val gameUseCases: GameService = GameUseCases(eventStore, eventPublisher, activeGames, assumeUser) { deck }
+    private val gameUseCases: GameService = GameUseCases(DummyGameRepository(eventStore), eventPublisher, activeGames, assumeUser) { deck }
 
     @BeforeEach
     internal fun setUp() {

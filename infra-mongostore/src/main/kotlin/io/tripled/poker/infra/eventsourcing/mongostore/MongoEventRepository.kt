@@ -19,7 +19,7 @@ data class PersistedEvent<AggregateId, Payload>(@Id val eventId: UUID = UUID.ran
 
 @Repository
 class EventStore(val eventRepo: MongoEventRepository) : io.tripled.poker.eventsourcing.EventStore {
-    override fun save(id: Any, events: List<Event>) {
+    override fun append(id: Any, events: List<Event>) {
         val persistedEvents = events.map {
             PersistedEvent(aggregateId = id.toString() as Any, payload = it)
         }

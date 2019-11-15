@@ -10,8 +10,8 @@ class DummyEventStoreTest {
     val dummyEventStore: EventStore = DummyEventStore()
     @Test
     internal fun `should return events with right aggregate Id`() {
-        dummyEventStore.save("1", listOf(PlayerChecked("Joef")))
-        dummyEventStore.save("2", listOf(PlayerChecked("Jef")))
+        dummyEventStore.append("1", listOf(PlayerChecked("Joef")))
+        dummyEventStore.append("2", listOf(PlayerChecked("Jef")))
 
         val eventList = dummyEventStore.findById("2")
         expect(eventList).toBe(listOf(PlayerChecked("Jef")))
@@ -20,8 +20,8 @@ class DummyEventStoreTest {
     @Test
     internal fun `should append events`() {
         val id = "1"
-        dummyEventStore.save(id, listOf(PlayerChecked("Joef")))
-        dummyEventStore.save(id, listOf(PlayerChecked("Jef")))
+        dummyEventStore.append(id, listOf(PlayerChecked("Joef")))
+        dummyEventStore.append(id, listOf(PlayerChecked("Jef")))
 
         val eventList = dummyEventStore.findById(id)
         expect(eventList).toBe(listOf(PlayerChecked("Joef"), PlayerChecked("Jef")))

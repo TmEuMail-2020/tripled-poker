@@ -14,7 +14,7 @@ class PokerTable(private val deck: PredeterminedCardTestDeck = PredeterminedCard
                  private val eventPublisher: EventPublisher = DummyEventPublisher(),
                  private val assumeUser: AssumeUser = AssumeUser(),
                  private val activeGames: ActiveGames = DummyActiveGames(),
-                 private val gameUseCases: GameService = GameUseCases(eventStore, eventPublisher, activeGames, assumeUser) { deck },
+                 private val gameUseCases: GameService = GameUseCases(DummyGameRepository(eventStore), eventPublisher, activeGames, assumeUser) { deck },
                  private val tableUseCases: TableService = TableUseCases(eventStore, eventPublisher, assumeUser) { "gameId" })
     : TestPokerGame(deck, eventStore, eventPublisher, assumeUser, activeGames, gameUseCases, tableUseCases) {
 

@@ -43,7 +43,7 @@ class TableUseCases(
     }
 
     private fun save(events: List<Event>) {
-        eventStore.save(tableId, events)
+        eventStore.append(tableId, events)
     }
 
     override fun getTable() = TableProjection().table(users.currentUser.playerId, eventStore)

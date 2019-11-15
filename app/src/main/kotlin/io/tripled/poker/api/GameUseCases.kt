@@ -2,7 +2,6 @@ package io.tripled.poker.api
 
 import io.tripled.poker.domain.*
 import io.tripled.poker.eventpublishing.EventPublisher
-import io.tripled.poker.eventsourcing.EventStore
 import io.tripled.poker.projection.ActiveGames
 import io.tripled.poker.vocabulary.GameId
 import io.tripled.poker.vocabulary.PlayerId
@@ -15,7 +14,7 @@ interface GameService {
 }
 
 class GameUseCases(
-        private val eventStore: EventStore,
+        private val gameRepository: GameRepository,
         private val eventPublisher: EventPublisher,
         private val activeGames: ActiveGames,
         private val users: Users,
@@ -42,13 +41,13 @@ class GameUseCases(
         publish(gameId, events)
     }
 
-    private fun withGame(gameId: GameId) = Game(GameState.of(eventStore.findById(gameId)))
+    private fun withGame(gameId: GameId) = gameRepository.findById(gameId)
 
     private fun publish(gameId: GameId, events: List<Event>) {
         eventPublisher.publish(gameId, events)
     }
 
     private fun save(gameId: GameId, events: List<Event>) {
-        eventStore.save(gameId, events)
+        gameRepository.save(gameId, events)
     }
 }

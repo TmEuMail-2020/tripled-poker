@@ -14,7 +14,7 @@ class DummyEventStore(var given: MutableMap<Any, List<Event>> = mutableMapOf()) 
         given = builder.events
     }
 
-    override fun save(id: Any, events: List<Event>) {
+    override fun append(id: Any, events: List<Event>) {
         newlyDispatchedEvents.append(id, events)
     }
 

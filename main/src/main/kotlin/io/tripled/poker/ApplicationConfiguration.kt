@@ -3,10 +3,7 @@ package io.tripled.poker
 import io.tripled.poker.api.GameService
 import io.tripled.poker.api.GameUseCases
 import io.tripled.poker.api.TableUseCases
-import io.tripled.poker.domain.Event
-import io.tripled.poker.domain.GameCreated
-import io.tripled.poker.domain.ShuffledDeck
-import io.tripled.poker.domain.Users
+import io.tripled.poker.domain.*
 import io.tripled.poker.eventpublishing.EventPublisher
 import io.tripled.poker.eventsourcing.EventStore
 import io.tripled.poker.projection.ActiveGames
@@ -35,8 +32,8 @@ class ApplicationConfiguration {
             }
 
     @Bean
-    fun gameUseCases(eventStore: EventStore, eventPublisher: EventPublisher, activeGames: ActiveGames, users: Users)
-            = GameUseCases(eventStore, eventPublisher, activeGames, users) { ShuffledDeck() }
+    fun gameUseCases(gameRepository: GameRepository, eventPublisher: EventPublisher, activeGames: ActiveGames, users: Users)
+            = GameUseCases(gameRepository, eventPublisher, activeGames, users) { ShuffledDeck() }
 
     @Bean
     fun activeGames() = object : ActiveGames {
