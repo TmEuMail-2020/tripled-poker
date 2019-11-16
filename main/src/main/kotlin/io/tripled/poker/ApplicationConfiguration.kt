@@ -1,11 +1,16 @@
 package io.tripled.poker
 
-import io.tripled.poker.api.GameService
-import io.tripled.poker.api.GameUseCases
-import io.tripled.poker.api.TableUseCases
+import io.tripled.poker.app.GameUseCases
+import io.tripled.poker.app.TableUseCases
+import io.tripled.poker.app.api.GameService
 import io.tripled.poker.domain.*
+import io.tripled.poker.domain.cards.ShuffledDeck
+import io.tripled.poker.domain.game.GameRepository
+import io.tripled.poker.domain.table.GameCreated
+import io.tripled.poker.eventpublishing.DomainEvents
 import io.tripled.poker.eventpublishing.EventPublisher
 import io.tripled.poker.eventsourcing.EventStore
+import io.tripled.poker.infra.eventsourcing.MongoConfiguration
 import io.tripled.poker.projection.ActiveGames
 import io.tripled.poker.vocabulary.GameId
 import io.tripled.poker.vocabulary.PlayerId
@@ -13,12 +18,14 @@ import io.tripled.poker.vocabulary.TableId
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.Import
 import org.springframework.context.event.EventListener
 import org.springframework.stereotype.Component
 import java.util.*
 import kotlin.collections.HashMap
 
 @Configuration
+@Import(value = [MongoConfiguration::class])
 class ApplicationConfiguration {
 
     @Bean
@@ -53,6 +60,8 @@ class ConcreteEventPublisher(private val applicationEventPublisher: ApplicationE
 
             domainToApplicationEvents(event, id)
         }
+
+        applicationEventPublisher.publishEvent(DomainEvents(id, events))
     }
 
     private fun domainToApplicationEvents(event: Event, id: Any) {

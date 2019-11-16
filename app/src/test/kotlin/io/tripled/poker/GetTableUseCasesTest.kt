@@ -2,10 +2,12 @@ package io.tripled.poker
 
 import ch.tutteli.atrium.api.cc.en_GB.toBe
 import ch.tutteli.atrium.verbs.expect
-import io.tripled.poker.api.response.HiddenCards
-import io.tripled.poker.api.response.Player
-import io.tripled.poker.api.response.VisibleCards
+import io.tripled.poker.app.api.response.HiddenCards
+import io.tripled.poker.app.api.response.Player
+import io.tripled.poker.app.api.response.VisibleCards
 import io.tripled.poker.domain.*
+import io.tripled.poker.domain.cards.ShuffledDeck
+import io.tripled.poker.domain.cards.of
 import io.tripled.poker.dsl.pokerTableTest
 import io.tripled.poker.dsl.pokerTableTestNoEventAssert
 import io.tripled.poker.vocabulary.Card

@@ -1,8 +1,13 @@
 package io.tripled.poker.projection
 
-import io.tripled.poker.api.response.*
-import io.tripled.poker.api.response.Table
+import io.tripled.poker.app.api.response.*
+import io.tripled.poker.app.api.response.Table
 import io.tripled.poker.domain.*
+import io.tripled.poker.domain.cards.Card
+import io.tripled.poker.domain.cards.Hand
+import io.tripled.poker.domain.game.*
+import io.tripled.poker.domain.table.GameCreated
+import io.tripled.poker.domain.table.PlayerJoinedTable
 import io.tripled.poker.eventsourcing.EventStore
 import io.tripled.poker.vocabulary.PlayerId
 
@@ -84,7 +89,7 @@ class TableProjection {
         private fun Hand.asVisibleCards() = VisibleCards(mapToCards())
         private fun Hand.asHiddenCards() = HiddenCards(cards().size)
         private fun Hand.mapToCards() = cards().map { it.mapToCard() }
-        private fun io.tripled.poker.domain.Card.mapToCard() = io.tripled.poker.vocabulary.Card(this.suit, this.value)
+        private fun Card.mapToCard() = io.tripled.poker.vocabulary.Card(this.suit, this.value)
 
     }
 }

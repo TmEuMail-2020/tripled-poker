@@ -5,12 +5,12 @@ import ch.tutteli.atrium.api.cc.en_GB.startsWith
 import ch.tutteli.atrium.api.cc.en_GB.toThrow
 import ch.tutteli.atrium.creating.Assert
 import ch.tutteli.atrium.verbs.expect
-import io.tripled.poker.api.GameService
-import io.tripled.poker.api.GameUseCases
+import io.tripled.poker.app.GameUseCases
+import io.tripled.poker.app.api.GameService
 import io.tripled.poker.domain.DeckMother
 import io.tripled.poker.domain.Event
 import io.tripled.poker.domain.GameIdActiveGame
-import io.tripled.poker.domain.PredeterminedCardDeck
+import io.tripled.poker.domain.cards.PredeterminedCardDeck
 import io.tripled.poker.dsl.AssumeUser
 import io.tripled.poker.dsl.DummyEventPublisher
 import io.tripled.poker.dsl.DummyEventStore

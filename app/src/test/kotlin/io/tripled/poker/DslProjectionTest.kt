@@ -3,7 +3,7 @@ package io.tripled.poker
 import ch.tutteli.atrium.api.cc.en_GB.toBe
 import ch.tutteli.atrium.verbs.expect
 import io.tripled.poker.domain.DeckMother
-import io.tripled.poker.domain.of
+import io.tripled.poker.domain.cards.of
 import io.tripled.poker.dsl.DummyEventStore
 import io.tripled.poker.dsl.pokerTableTest
 import io.tripled.poker.projection.DslProjection

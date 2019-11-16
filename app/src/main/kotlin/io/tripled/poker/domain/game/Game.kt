@@ -1,5 +1,7 @@
-package io.tripled.poker.domain
+package io.tripled.poker.domain.game
 
+import io.tripled.poker.domain.*
+import io.tripled.poker.domain.cards.*
 import io.tripled.poker.vocabulary.PlayerId
 
 data class GameStarted(val players: List<PlayerId>, val cardsInDeck: List<Card>) : Event

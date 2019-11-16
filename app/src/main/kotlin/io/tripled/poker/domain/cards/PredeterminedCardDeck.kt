@@ -1,4 +1,4 @@
-package io.tripled.poker.domain
+package io.tripled.poker.domain.cards
 
 import java.util.*
 

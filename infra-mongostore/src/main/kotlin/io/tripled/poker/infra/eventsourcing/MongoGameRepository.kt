@@ -1,6 +1,9 @@
 package io.tripled.poker.infra.eventsourcing
 
 import io.tripled.poker.domain.*
+import io.tripled.poker.domain.cards.Card
+import io.tripled.poker.domain.cards.Hand
+import io.tripled.poker.domain.game.*
 import io.tripled.poker.eventsourcing.EventStore
 import io.tripled.poker.vocabulary.GameId
 import io.tripled.poker.vocabulary.PlayerId

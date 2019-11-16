@@ -2,8 +2,11 @@ package io.tripled.poker.domain
 
 import ch.tutteli.atrium.api.cc.en_GB.*
 import ch.tutteli.atrium.verbs.expect
-import io.tripled.poker.api.GameService
-import io.tripled.poker.api.GameUseCases
+import io.tripled.poker.app.GameUseCases
+import io.tripled.poker.app.api.GameService
+import io.tripled.poker.domain.cards.PredeterminedCardDeck
+import io.tripled.poker.domain.game.PlayerFolded
+import io.tripled.poker.domain.game.PlayerWonGame
 import io.tripled.poker.dsl.AssumeUser
 import io.tripled.poker.dsl.DummyEventPublisher
 import io.tripled.poker.dsl.DummyEventStore

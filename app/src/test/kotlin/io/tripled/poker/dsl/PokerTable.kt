@@ -1,10 +1,10 @@
 package io.tripled.poker.dsl
 
-import io.tripled.poker.api.GameService
-import io.tripled.poker.api.GameUseCases
-import io.tripled.poker.api.TableService
-import io.tripled.poker.api.TableUseCases
-import io.tripled.poker.api.response.Table
+import io.tripled.poker.app.GameUseCases
+import io.tripled.poker.app.TableUseCases
+import io.tripled.poker.app.api.GameService
+import io.tripled.poker.app.api.TableService
+import io.tripled.poker.app.api.response.Table
 import io.tripled.poker.eventpublishing.EventPublisher
 import io.tripled.poker.projection.ActiveGames
 import io.tripled.poker.vocabulary.PlayerId

@@ -1,5 +1,6 @@
 package io.tripled.poker.domain
 
+import io.tripled.poker.domain.cards.of
 import io.tripled.poker.vocabulary.Suit.*
 import io.tripled.poker.vocabulary.Value.ACE
 import io.tripled.poker.vocabulary.Value.TWO

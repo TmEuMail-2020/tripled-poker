@@ -1,17 +1,15 @@
-package io.tripled.poker.api
+package io.tripled.poker.app
 
+import io.tripled.poker.app.api.GameService
 import io.tripled.poker.domain.*
+import io.tripled.poker.domain.cards.Deck
+import io.tripled.poker.domain.game.Game
+import io.tripled.poker.domain.game.GameRepository
 import io.tripled.poker.eventpublishing.EventPublisher
 import io.tripled.poker.projection.ActiveGames
 import io.tripled.poker.vocabulary.GameId
 import io.tripled.poker.vocabulary.PlayerId
 import io.tripled.poker.vocabulary.TableId
-
-interface GameService {
-    fun startGame(tableId: TableId, gameId: GameId, players: List<PlayerId>)
-    fun check(tableId: TableId)
-    fun fold(tableId: TableId)
-}
 
 class GameUseCases(
         private val gameRepository: GameRepository,

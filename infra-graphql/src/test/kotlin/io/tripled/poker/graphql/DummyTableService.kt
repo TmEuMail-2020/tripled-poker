@@ -1,9 +1,9 @@
 package io.tripled.poker.graphql
 
-import io.tripled.poker.api.TableService
-import io.tripled.poker.api.response.HiddenCards
-import io.tripled.poker.api.response.Player
-import io.tripled.poker.api.response.Table
+import io.tripled.poker.app.api.TableService
+import io.tripled.poker.app.api.response.HiddenCards
+import io.tripled.poker.app.api.response.Player
+import io.tripled.poker.app.api.response.Table
 import org.springframework.stereotype.Component
 
 @Component

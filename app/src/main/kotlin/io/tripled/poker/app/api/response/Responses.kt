@@ -1,4 +1,4 @@
-package io.tripled.poker.api.response
+package io.tripled.poker.app.api.response
 
 import io.tripled.poker.vocabulary.Card
 import io.tripled.poker.vocabulary.PlayerId

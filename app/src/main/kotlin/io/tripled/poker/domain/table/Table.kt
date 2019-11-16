@@ -1,5 +1,7 @@
-package io.tripled.poker.domain
+package io.tripled.poker.domain.table
 
+import io.tripled.poker.domain.Event
+import io.tripled.poker.domain.filterEvents
 import io.tripled.poker.vocabulary.GameId
 import io.tripled.poker.vocabulary.PlayerId
 

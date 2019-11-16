@@ -1,4 +1,4 @@
-package io.tripled.poker.domain
+package io.tripled.poker.domain.game
 
 enum class GamePhase {
     DONE,

@@ -1,5 +1,7 @@
 package io.tripled.poker.domain
 
+import io.tripled.poker.domain.cards.ShuffledDeck
+import io.tripled.poker.domain.cards.of
 import io.tripled.poker.vocabulary.Suit
 import io.tripled.poker.vocabulary.Value
 import org.junit.jupiter.api.Assertions.assertNotEquals

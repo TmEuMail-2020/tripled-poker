@@ -1,7 +1,7 @@
 package io.tripled.poker.dsl
 
-import io.tripled.poker.api.TableService
-import io.tripled.poker.api.response.Table
+import io.tripled.poker.app.api.TableService
+import io.tripled.poker.app.api.response.Table
 
 internal class DummyTableUseCases : TableService {
     override fun join() = Unit

@@ -1,7 +1,7 @@
 package io.tripled.poker.dsl
 
-import io.tripled.poker.domain.Card
-import io.tripled.poker.domain.Deck
+import io.tripled.poker.domain.cards.Card
+import io.tripled.poker.domain.cards.Deck
 import java.util.*
 
 class PredeterminedCardTestDeck(

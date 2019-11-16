@@ -2,7 +2,7 @@ package io.tripled.poker.dsl
 
 import ch.tutteli.atrium.api.cc.en_GB.toBe
 import ch.tutteli.atrium.verbs.expect
-import io.tripled.poker.domain.PlayerChecked
+import io.tripled.poker.domain.game.PlayerChecked
 import io.tripled.poker.eventsourcing.EventStore
 import org.junit.jupiter.api.Test
 

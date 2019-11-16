@@ -2,6 +2,8 @@ package io.tripled.poker.domain
 
 import ch.tutteli.atrium.api.cc.en_GB.toBe
 import ch.tutteli.atrium.verbs.expect
+import io.tripled.poker.domain.cards.Card
+import io.tripled.poker.domain.cards.of
 import io.tripled.poker.vocabulary.Suit.*
 import io.tripled.poker.vocabulary.Value.*
 import org.junit.jupiter.params.ParameterizedTest

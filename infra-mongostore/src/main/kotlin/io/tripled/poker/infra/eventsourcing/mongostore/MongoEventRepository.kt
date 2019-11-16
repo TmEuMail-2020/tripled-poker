@@ -6,6 +6,7 @@ import io.tripled.poker.projection.DslProjection
 import io.tripled.poker.vocabulary.GameId
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.repository.MongoRepository
+import org.springframework.data.mongodb.repository.config.EnableMongoRepositories
 import org.springframework.stereotype.Repository
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -27,14 +28,14 @@ class EventStore(val eventRepo: MongoEventRepository) : io.tripled.poker.eventso
     }
 
     override fun findById(id: Any): List<Event> = eventRepo.findByAggregateId(id.toString()).map { it.payload }.toList()
-}
 
-interface MongoEventRepository : MongoRepository<PersistedEvent<Any, Event>, UUID> {
-    fun findByAggregateId(aggregateId: Any): List<PersistedEvent<Any, Event>>
+    interface MongoEventRepository : MongoRepository<PersistedEvent<Any, Event>, UUID> {
+        fun findByAggregateId(aggregateId: Any): List<PersistedEvent<Any, Event>>
+    }
 }
 
 @RestController
-class EventController(private val eventRepo: MongoEventRepository,
+class EventController(private val eventRepo: EventStore.MongoEventRepository,
                       private val eventStore: io.tripled.poker.eventsourcing.EventStore){
     @GetMapping("/events/{eventId}")
     fun events(@PathVariable eventId: Any) = eventRepo.findByAggregateId(eventId)
