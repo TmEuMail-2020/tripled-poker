@@ -11,7 +11,7 @@ import io.tripled.poker.vocabulary.PlayerId
 class DummyGameRepository(private val eventStore: EventStore) : GameRepository {
     override fun save(gameId: GameId, events: List<Event>) = eventStore.append(gameId, events)
 
-    override fun findById(gameId: GameId): Game = Game(GameReducer().of(eventStore.findById(gameId)))
+    override fun findGameById(gameId: GameId): Game = Game(GameReducer().of(eventStore.findById(gameId)))
 
     internal class GameReducer {
         fun of(events: List<Event>) = GameState(players(events),

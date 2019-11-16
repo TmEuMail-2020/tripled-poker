@@ -7,6 +7,7 @@ import io.tripled.poker.domain.*
 import io.tripled.poker.domain.cards.ShuffledDeck
 import io.tripled.poker.domain.game.GameRepository
 import io.tripled.poker.domain.table.GameCreated
+import io.tripled.poker.domain.table.TableRepository
 import io.tripled.poker.eventpublishing.DomainEvents
 import io.tripled.poker.eventpublishing.EventPublisher
 import io.tripled.poker.eventsourcing.EventStore
@@ -33,8 +34,8 @@ class ApplicationConfiguration {
             = ConcreteEventPublisher(applicationEventPublisher)
 
     @Bean
-    fun tableUseCases(eventStore: EventStore, eventPublisher: EventPublisher, users: Users)
-            = TableUseCases(eventStore, eventPublisher, users) {
+    fun tableUseCases(tableRepository: TableRepository, eventPublisher: EventPublisher, users: Users)
+            = TableUseCases(tableRepository, eventPublisher, users) {
                 UUID.randomUUID().toString()
             }
 

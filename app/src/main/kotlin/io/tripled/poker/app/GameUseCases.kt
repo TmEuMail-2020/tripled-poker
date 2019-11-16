@@ -39,7 +39,7 @@ class GameUseCases(
         publish(gameId, events)
     }
 
-    private fun withGame(gameId: GameId) = gameRepository.findById(gameId)
+    private fun withGame(gameId: GameId) = gameRepository.findGameById(gameId)
 
     private fun publish(gameId: GameId, events: List<Event>) {
         eventPublisher.publish(gameId, events)

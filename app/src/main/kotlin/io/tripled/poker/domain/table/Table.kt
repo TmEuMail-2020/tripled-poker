@@ -25,13 +25,4 @@ class Table(tableState: TableState) {
     }.toList()
 }
 
-data class TableState(val players: List<PlayerId>) {
-    companion object {
-        fun of(events: List<Event>) = TableState(players(events))
-
-        private fun players(events: List<Event>): List<String> = events
-                .filterEvents<PlayerJoinedTable>()
-                .map { event -> event.name }
-    }
-}
-
+data class TableState(val players: List<PlayerId>)
