@@ -7,10 +7,4 @@ EXPOSE 8080
 EXPOSE 8081
 
 ADD main/build/libs/*.jar /app.jar
-ENTRYPOINT [
-    "java",
-    "-javaagent:${HOME}/elastic-apm-agent.jar",
-    "-Djava.security.egd=file:/dev/./urandom",
-    "-jar",
-    "/app.jar"
-    ]
+ENTRYPOINT [ "java", "-javaagent:${HOME}/elastic-apm-agent.jar", "-Djava.security.egd=file:/dev/./urandom", "-jar", "/app.jar" ]
