@@ -39,6 +39,13 @@ spec:
               value: https://594899af51cd4f0b8219d6d271625810@sentry.rotate-it.be/3?stacktrace.app.packages=io.tripled
             - name: OPENTRACING_JAEGER_HTTP-SENDER_URL
               value: https://tracethis.rotate-it.be/api/traces
+            - name: ELASTIC_APM_SERVICE_NAME
+              value: poker-service
+            - name: ELASTIC_APM_APPLICATION_PACKAGES
+              value: io.tripled
+            - name: ELASTIC_APM_SERVER_URLS
+              value: http://apm-server-quickstart-apm-http.default:8200
+
 ---
 apiVersion: v1
 kind: Service
