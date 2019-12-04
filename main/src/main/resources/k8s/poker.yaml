@@ -41,9 +41,11 @@ spec:
               value: https://tracethis.rotate-it.be/api/traces
             - name: ELASTIC_APM_SERVICE_NAME
               value: poker-service
+            - name: ELASTIC_APM_SECRET_TOKEN
+              value: fn6xvjk4w7zt845rr5q7vcx4
             - name: ELASTIC_APM_APPLICATION_PACKAGES
               value: io.tripled
-            - name: ELASTIC_APM_SERVER_URLS
+            - name: ELASTIC_APM_SERVER_URL
               value: http://apm-server-quickstart-apm-http.default:8200
 
 ---
