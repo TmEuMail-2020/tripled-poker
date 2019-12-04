@@ -46,7 +46,7 @@ spec:
             - name: ELASTIC_APM_APPLICATION_PACKAGES
               value: io.tripled
             - name: ELASTIC_APM_SERVER_URLS
-              value: http://apm-server-quickstart-apm-http.default:8200
+              value: https://apm-server-quickstart-apm-http.default:8200
 
 ---
 apiVersion: v1
