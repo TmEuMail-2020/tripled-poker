@@ -3,16 +3,13 @@ package io.tripled.poker.graphql
 import com.expedia.graphql.SchemaGeneratorConfig
 import com.expedia.graphql.TopLevelObject
 import com.expedia.graphql.toSchema
-import com.fasterxml.jackson.module.kotlin.KotlinModule
 import graphql.schema.GraphQLSchema
 import graphql.schema.idl.SchemaPrinter
-import graphql.servlet.config.ObjectMapperConfigurer
-import graphql.servlet.core.GraphQLErrorHandler
-import graphql.servlet.core.GraphQLObjectMapper
 import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.web.socket.config.annotation.EnableWebSocket
+import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker
 
 @Configuration
 @EnableWebSocket
@@ -56,12 +53,6 @@ class CustomGraphqlConfiguration {
         )
         return schema
     }
-
-    @Bean
-    fun graphQLObjectMapper(): GraphQLObjectMapper = GraphQLObjectMapper.newBuilder()
-            .withObjectMapperConfigurer(ObjectMapperConfigurer { it.registerModule(KotlinModule()) })
-            .withGraphQLErrorHandler(GraphQLErrorHandler { it })
-            .build()
 
     @Bean
     fun assumeUser() = AssumeUser()

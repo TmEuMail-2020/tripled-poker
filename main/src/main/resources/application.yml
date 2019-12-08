@@ -29,7 +29,7 @@ graphiql:
   pageTitle: Open Triple D Poker - Graphiql
   cdn:
     enabled: false
-    version: 0.13.0
+#    version: 0.13.0
   props:
     resources:
 #      query: query.graphql
