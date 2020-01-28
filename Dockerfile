@@ -1,6 +1,6 @@
 FROM oracle/graalvm-ce:19.1.0
 ARG ELASTIC_APM_AGEN_VERSION=1.12.0
-RUN curl https://search.maven.org/remotecontent?filepath=co/elastic/apm/elastic-apm-agent/${ELASTIC_APM_AGEN_VERSION}/elastic-apm-agent-${ELASTIC_APM_AGEN_VERSION}.jar \
+RUN curl https://repo1.maven.org:443/fromsearch?filepath=co/elastic/apm/elastic-apm-agent/${ELASTIC_APM_AGEN_VERSION}/elastic-apm-agent-${ELASTIC_APM_AGEN_VERSION}.jar \
     -o /elastic-apm-agent.jar
 
 EXPOSE 8080
