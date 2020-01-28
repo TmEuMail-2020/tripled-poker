@@ -261,7 +261,7 @@ class PokerApi(var playerName: String = "") {
     private fun post(f: (Table) -> Unit, operation: String): Promise<Unit> {
         return axios<GraphqlResponse>(jsObject {
             method = "post"
-            url = "/graphql"
+            url = "graphql"
             timeout = 3000
             headers = createHeaders()
             data = query(operation, playerName)
@@ -296,7 +296,7 @@ class EventStreamApi {
     fun dsl(f: (String) -> Unit, eventId: String){
         axios<String>(jsObject {
             method = "get"
-            url = "/dsl/$eventId"
+            url = "dsl/$eventId"
             timeout = 3000
         }).then { response ->
             f.invoke(response.data)
@@ -306,7 +306,7 @@ class EventStreamApi {
     fun events(f: (Array<dynamic>) -> Unit, eventId: String){
         axios<Array<dynamic>>(jsObject {
             method = "get"
-            url = "/events/$eventId"
+            url = "events/$eventId"
             timeout = 3000
         }).then { response ->
             f.invoke(response.data)
