@@ -57,3 +57,16 @@ There is also a video on how to play:
 
 #### Build infra
 ![alt text](build infra.png "building high level overview")
+
+## Added keycloak gatekeeper
+```
+helm upgrade --install --version 1.6.0 \
+    --set discoveryURL=https://keycloak.otd.rotate-it.be/auth/realms/poker \
+    --set upstreamURL=http://poker-svc.poker-265.svc.cluster.local:8080 \
+    --set ClientID=localtest \
+    --set ClientSecret=ef5d811f-af5e-4a54-904c-11095fe716cf \
+    --set ingress.enabled=true \
+    --set scopes[0]=openid \
+    --set ingress.hosts[0]=pokers.otd.rotate-it.be \
+    secure-poker gabibbo97/keycloak-gatekeeper
+```
