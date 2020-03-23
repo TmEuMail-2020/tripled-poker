@@ -1,6 +1,6 @@
 package io.tripled.poker.graphql.subscription
 
-import com.expedia.graphql.annotations.GraphQLDescription
+import com.expediagroup.graphql.annotations.GraphQLDescription
 import io.tripled.poker.graphql.Subscription
 import org.springframework.stereotype.Component
 import reactor.core.publisher.Flux

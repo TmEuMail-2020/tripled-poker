@@ -2,15 +2,18 @@ package io.tripled.poker
 
 import com.graphql.spring.boot.test.GraphQLTestTemplate
 import net.minidev.json.JSONObject
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.skyscreamer.jsonassert.JSONAssert
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 
+/*
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class PokerScenarios (
 	@Autowired val graphQLTestTemplate: GraphQLTestTemplate){
 
+	@Disabled
 	@Test
 	fun `three players join table`() {
 		request("requests/jan-joins.graphql")
@@ -42,3 +45,4 @@ class PokerScenarios (
 
 	private fun request(resource: String) = graphQLTestTemplate.postForResource(resource)
 }
+*/

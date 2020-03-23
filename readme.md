@@ -68,5 +68,8 @@ helm upgrade --install --version 1.6.0 \
     --set ingress.enabled=true \
     --set scopes[0]=openid \
     --set ingress.hosts[0]=pokers.otd.rotate-it.be \
+    --set forwarding.enable=true \
+    --set forwarding.username=pkr \
+    --set forwarding.password=pkrpass \
     secure-poker gabibbo97/keycloak-gatekeeper
 ```

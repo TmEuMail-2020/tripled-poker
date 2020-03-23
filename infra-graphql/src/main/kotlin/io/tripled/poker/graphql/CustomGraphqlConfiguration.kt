@@ -1,15 +1,14 @@
 package io.tripled.poker.graphql
 
-import com.expedia.graphql.SchemaGeneratorConfig
-import com.expedia.graphql.TopLevelObject
-import com.expedia.graphql.toSchema
+import com.expediagroup.graphql.SchemaGeneratorConfig
+import com.expediagroup.graphql.TopLevelObject
+import com.expediagroup.graphql.toSchema
 import graphql.schema.GraphQLSchema
 import graphql.schema.idl.SchemaPrinter
 import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.web.socket.config.annotation.EnableWebSocket
-import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker
 
 @Configuration
 @EnableWebSocket
@@ -48,7 +47,7 @@ class CustomGraphqlConfiguration {
                 SchemaPrinter.Options.defaultOptions()
                         .includeScalarTypes(true)
                         .includeExtendedScalarTypes(true)
-                        .includeSchemaDefintion(true)
+                        .includeSchemaDefinition(true)
         ).print(schema)
         )
         return schema

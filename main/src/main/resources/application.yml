@@ -22,14 +22,14 @@ graphiql:
   mapping: /graphiql
   endpoint:
     graphql: /graphql
-    subscriptions: /subscriptions
+#    subscriptions: /subscriptions
   static:
     basePath: /
   enabled: true
   pageTitle: Open Triple D Poker - Graphiql
   cdn:
-    enabled: false
-#    version: 0.13.0
+    enabled: true
+    version: 0.17.5
   props:
     resources:
 #      query: query.graphql
