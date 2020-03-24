@@ -28,7 +28,7 @@ buildscript {
 
 plugins {
 	id 'jacoco'
-	id "io.gitlab.arturbosch.detekt" version "1.0.0-RC16"
+	id "io.gitlab.arturbosch.detekt" version "1.7.0"
 	id "com.gradle.build-scan" version "2.1"
 	id "com.moowork.node" version "1.2.0"
 	id "com.gorylenko.gradle-git-properties" version "2.0.0"
@@ -90,9 +90,9 @@ configure(kotlinModules) {
 	}
 
 	detekt {
-		toolVersion = "1.5.0"
+		toolVersion = "1.7.0"
 		input = files("src/main/kotlin")
-		filters = ".*/resources/.*,.*/build/.*"
+//		filters = ".*/resources/.*,.*/build/.*"
 		config = files("./src/main/resources/quality/detekt.yml")
 
 		reports {
