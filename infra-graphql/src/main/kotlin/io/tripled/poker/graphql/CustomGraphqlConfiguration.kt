@@ -8,10 +8,8 @@ import graphql.schema.idl.SchemaPrinter
 import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.web.socket.config.annotation.EnableWebSocket
 
 @Configuration
-@EnableWebSocket
 class CustomGraphqlConfiguration {
     private val logger = LoggerFactory.getLogger(CustomGraphqlConfiguration::class.java)
 

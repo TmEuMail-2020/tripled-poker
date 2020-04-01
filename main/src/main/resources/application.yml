@@ -22,7 +22,7 @@ graphiql:
   mapping: /graphiql
   endpoint:
     graphql: /graphql
-#    subscriptions: /subscriptions
+    subscriptions: /subscriptions
   static:
     basePath: /
   enabled: true
