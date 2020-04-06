@@ -9,8 +9,7 @@ import org.springframework.stereotype.Component
 
 @Component
 class TableMutations(private val tableUseCases: TableService,
-                     private val gameUseCases: GameService,
-                     private val assumeUser: AssumeUser) : Mutation {
+                     private val gameUseCases: GameService) : Mutation {
 
     fun joinTable(name: String) = executeTableUseCase(name) { this.join() }
 
@@ -21,13 +20,11 @@ class TableMutations(private val tableUseCases: TableService,
     fun fold(name: String) = executeGameUseCase(name) { fold("1") }
 
     private fun executeTableUseCase(name: String, command: TableService.() -> Unit): Table {
-        assumeUser.assumedPlayerId = name
         tableUseCases.command()
         return tableUseCases.getTable()
     }
 
     private fun executeGameUseCase(name: String, command: GameService.() -> Unit): Table {
-        assumeUser.assumedPlayerId = name
         gameUseCases.command()
         return tableUseCases.getTable()
     }
