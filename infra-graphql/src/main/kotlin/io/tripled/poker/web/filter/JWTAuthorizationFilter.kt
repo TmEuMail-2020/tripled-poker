@@ -39,7 +39,7 @@ class JWTAuthorizationFilter(authManager: AuthenticationManager?) : BasicAuthent
                     .verify(token.replace(TOKEN_PREFIX, ""))
                     .subject
             * */
-            val user = JWT.decode(token).subject
+            val user = JWT.decode(token.replace(TOKEN_PREFIX, "")).subject
             return if (user != null) {
                 UsernamePasswordAuthenticationToken(user, null, ArrayList())
             } else null
