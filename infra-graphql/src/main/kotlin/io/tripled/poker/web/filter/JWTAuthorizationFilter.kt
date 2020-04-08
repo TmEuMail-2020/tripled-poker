@@ -1,18 +1,14 @@
 package io.tripled.poker.web.filter
 
 import com.auth0.jwt.JWT
-import com.auth0.jwt.algorithms.Algorithm
 import io.tripled.poker.web.filter.SecurityConstants.HEADER_STRING
-import io.tripled.poker.web.filter.SecurityConstants.SECRET
-import io.tripled.poker.web.filter.SecurityConstants.TOKEN_PREFIX
+import io.tripled.poker.web.filter.SecurityConstants.BEARER_PREFIX
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter
-import java.io.IOException
 import java.util.*
 import javax.servlet.FilterChain
-import javax.servlet.ServletException
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
@@ -20,30 +16,32 @@ class JWTAuthorizationFilter(authManager: AuthenticationManager?) : BasicAuthent
     override fun doFilterInternal(req: HttpServletRequest,
                                   res: HttpServletResponse,
                                   chain: FilterChain) {
-        val header = req.getHeader(HEADER_STRING)
-        if (header == null || !header.startsWith(TOKEN_PREFIX)) {
-            chain.doFilter(req, res)
-            return
+        val header: String? = req.getHeader(HEADER_STRING)
+        header?.let {
+            authorizeJWTHeader(it)
         }
-        val authentication = getAuthentication(req)
-        SecurityContextHolder.getContext().authentication = authentication
         chain.doFilter(req, res)
     }
 
-    private fun getAuthentication(request: HttpServletRequest): UsernamePasswordAuthenticationToken? {
-        val token = request.getHeader(HEADER_STRING)
-        if (token != null) { // parse the token.
-            /*
-            * JWT.require(Algorithm.HMAC512(SECRET.toByteArray()))
-                    .build()
-                    .verify(token.replace(TOKEN_PREFIX, ""))
-                    .subject
-            * */
-            val user = JWT.decode(token.replace(TOKEN_PREFIX, "")).subject
-            return if (user != null) {
-                UsernamePasswordAuthenticationToken(user, null, ArrayList())
-            } else null
+    private fun authorizeJWTHeader(header: String) {
+        if (header.startsWith(BEARER_PREFIX)) {
+            SecurityContextHolder.getContext().authentication = getAuthentication(header)
         }
-        return null
+    }
+
+    private fun getAuthentication(authorizationToken: String): UsernamePasswordAuthenticationToken? {
+        val jwtToken = authorizationToken.replace(BEARER_PREFIX, "")
+        /* TODO fix token validation, it's RSA256
+    * JWT.require(Algorithm.HMAC512(SECRET.toByteArray()))
+            .build()
+            .verify(token.replace(TOKEN_PREFIX, ""))
+            .subject
+    * */
+        val user = JWT.decode(jwtToken).getClaim("preferred_username")
+        return if (user == null) {
+            null
+        } else {
+            UsernamePasswordAuthenticationToken(user, null, ArrayList())
+        }
     }
 }

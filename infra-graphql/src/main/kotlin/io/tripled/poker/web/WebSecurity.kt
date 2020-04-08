@@ -1,6 +1,5 @@
 package io.tripled.poker.web
 
-import io.tripled.poker.web.filter.JWTAuthenticationFilter
 import io.tripled.poker.web.filter.JWTAuthorizationFilter
 import org.springframework.context.annotation.Bean
 import org.springframework.http.HttpMethod
@@ -25,7 +24,6 @@ class WebSecurity  : WebSecurityConfigurerAdapter() {
                 .antMatchers("/**")
                 .permitAll()
                 .and()
-                .addFilter(JWTAuthenticationFilter())
                 .addFilter(JWTAuthorizationFilter(authenticationManager())) // this disables session creation on Spring Security
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
