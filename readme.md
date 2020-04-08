@@ -64,12 +64,12 @@ helm upgrade --install --version 1.6.0 \
     --set discoveryURL=https://keycloak.otd.rotate-it.be/auth/realms/poker \
     --set upstreamURL=http://poker-svc.poker-265.svc.cluster.local:8080 \
     --set ClientID=localtest \
-    --set ClientSecret=ef5d811f-af5e-4a54-904c-11095fe716cf \
+    --set ClientSecret=e1c1a7de-e94e-487d-9c12-b23b2eebf20d \
     --set ingress.enabled=true \
     --set scopes[0]=openid \
     --set ingress.hosts[0]=pokers.otd.rotate-it.be \
-    --set forwarding.enable=true \
-    --set forwarding.username=pkr \
-    --set forwarding.password=pkrpass \
+    --set forwarding.enable=false \
+    --set forwarding.username=echouser \
+    --set forwarding.password=echopassword \
     secure-poker gabibbo97/keycloak-gatekeeper
 ```
