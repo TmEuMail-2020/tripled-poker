@@ -37,7 +37,7 @@ class JWTAuthorizationFilter(authManager: AuthenticationManager?) : BasicAuthent
             .verify(token.replace(TOKEN_PREFIX, ""))
             .subject
     * */
-        val user = JWT.decode(jwtToken).getClaim("preferred_username")
+        val user = JWT.decode(jwtToken).getClaim("preferred_username").asString()
         return if (user == null) {
             null
         } else {
