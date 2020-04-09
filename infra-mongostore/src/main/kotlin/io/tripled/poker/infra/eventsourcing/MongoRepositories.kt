@@ -122,11 +122,11 @@ class MongoRepositories(private val eventStore: EventStore) : GameRepository, Ta
             return tableEvents
         }
 
-        private class InnerTableProjection(private val playerName: String, dsl: String, events: List<Event>) {
+        private class InnerTableProjection(private val playerName: PlayerId, dsl: String, events: List<Event>) {
             val table: io.tripled.poker.app.api.response.Table
 
             init {
-                table = io.tripled.poker.app.api.response.Table(players(events), flop(events), turn(events), river(events), winner(events), dsl)
+                table = io.tripled.poker.app.api.response.Table(playerName, players(events), flop(events), turn(events), river(events), winner(events), dsl)
             }
 
             private fun flop(events: List<Event>): Cards = events.filterEvents<FlopIsTurned>()

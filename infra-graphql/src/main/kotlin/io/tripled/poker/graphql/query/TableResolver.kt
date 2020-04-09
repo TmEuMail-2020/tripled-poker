@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component
 
 @Component
 class TableResolver(private val tableService: TableService) : Query {
-   fun table(name: String): Table {
+   fun table(): Table {
       return tableService.getTable()
    }
 }

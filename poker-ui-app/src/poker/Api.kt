@@ -8,11 +8,12 @@ import kotlin.js.Promise
 data class TableData(val table: Table)
 data class GraphqlResponse(val data: TableData, val errors: Array<dynamic>)
 
-class PokerApi(var playerName: String = "") {
+class PokerApi {
 
     private val graphql = """
-        mutation playRound(${'$'}name: String!) {
-            table: startGame(name: ${'$'}name) {
+        mutation playRound {
+            table: startGame {
+                playingPlayer
                 players {
                     name
                     cards {
@@ -57,8 +58,9 @@ class PokerApi(var playerName: String = "") {
             }
         }
         
-        mutation joinTable(${'$'}name: String!) {
-            table: joinTable(name: ${'$'}name) {
+        mutation joinTable {
+            table: joinTable {
+                playingPlayer
                 players {
                     name
                     cards {
@@ -103,8 +105,9 @@ class PokerApi(var playerName: String = "") {
             }
         }
         
-        mutation fold(${'$'}name: String!) {
-            table: fold(name: ${'$'}name) {
+        mutation fold {
+            table: fold {
+                playingPlayer
                 players {
                     name
                     cards {
@@ -149,8 +152,9 @@ class PokerApi(var playerName: String = "") {
             }
         }
         
-        mutation check(${'$'}name: String!) {
-            table: check(name: ${'$'}name) {
+        mutation check {
+            table: check{
+                playingPlayer
                 players {
                     name
                     cards {
@@ -195,8 +199,9 @@ class PokerApi(var playerName: String = "") {
             }
         }
         
-        query getTable(${'$'}name: String!) {
-            table(name: ${'$'}name) {
+        query getTable {
+            table {
+                playingPlayer
                 players {
                     name
                     cards {
@@ -247,10 +252,7 @@ class PokerApi(var playerName: String = "") {
     fun getTable(f: (Table) -> Unit) =
             post(f, "getTable")
 
-    fun joinTable(playerName: String, f: (Table) -> Unit): Promise<Unit> {
-        this.playerName = playerName
-        return post(f, "joinTable")
-    }
+    fun joinTable(f: (Table) -> Unit) = post(f, "joinTable")
 
     fun playRound(f: (Table) -> Unit) = post(f, "playRound")
 
@@ -264,7 +266,7 @@ class PokerApi(var playerName: String = "") {
             url = "/graphql"
             timeout = 3000
             headers = createHeaders()
-            data = query(operation, playerName)
+            data = query(operation)
         }).then { response ->
             if (response.data.errors != null && response.data.errors.isNotEmpty()){
                 window.alert(response.data.errors[0].message)

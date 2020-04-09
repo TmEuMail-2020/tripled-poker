@@ -11,20 +11,20 @@ import org.springframework.stereotype.Component
 class TableMutations(private val tableUseCases: TableService,
                      private val gameUseCases: GameService) : Mutation {
 
-    fun joinTable(name: String) = executeTableUseCase(name) { this.join() }
+    fun joinTable() = executeTableUseCase() { this.join() }
 
-    fun startGame(name: String) = executeTableUseCase(name) { createGame() }
+    fun startGame() = executeTableUseCase() { createGame() }
 
-    fun check(name: String) = executeGameUseCase(name) { check("1") }
+    fun check() = executeGameUseCase() { check("1") }
 
-    fun fold(name: String) = executeGameUseCase(name) { fold("1") }
+    fun fold() = executeGameUseCase() { fold("1") }
 
-    private fun executeTableUseCase(name: String, command: TableService.() -> Unit): Table {
+    private fun executeTableUseCase(command: TableService.() -> Unit): Table {
         tableUseCases.command()
         return tableUseCases.getTable()
     }
 
-    private fun executeGameUseCase(name: String, command: GameService.() -> Unit): Table {
+    private fun executeGameUseCase(command: GameService.() -> Unit): Table {
         gameUseCases.command()
         return tableUseCases.getTable()
     }

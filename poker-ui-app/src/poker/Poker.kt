@@ -20,7 +20,8 @@ data class Card(val value: String, val suit: String){
 }
 data class Cards(val numberOfCards: Int, val visibleCards: Array<Card> = emptyArray())
 data class Player(val name: String, val cards: Cards)
-data class Table(val players: Array<Player> = emptyArray(),
+data class Table(var playingPlayer: String = "",
+                 val players: Array<Player> = emptyArray(),
                  val flop: Cards = Cards(0),
                  val turn: Cards = Cards(0),
                  val river: Cards = Cards(0),
@@ -33,7 +34,6 @@ class PokerTableRepresentation : RComponent<RProps, RState>() {
     private val pokerApi = PokerApi()
     private val eventApi = EventStreamApi()
     private var table: Table = Table()
-    private var playerName = ""
     private var tableEvents: Array<dynamic> = emptyArray()
     private var selectedGameId: String = ""
     private var gameEvents: Array<dynamic> = emptyArray()
@@ -54,14 +54,19 @@ class PokerTableRepresentation : RComponent<RProps, RState>() {
     override fun RBuilder.render() {
         h1 { +"Poker table" }
 
-        joinGame { newPlayerName ->
-            pokerApi.joinTable(newPlayerName, ::updateTable)
-            setState {
-                playerName = newPlayerName
-            }
+        joinGame {
+            pokerApi.joinTable(::updateTable)
         }
-        if (playerName.isNotEmpty()){
-            h1 { + "Playing as player $playerName" }
+        if (table.playingPlayer.isNotEmpty()){
+            h1 { + "Logged on as player ${table.playingPlayer}" }
+        }
+        input(type = InputType.button) {
+            attrs {
+                value = "Play round"
+                onClickFunction = { event: Event ->
+                    pokerApi.playRound(::updateTable)
+                }
+            }
         }
         input(type = InputType.button) {
             attrs {
@@ -76,14 +81,6 @@ class PokerTableRepresentation : RComponent<RProps, RState>() {
                 value = "Fold"
                 onClickFunction = { event: Event ->
                     pokerApi.fold(::updateTable)
-                }
-            }
-        }
-        input(type = InputType.button) {
-            attrs {
-                value = "Play round"
-                onClickFunction = { event: Event ->
-                    pokerApi.playRound(::updateTable)
                 }
             }
         }
@@ -208,10 +205,10 @@ class PlayerList : RComponent<PlayerListProps, RState>() {
     }
 }
 
-fun RBuilder.joinGame(onJoinGame: (String) -> Any) = child(JoinGame::class) { attrs.onJoinGame = onJoinGame }
+fun RBuilder.joinGame(onJoinGame: () -> Any) = child(JoinGame::class) { attrs.onJoinGame = onJoinGame }
 
 interface JoinGameProps : RProps {
-    var onJoinGame: (String) -> Any
+    var onJoinGame: () -> Any
 }
 
 class JoinGame : RComponent<JoinGameProps, RState>() {
@@ -220,31 +217,11 @@ class JoinGame : RComponent<JoinGameProps, RState>() {
     override fun RBuilder.render() {
         if (playerName.isEmpty()){
             p { +"Join the game" }
-            input(type = InputType.text) {
-                attrs {
-                    placeholder = "enter player name"
-                    onChangeFunction = { event: Event ->
-                        playerName = (event.target as HTMLInputElement).value
-                    }
-                    onKeyPressFunction = { syntheticEvent: Event ->
-                        val event = syntheticEvent.asDynamic().nativeEvent
-                        if (event is KeyboardEvent) {
-                            if (event.key == "Enter") {
-                                val target = event.target as HTMLInputElement
-                                props.onJoinGame(playerName)
-                                setState {
-                                    target.value = ""
-                                }
-                            }
-                        }
-                    }
-                }
-            }
             input(type = InputType.button) {
                 attrs {
                     value = "Join game"
                     onClickFunction = { event: Event ->
-                        props.onJoinGame(playerName)
+                        props.onJoinGame()
                     }
                 }
             }

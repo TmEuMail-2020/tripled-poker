@@ -23,6 +23,8 @@ class TableUseCases(
 
     override fun createGame() = executeOnTable { createGame(gameIdGenerator()) }
 
+    override fun getTable() = tableRepository.projectTable(users.currentUser.playerId)
+
     private fun executeOnTable(command: Table.() -> List<Event>) {
         val events = withTable().command()
         save(events)
@@ -38,7 +40,4 @@ class TableUseCases(
     private fun save(events: List<Event>) {
         tableRepository.saveTable(tableId, events)
     }
-
-    override fun getTable() = tableRepository.projectTable(users.currentUser.playerId)
-
 }

@@ -52,7 +52,7 @@ class DummyTableRepository(private val eventStore: EventStore) : TableRepository
             val table: io.tripled.poker.app.api.response.Table
 
             init {
-                table = io.tripled.poker.app.api.response.Table(players(events), flop(events), turn(events), river(events), winner(events), dsl)
+                table = io.tripled.poker.app.api.response.Table("dummy", players(events), flop(events), turn(events), river(events), winner(events), dsl)
             }
 
             private fun flop(events: List<Event>): Cards = events.filterEvents<FlopIsTurned>()

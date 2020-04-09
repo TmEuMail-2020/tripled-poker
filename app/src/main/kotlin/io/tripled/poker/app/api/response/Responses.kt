@@ -5,7 +5,8 @@ import io.tripled.poker.vocabulary.PlayerId
 
 data class Player(val name: PlayerId, val cards: Cards = HiddenCards(0))
 
-data class Table(val players: List<Player>,
+data class Table(var playingPlayer: PlayerId,
+                 val players: List<Player>,
                  val flop: Cards,
                  val turn: Cards,
                  val river: Cards,
