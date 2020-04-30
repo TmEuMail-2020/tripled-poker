@@ -8,6 +8,8 @@ import io.tripled.poker.app.api.response.VisibleCards
 import io.tripled.poker.domain.*
 import io.tripled.poker.domain.cards.ShuffledDeck
 import io.tripled.poker.domain.cards.of
+import io.tripled.poker.domain.suitedAceKing
+import io.tripled.poker.domain.suitedConnectors
 import io.tripled.poker.dsl.pokerTableTest
 import io.tripled.poker.dsl.pokerTableTestNoEventAssert
 import io.tripled.poker.vocabulary.Card

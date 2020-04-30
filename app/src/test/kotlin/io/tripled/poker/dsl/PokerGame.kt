@@ -7,7 +7,7 @@ import io.tripled.poker.app.GameUseCases
 import io.tripled.poker.app.TableUseCases
 import io.tripled.poker.app.api.GameService
 import io.tripled.poker.app.api.TableService
-import io.tripled.poker.domain.*
+import io.tripled.poker.domain.Event
 import io.tripled.poker.domain.cards.Card
 import io.tripled.poker.domain.cards.Hand
 import io.tripled.poker.domain.game.*
@@ -37,7 +37,7 @@ open class TestPokerGame(private val deck: PredeterminedCardTestDeck = Predeterm
                          private val assumeUser: AssumeUser = AssumeUser(),
                          private val activeGames: ActiveGames = DummyActiveGames(),
                          private val gameUseCases: GameService = GameUseCases(DummyGameRepository(eventStore), eventPublisher, activeGames, assumeUser) { deck },
-                         private val tableUseCases: TableService = TableUseCases(DummyTableRepository(eventStore), eventPublisher, assumeUser) { "gameId" }) {
+                         private val tableUseCases: TableService = TableUseCases(DummyTableRepository(eventStore), eventPublisher, eventStore, assumeUser) { "gameId" }) {
     private val tableId: TableId = "1"
     private var gameId: GameId = "gameId"
     private var players: List<PlayerId>? = null

@@ -5,14 +5,9 @@ import com.expediagroup.graphql.TopLevelObject
 import com.expediagroup.graphql.toSchema
 import graphql.schema.GraphQLSchema
 import graphql.schema.idl.SchemaPrinter
-import io.tripled.poker.domain.User
-import io.tripled.poker.domain.Users
 import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.security.core.context.SecurityContextHolder
-import org.springframework.security.core.userdetails.UserDetails
-
 
 @Configuration
 class CustomGraphqlConfiguration {
@@ -54,19 +49,5 @@ class CustomGraphqlConfiguration {
         ).print(schema)
         )
         return schema
-    }
-
-    @Bean
-    fun assumeUser() = object : Users {
-        override val currentUser: User
-            get(){
-                val principal = SecurityContextHolder.getContext().authentication.principal
-                if (principal is UserDetails) {
-                    return User(principal.username)
-                }
-
-                return User(principal.toString())
-            }
-
     }
 }

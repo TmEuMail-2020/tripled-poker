@@ -1,8 +1,8 @@
 package io.tripled.poker.web.filter
 
 import com.auth0.jwt.JWT
-import io.tripled.poker.web.filter.SecurityConstants.HEADER_STRING
 import io.tripled.poker.web.filter.SecurityConstants.BEARER_PREFIX
+import io.tripled.poker.web.filter.SecurityConstants.HEADER_STRING
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder

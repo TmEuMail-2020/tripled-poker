@@ -1,7 +1,8 @@
 package io.tripled.poker.app
 
 import io.tripled.poker.app.api.GameService
-import io.tripled.poker.domain.*
+import io.tripled.poker.domain.Event
+import io.tripled.poker.domain.Users
 import io.tripled.poker.domain.cards.Deck
 import io.tripled.poker.domain.game.Game
 import io.tripled.poker.domain.game.GameRepository

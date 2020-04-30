@@ -28,7 +28,7 @@ buildscript {
 
 plugins {
 	id 'jacoco'
-	id "io.gitlab.arturbosch.detekt" version "1.7.0"
+	id "io.gitlab.arturbosch.detekt" version "1.8.0"
 	id "com.gradle.build-scan" version "2.1"
 	id "com.moowork.node" version "1.2.0"
 	id "com.gorylenko.gradle-git-properties" version "2.0.0"
@@ -90,10 +90,11 @@ configure(kotlinModules) {
 	}
 
 	detekt {
-		toolVersion = "1.7.0"
+		toolVersion = "1.8.0"
 		input = files("src/main/kotlin")
 //		filters = ".*/resources/.*,.*/build/.*"
-		config = files("./src/main/resources/quality/detekt.yml")
+		buildUponDefaultConfig = true
+		config = files("$projectDir/src/main/resources/quality/detekt.yml")
 
 		reports {
 			xml {
@@ -201,24 +202,34 @@ task jacocoTestCoverageVerification(type: JacocoCoverageVerification, dependsOn:
 	}
 }
 
+project(':vocabulary'){
+	task detekt(){}
+}
 
-project(':infra-businessmetrics') {
+project(':app-api') {
 	dependencies {
-		implementation 'org.springframework.boot:spring-boot-starter-web'
-		implementation 'org.springframework.boot:spring-boot-starter-actuator'
-		implementation 'io.micrometer:micrometer-registry-prometheus'
-
-		implementation project(':app')
-
-		testImplementation 'org.springframework.boot:spring-boot-starter-test'
+		implementation project(':vocabulary')
 	}
 }
 
+project(':domain') {
+	dependencies {
+		implementation project(':vocabulary')
+	}
+}
+
+project(':app') {
+	dependencies {
+		implementation project(':app-api')
+		implementation project(':domain')
+		implementation project(':vocabulary')
+	}
+}
+
+// calling
 project(':infra-graphql') {
 	dependencies {
-		implementation 'com.auth0:java-jwt:3.4.0'
 		implementation 'org.springframework.boot:spring-boot-starter-websocket'
-		implementation 'org.springframework.boot:spring-boot-starter-security'
 		implementation 'org.springframework.boot:spring-boot-starter-webflux'
 		implementation 'com.graphql-java-kickstart:graphql-spring-boot-starter:7.0.2-SNAPSHOT'
 		implementation 'com.graphql-java-kickstart:graphiql-spring-boot-starter:7.0.2-SNAPSHOT'
@@ -226,10 +237,39 @@ project(':infra-graphql') {
 		implementation 'com.graphql-java-kickstart:voyager-spring-boot-starter:7.0.2-SNAPSHOT'
 		implementation 'com.expediagroup:graphql-kotlin-schema-generator:2.0.0-RC12.1'
 
-		implementation project(':app')
+		implementation project(':app-api')
+		implementation project(':vocabulary')
+		testImplementation project(':domain')
 
 		testImplementation 'org.springframework.boot:spring-boot-starter-test'
 		testImplementation 'com.graphql-java-kickstart:graphql-spring-boot-starter-test:7.0.2-SNAPSHOT'
+	}
+}
+
+// implementing
+project(':infra-businessmetrics') {
+	dependencies {
+		implementation 'org.springframework.boot:spring-boot-starter-web'
+		implementation 'org.springframework.boot:spring-boot-starter-actuator'
+		implementation 'io.micrometer:micrometer-registry-prometheus'
+
+		implementation project(':domain')
+		implementation project(':vocabulary')
+
+		testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	}
+}
+
+project(':infra-security') {
+	dependencies {
+		implementation 'com.auth0:java-jwt:3.4.0'
+		implementation 'org.springframework.boot:spring-boot-starter-security'
+		implementation 'org.springframework.boot:spring-boot-starter-web'
+
+		implementation project(':domain')
+		implementation project(':vocabulary')
+
+		testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	}
 }
 
@@ -239,32 +279,35 @@ project(':infra-mongostore') {
 		implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
 		implementation 'de.flapdoodle.embed:de.flapdoodle.embed.mongo'
 
-		implementation project(':app')
+		implementation project(':domain')
+		implementation project(':vocabulary')
 
 		testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	}
 }
 
+// main partition
 project(':main') {
 	apply plugin: "com.gorylenko.gradle-git-properties"
 	apply plugin: 'org.springframework.boot'
 
 	dependencies {
-		implementation 'org.springframework.boot:spring-boot-starter-web'
-		implementation 'org.springframework.boot:spring-boot-starter-websocket'
-		implementation 'org.springframework.boot:spring-boot-starter-security'
 		implementation 'io.sentry:sentry-spring:1.7.28'
 		implementation 'io.opentracing.contrib:opentracing-spring-jaeger-cloud-starter:2.0.3'
 		implementation 'io.opentracing.contrib:opentracing-spring-cloud-starter:0.3.7'
 		developmentOnly("org.springframework.boot:spring-boot-devtools")
 
+		implementation project(':vocabulary')
+		implementation project(':app-api')
 		implementation project(':app')
-		implementation project(':infra-businessmetrics')
+		implementation project(':domain')
 		implementation project(':infra-mongostore')
+		implementation project(':infra-businessmetrics')
         implementation project(":infra-graphql")
+        implementation project(":infra-security")
 
 		testImplementation 'org.springframework.boot:spring-boot-starter-test'
-		testImplementation 'com.graphql-java-kickstart:graphql-spring-boot-starter-test:7.0.0'
+		testImplementation 'com.graphql-java-kickstart:graphql-spring-boot-starter-test:7.0.2-SNAPSHOT'
 	}
 }
 

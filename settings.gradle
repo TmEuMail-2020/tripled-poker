@@ -1,8 +1,12 @@
 rootProject.name = 'poker'
+include 'vocabulary'
+include 'domain'
 include 'app'
+include 'app-api'
 include 'infra-businessmetrics'
 include 'infra-mongostore'
 include 'infra-graphql'
+include 'infra-security'
 include 'main'
 include 'poker-ui-app'
 

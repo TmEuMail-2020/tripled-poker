@@ -1,8 +1,10 @@
 package io.tripled.poker.projection
 
-import io.tripled.poker.domain.*
+import io.tripled.poker.domain.Event
 import io.tripled.poker.domain.cards.Card
+import io.tripled.poker.domain.filterEvents
 import io.tripled.poker.domain.game.*
+import io.tripled.poker.domain.ifContaining
 import io.tripled.poker.domain.table.GameCreated
 import io.tripled.poker.domain.table.PlayerJoinedTable
 import io.tripled.poker.eventsourcing.EventStore

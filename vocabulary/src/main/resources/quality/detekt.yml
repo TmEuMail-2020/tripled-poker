@@ -1,0 +1,42 @@
+# turn on ALL checks
+build:
+  weights:
+    comments: 0   # missing comments should not fail the build
+
+comments:
+  EndOfSentenceFormat:
+    active: false
+  CommentOverPrivateFunction:
+    active: false
+  UndocumentedPublicClass:
+    active: false
+  UndocumentedPublicFunction:
+    active: false
+
+complexity:
+  LongParameterList:
+    threshold: 10
+    active: true
+  TooManyFunctions:
+    thresholdInInterfaces: 15
+    thresholdInClasses: 15
+    thresholdInFiles: 15
+  ComplexInterface:
+    threshold: 15
+
+performance:
+  SpreadOperator:
+    active: false
+
+style:
+  MagicNumber:
+    ignoreEnums: true
+    ignoreNumbers: '-1,0,1,2,10,100'
+  MaxLineLength:
+    maxLineLength: 200
+  ReturnCount:
+    active: false
+  NewLineAtEndOfFile:
+    active: false
+  FunctionOnlyReturningConstant:
+    active: false

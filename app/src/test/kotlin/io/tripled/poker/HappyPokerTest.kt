@@ -3,7 +3,7 @@ package io.tripled.poker
 import io.tripled.poker.domain.DeckMother
 import io.tripled.poker.domain.cards.of
 import io.tripled.poker.dsl.pokerGameTest
-import io.tripled.poker.vocabulary.Suit.*
+import io.tripled.poker.vocabulary.Suit.HEARTS
 import io.tripled.poker.vocabulary.Value.*
 import org.junit.jupiter.api.Test
 

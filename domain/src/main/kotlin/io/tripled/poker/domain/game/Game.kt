@@ -1,6 +1,6 @@
 package io.tripled.poker.domain.game
 
-import io.tripled.poker.domain.*
+import io.tripled.poker.domain.Event
 import io.tripled.poker.domain.cards.*
 import io.tripled.poker.vocabulary.PlayerId
 
