@@ -41,7 +41,7 @@ class WebSecurity  : WebSecurityConfigurerAdapter() {
     }
 
     @Bean
-    fun usersFromJWT() = object : Users {
+    fun users() = object : Users {
         override val currentUser: User
             get(){
                 val principal = SecurityContextHolder.getContext().authentication.principal
