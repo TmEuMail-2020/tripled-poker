@@ -58,6 +58,16 @@ There is also a video on how to play:
 #### Build infra
 ![alt text](build infra.png "building high level overview")
 
+## Install keycloak
+```
+helm upgrade --namespace keycloak --install keycloak \
+--set keycloak.persistence.deployPostgres=true \
+--set keycloak.persistence.dbVendor=postgres \
+--set postgresql.persistence.enabled=true \
+--set keycloak.ingress.enabled=true \
+--set keycloak.ingress.hosts={keycloak.otd.rotate-it.be} codecentric/keycloak
+```
+
 ## Added keycloak gatekeeper
 ```
 helm upgrade --install --version 1.6.0 \
