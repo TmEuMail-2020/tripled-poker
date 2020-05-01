@@ -73,7 +73,7 @@ helm upgrade --namespace keycloak --install keycloak \
 helm upgrade --install --version 1.6.0 \
     --set discoveryURL=https://keycloak.otd.rotate-it.be/auth/realms/poker \
     --set upstreamURL=http://poker-svc.poker-265.svc.cluster.local:8080 \
-    --set ClientID=localtest \
+    --set ClientID=poker-gatekeeper \
     --set ClientSecret=e1c1a7de-e94e-487d-9c12-b23b2eebf20d \
     --set ingress.enabled=true \
     --set scopes[0]=openid \
