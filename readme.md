@@ -77,7 +77,7 @@ helm upgrade --install --version 1.6.0 \
     --set ClientSecret=e1c1a7de-e94e-487d-9c12-b23b2eebf20d \
     --set ingress.enabled=true \
     --set scopes[0]=openid \
-    --set ingress.hosts[0]=pokers.otd.rotate-it.be \
+    --set ingress.hosts[0]=poker.otd.rotate-it.be \
     --set forwarding.enable=false \
     --set forwarding.username=echouser \
     --set forwarding.password=echopassword \

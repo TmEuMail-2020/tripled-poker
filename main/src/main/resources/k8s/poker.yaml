@@ -62,19 +62,3 @@ spec:
       targetPort: 8080
   selector:
     app: production
----
-apiVersion: extensions/v1beta1
-kind: Ingress
-metadata:
-  name: poker-ing
-  labels:
-    app: production
-spec:
-  rules:
-    - host: poker.otd.rotate-it.be
-      http:
-        paths:
-          - backend:
-              serviceName: poker-svc
-              servicePort: 8080
-            path: /
