@@ -7,7 +7,6 @@ import io.tripled.poker.app.api.response.Table
 import io.tripled.poker.domain.Users
 import org.springframework.stereotype.Component
 
-@Component
 class DummyTableService(private val users: Users) : TableService {
 
     override fun createGame() {

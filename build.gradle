@@ -1,10 +1,10 @@
 buildscript {
 	ext {
-		kotlinVersion = '1.3.70'
-		springBootVersion = '2.2.6.RELEASE'
-		junitVersion = '5.5.2'
+		kotlinVersion = "1.3.71"
+		springBootVersion = "2.2.7.RELEASE"
+		junitVersion = "5.6.2"
 	}
-    ext['kotlin.version'] = '1.3.70'
+    ext["kotlin.version"] = "1.3.71"
 
     repositories {
 		mavenCentral()
@@ -14,42 +14,46 @@ buildscript {
 	dependencies {
 		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
 		classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlinVersion}"){
-			exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib'
-			exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib-common'
-			exclude group: 'org.jetbrains.kotlin', module: 'kotlin-reflect'
+			exclude group: "org.jetbrains.kotlin", module: "kotlin-stdlib"
+			exclude group: "org.jetbrains.kotlin", module: "kotlin-stdlib-common"
+			exclude group: "org.jetbrains.kotlin", module: "kotlin-reflect"
 		}
 		classpath("org.jetbrains.kotlin:kotlin-allopen:${kotlinVersion}"){
-			exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib'
-			exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib-common'
-			exclude group: 'org.jetbrains.kotlin', module: 'kotlin-reflect'
+			exclude group: "org.jetbrains.kotlin", module: "kotlin-stdlib"
+			exclude group: "org.jetbrains.kotlin", module: "kotlin-stdlib-common"
+			exclude group: "org.jetbrains.kotlin", module: "kotlin-reflect"
 		}
 	}
 }
 
 plugins {
-	id 'jacoco'
+	id "jacoco"
 	id "io.gitlab.arturbosch.detekt" version "1.8.0"
-	id "com.gradle.build-scan" version "2.1"
-	id "com.moowork.node" version "1.2.0"
-	id "com.gorylenko.gradle-git-properties" version "2.0.0"
+	id "com.moowork.node" version "1.3.1"
+	id "com.gorylenko.gradle-git-properties" version "2.2.2"
 
 }
 
-buildScan { termsOfServiceUrl = "https://gradle.com/terms-of-service"; termsOfServiceAgree = "yes" }
+if (hasProperty('buildScan')) {
+	buildScan {
+		termsOfServiceUrl = 'https://gradle.com/terms-of-service'
+		termsOfServiceAgree = 'yes'
+	}
+}
 
 def kotlinModules = subprojects.findAll {
 	!(it.path in [
-			':poker-ui-app'
+			":poker-ui-app"
 	])
 }
 
 configure(kotlinModules) {
-	apply plugin: 'java'
-	apply plugin: 'kotlin'
-	apply plugin: 'kotlin-spring'
-	apply plugin: 'idea'
-	apply plugin: 'io.spring.dependency-management'
-	apply plugin: 'jacoco'
+	apply plugin: "java"
+	apply plugin: "kotlin"
+	apply plugin: "kotlin-spring"
+	apply plugin: "idea"
+	apply plugin: "io.spring.dependency-management"
+	apply plugin: "jacoco"
 
 	group = "io.tripled"
 	version = "0.0.1-SNAPSHOT"
@@ -57,22 +61,22 @@ configure(kotlinModules) {
 
 	compileKotlin {
 		kotlinOptions {
-			freeCompilerArgs = ['-Xjsr305=strict']
-			jvmTarget = '1.8'
+			freeCompilerArgs = ["-Xjsr305=strict"]
+			jvmTarget = "1.8"
 		}
 	}
 	compileTestKotlin {
 		kotlinOptions {
-			freeCompilerArgs = ['-Xjsr305=strict']
-			jvmTarget = '1.8'
+			freeCompilerArgs = ["-Xjsr305=strict"]
+			jvmTarget = "1.8"
 		}
 	}
 
 	sourceSets {
-		main.java.srcDirs = ['src/main/kotlin']
-		test.java.srcDirs = ['src/test/kotlin']
-		main.kotlin.srcDirs = ['src/main/kotlin']
-		test.kotlin.srcDirs = ['src/test/kotlin']
+		main.java.srcDirs = ["src/main/kotlin"]
+		test.java.srcDirs = ["src/test/kotlin"]
+		main.kotlin.srcDirs = ["src/main/kotlin"]
+		test.kotlin.srcDirs = ["src/test/kotlin"]
 	}
 
 	configurations {
@@ -117,26 +121,26 @@ configure(kotlinModules) {
 	}
 
 	ext {
-		springBootVersion = '2.2.6.RELEASE'
-		junitVersion = '5.3.2'
+		springBootVersion = "2.2.7.RELEASE"
+		junitVersion = "5.3.2"
 	}
 
 	dependencies {
-		implementation 'com.fasterxml.jackson.module:jackson-module-kotlin'
+		implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 
-		implementation "org.jetbrains.kotlin:kotlin-stdlib"
-		implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7"
-		implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
-		implementation "org.jetbrains.kotlin:kotlin-reflect"
+		implementation("org.jetbrains.kotlin:kotlin-stdlib")
+		implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7")
+		implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+		implementation("org.jetbrains.kotlin:kotlin-reflect")
 
 		// testing facilities
-		testCompile("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
-		testCompile("org.junit.jupiter:junit-jupiter-params:${junitVersion}")
-		testRuntime("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
-		testCompile("ch.tutteli.atrium:atrium-cc-en_GB-robstoll:0.8.0"){
-			exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib'
-			exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib-common'
-			exclude group: 'org.jetbrains.kotlin', module: 'kotlin-reflect'
+		testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
+		testImplementation("org.junit.jupiter:junit-jupiter-params:${junitVersion}")
+		testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
+		testImplementation("ch.tutteli.atrium:atrium-cc-en_GB-robstoll:0.8.0"){
+			exclude group: "org.jetbrains.kotlin", module: "kotlin-stdlib"
+			exclude group: "org.jetbrains.kotlin", module: "kotlin-stdlib-common"
+			exclude group: "org.jetbrains.kotlin", module: "kotlin-reflect"
 		}
 	}
 
@@ -152,19 +156,19 @@ repositories {
 	jcenter()
 }
 
-task coverage(type: JacocoReport, group: 'Coverage reports') {
-	description = 'Generates an aggregate report from all subprojects'
+task coverage(type: JacocoReport, group: "Coverage reports") {
+	description = "Generates an aggregate report from all subprojects"
 
 	def coverageModules = kotlinModules.findAll {
-		!it.path.contains("test") && !it.path.contains('api')
+		!it.path.contains("test") && !it.path.contains("api")
 	}
 
 	dependsOn(coverageModules.test)
-	additionalSourceDirs = files(coverageModules.sourceSets.main.allSource.srcDirs)
-	sourceDirectories = files(coverageModules.sourceSets.main.allSource.srcDirs)
-	classDirectories = files(coverageModules.sourceSets.main.output)
-	executionData = files(coverageModules.stream()
-			.map { it.file('./build/jacoco/test.exec') }
+	additionalSourceDirs.setFrom files(coverageModules.sourceSets.main.allSource.srcDirs)
+	sourceDirectories.setFrom files(coverageModules.sourceSets.main.allSource.srcDirs)
+	classDirectories.setFrom files(coverageModules.sourceSets.main.output)
+	executionData.setFrom files(coverageModules.stream()
+			.map { it.file("./build/jacoco/test.exec") }
 			.toArray())
 
 	reports {
@@ -173,23 +177,23 @@ task coverage(type: JacocoReport, group: 'Coverage reports') {
 	}
 
 	doFirst {
-		executionData = files(executionData.findAll { it.exists() })
+		executionData.setFrom files(executionData.findAll { it.exists() })
 	}
 }
 
-task jacocoTestCoverageVerification(type: JacocoCoverageVerification, dependsOn: 'coverage') {
+task jacocoTestCoverageVerification(type: JacocoCoverageVerification, dependsOn: "coverage") {
 	def coverageModules = kotlinModules.findAll {
-		!it.path.contains("test") && !it.path.contains('api')
+		!it.path.contains("test") && !it.path.contains("api")
 	}
 
-	sourceDirectories = files(coverageModules.sourceSets.main.allSource.srcDirs)
-	classDirectories = files(coverageModules.sourceSets.main.output)
-	executionData = files(coverageModules.stream()
-			.map { it.file('./build/jacoco/test.exec') }
+	sourceDirectories.setFrom files(coverageModules.sourceSets.main.allSource.srcDirs)
+	classDirectories.setFrom files(coverageModules.sourceSets.main.output)
+	executionData.setFrom files(coverageModules.stream()
+			.map { it.file("./build/jacoco/test.exec") }
 			.toArray())
 
 	doFirst {
-		executionData = files(executionData.findAll { it.exists() })
+		executionData.setFrom files(executionData.findAll { it.exists() })
 	}
 
 	violationRules {
@@ -202,125 +206,142 @@ task jacocoTestCoverageVerification(type: JacocoCoverageVerification, dependsOn:
 	}
 }
 
-project(':vocabulary'){
+project(":vocabulary"){
 	task detekt(){}
 }
 
-project(':app-api') {
+project(":app-api") {
 	dependencies {
-		implementation project(':vocabulary')
+		implementation project(":vocabulary")
 	}
 }
 
-project(':domain') {
+project(":domain") {
 	dependencies {
-		implementation project(':vocabulary')
+		implementation project(":vocabulary")
 	}
 }
 
-project(':app') {
+project(":app") {
 	dependencies {
-		implementation project(':app-api')
-		implementation project(':domain')
-		implementation project(':vocabulary')
+		implementation project(":app-api")
+		implementation project(":domain")
+		implementation project(":vocabulary")
 	}
 }
 
 // calling
-project(':infra-graphql') {
+project(":infra-graphql") {
 	dependencies {
-		implementation 'org.springframework.boot:spring-boot-starter-websocket'
-		implementation 'org.springframework.boot:spring-boot-starter-webflux'
-		implementation 'com.graphql-java-kickstart:graphql-spring-boot-starter:7.0.2-SNAPSHOT'
-		implementation 'com.graphql-java-kickstart:graphiql-spring-boot-starter:7.0.2-SNAPSHOT'
-		implementation 'com.graphql-java-kickstart:altair-spring-boot-starter:7.0.2-SNAPSHOT'
-		implementation 'com.graphql-java-kickstart:voyager-spring-boot-starter:7.0.2-SNAPSHOT'
-		implementation 'com.expediagroup:graphql-kotlin-schema-generator:2.0.0-RC12.1'
+		implementation("org.springframework.boot:spring-boot-starter-websocket")
+		implementation("org.springframework.boot:spring-boot-starter-webflux")
+		implementation("com.graphql-java-kickstart:graphql-spring-boot-starter:7.0.2-SNAPSHOT")
+		implementation("com.graphql-java-kickstart:graphiql-spring-boot-starter:7.0.2-SNAPSHOT")
+		implementation("com.graphql-java-kickstart:altair-spring-boot-starter:7.0.2-SNAPSHOT")
+		implementation("com.graphql-java-kickstart:voyager-spring-boot-starter:7.0.2-SNAPSHOT")
+		implementation("com.expediagroup:graphql-kotlin-schema-generator:2.0.0-RC12.1")
 
-		implementation project(':app-api')
-		implementation project(':vocabulary')
-		testImplementation project(':domain')
+		implementation project(":app-api")
+		implementation project(":vocabulary")
+		testImplementation project(":domain")
 
-		testImplementation 'org.springframework.boot:spring-boot-starter-test'
-		testImplementation 'com.graphql-java-kickstart:graphql-spring-boot-starter-test:7.0.2-SNAPSHOT'
+		testImplementation("org.springframework.boot:spring-boot-starter-test"){
+			exclude module: "junit"
+			exclude group: "org.junit.vintage", module: "junit-vintage-engine"
+		}
+		testImplementation("com.graphql-java-kickstart:graphql-spring-boot-starter-test:7.0.2-SNAPSHOT"){
+			exclude module: "junit"
+			exclude group: "org.junit.vintage", module: "junit-vintage-engine"
+		}
 	}
 }
 
 // implementing
-project(':infra-businessmetrics') {
+project(":infra-businessmetrics") {
 	dependencies {
-		implementation 'org.springframework.boot:spring-boot-starter-web'
-		implementation 'org.springframework.boot:spring-boot-starter-actuator'
-		implementation 'io.micrometer:micrometer-registry-prometheus'
+		implementation("org.springframework.boot:spring-boot-starter-web")
+		implementation("org.springframework.boot:spring-boot-starter-actuator")
+		implementation("io.micrometer:micrometer-registry-prometheus")
 
-		implementation project(':domain')
-		implementation project(':vocabulary')
+		implementation project(":domain")
+		implementation project(":vocabulary")
 
-		testImplementation 'org.springframework.boot:spring-boot-starter-test'
+		testImplementation("org.springframework.boot:spring-boot-starter-test"){
+			exclude module: "junit"
+			exclude group: "org.junit.vintage", module: "junit-vintage-engine"
+		}
 	}
 }
 
-project(':infra-security') {
+project(":infra-security") {
 	dependencies {
-		implementation 'com.auth0:java-jwt:3.4.0'
-		implementation 'org.springframework.boot:spring-boot-starter-security'
-		implementation 'org.springframework.boot:spring-boot-starter-web'
+		implementation("com.auth0:java-jwt:3.4.0")
+		implementation("org.springframework.boot:spring-boot-starter-security")
+		implementation("org.springframework.boot:spring-boot-starter-web")
 
-		implementation project(':domain')
-		implementation project(':vocabulary')
+		implementation project(":domain")
+		implementation project(":vocabulary")
 
-		testImplementation 'org.springframework.boot:spring-boot-starter-test'
+		testImplementation("org.springframework.boot:spring-boot-starter-test"){
+			exclude module: "junit"
+			exclude group: "org.junit.vintage", module: "junit-vintage-engine"
+		}
 	}
 }
 
-project(':infra-mongostore') {
+project(":infra-mongostore") {
 	dependencies {
-		implementation 'org.springframework.boot:spring-boot-starter-web'
-		implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
-		implementation 'de.flapdoodle.embed:de.flapdoodle.embed.mongo'
+		implementation("org.springframework.boot:spring-boot-starter-web")
+		implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
+		implementation("de.flapdoodle.embed:de.flapdoodle.embed.mongo")
 
-		implementation project(':domain')
-		implementation project(':vocabulary')
+		implementation project(":domain")
+		implementation project(":vocabulary")
 
-		testImplementation 'org.springframework.boot:spring-boot-starter-test'
+		testImplementation("org.springframework.boot:spring-boot-starter-test"){
+			exclude module: "junit"
+			exclude group: "org.junit.vintage", module: "junit-vintage-engine"
+		}
 	}
 }
 
 // main partition
-project(':main') {
+project(":main") {
 	apply plugin: "com.gorylenko.gradle-git-properties"
-	apply plugin: 'org.springframework.boot'
+	apply plugin: "org.springframework.boot"
 
 	dependencies {
-		implementation 'io.sentry:sentry-spring:1.7.28'
-		implementation 'io.opentracing.contrib:opentracing-spring-jaeger-cloud-starter:2.0.3'
-		implementation 'io.opentracing.contrib:opentracing-spring-cloud-starter:0.3.7'
+		implementation("io.sentry:sentry-spring:1.7.28")
+		implementation("io.opentracing.contrib:opentracing-spring-jaeger-cloud-starter:2.0.3")
+		implementation("io.opentracing.contrib:opentracing-spring-cloud-starter:0.3.7")
 		developmentOnly("org.springframework.boot:spring-boot-devtools")
 
-		implementation project(':vocabulary')
-		implementation project(':app-api')
-		implementation project(':app')
-		implementation project(':domain')
-		implementation project(':infra-mongostore')
-		implementation project(':infra-businessmetrics')
+		implementation project(":vocabulary")
+		implementation project(":app-api")
+		implementation project(":app")
+		implementation project(":domain")
+		implementation project(":infra-mongostore")
+		implementation project(":infra-businessmetrics")
         implementation project(":infra-graphql")
         implementation project(":infra-security")
 
-		testImplementation 'org.springframework.boot:spring-boot-starter-test'
-		testImplementation 'com.graphql-java-kickstart:graphql-spring-boot-starter-test:7.0.2-SNAPSHOT'
+		testImplementation("org.springframework.boot:spring-boot-starter-test"){
+			exclude module: "junit"
+			exclude group: "org.junit.vintage", module: "junit-vintage-engine"
+		}
 	}
 }
 
 project(":poker-ui-app") {
-	apply plugin: 'com.moowork.node'
+	apply plugin: "com.moowork.node"
 
 	node {
-		version = '11.6.0'
+		version = "11.6.0"
 		download = true
 	}
 
-	task frontendBuild( type: NodeTask, dependsOn: 'yarn' ) {
-		script = file( 'src' )
+	task frontendBuild( type: NodeTask, dependsOn: "yarn" ) {
+		script = file( "src" )
 	}
 	
 	task clean(){}

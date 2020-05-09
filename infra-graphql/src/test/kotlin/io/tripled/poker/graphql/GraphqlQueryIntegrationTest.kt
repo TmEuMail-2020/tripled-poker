@@ -16,9 +16,8 @@ import org.springframework.context.annotation.Import
 
 
 @GraphQLTest
-@Import(DummyTableService::class)
+@Import(value = [GraphqlTestApplication::class])
 @ComponentScan
-@Disabled
 class GraphqlQueryIntegrationTest(
         @Autowired val dummyTableService: DummyTableService,
         @Autowired val graphQLTestTemplate: GraphQLTestTemplate
@@ -33,7 +32,6 @@ class GraphqlQueryIntegrationTest(
     }
 
     @Test
-    @Disabled
     fun `join table mutation`() {
         val response = post(joinTable)
 
