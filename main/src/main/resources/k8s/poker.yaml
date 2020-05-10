@@ -36,7 +36,7 @@ spec:
               name: web
           env:
             - name: SENTRY_DSN
-              value: https://594899af51cd4f0b8219d6d271625810@sentry.rotate-it.be/3?stacktrace.app.packages=io.tripled
+              value: https://8ed353ea4add4d6ea2d04c153c211746@sentry.rotate-it.be/3?stacktrace.app.packages=io.tripled
             - name: OPENTRACING_JAEGER_HTTP-SENDER_URL
               value: https://tracethis.rotate-it.be/api/traces
             - name: ELASTIC_APM_SERVICE_NAME
