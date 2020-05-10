@@ -177,7 +177,9 @@ task coverage(type: JacocoReport, group: "Coverage reports") {
 	}
 
 	doFirst {
-		executionData.setFrom files(executionData.findAll { it.exists() })
+		executionData {
+			files(executionData.findAll { it.exists() })
+		}
 	}
 }
 
@@ -217,6 +219,8 @@ project(":app-api") {
 }
 
 project(":domain") {
+	apply plugin: "jacoco"
+
 	dependencies {
 		implementation project(":vocabulary")
 	}
