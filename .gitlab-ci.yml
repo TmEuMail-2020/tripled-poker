@@ -4,15 +4,6 @@ stages:
   - docker
   - deploy
 
-.ui build:
-  stage: uibuild
-  image: node:latest
-  script:
-    - cd poker-ui-app && yarn install && mkdir -p node_modules/.cache/kotlin-webpack && yarn build && echo "missing kotlinc ..."
-  artifacts:
-    paths:
-      - poker-ui-app/build/*
-
 gradle build:
   stage: build
   image: gradle:6.4
