@@ -1,7 +1,7 @@
 buildscript {
 	ext {
 		kotlinVersion = "1.3.71"
-		springBootVersion = "2.2.7.RELEASE"
+		springBootVersion = "2.3.0.RELEASE"
 		junitVersion = "5.6.2"
 	}
     ext["kotlin.version"] = "1.3.71"
@@ -82,11 +82,6 @@ configure(kotlinModules) {
 	configurations {
 		all*.exclude group: "junit"
 		detekt
-
-		developmentOnly
-		runtimeClasspath {
-			extendsFrom developmentOnly
-		}
 	}
 
 	test {
@@ -121,7 +116,7 @@ configure(kotlinModules) {
 	}
 
 	ext {
-		springBootVersion = "2.2.7.RELEASE"
+		springBootVersion = "2.3.0.RELEASE"
 		junitVersion = "5.3.2"
 	}
 
@@ -177,9 +172,7 @@ task coverage(type: JacocoReport, group: "Coverage reports") {
 	}
 
 	doFirst {
-		executionData {
-			files(executionData.findAll { it.exists() })
-		}
+		executionData.setFrom files(executionData.findAll { it.exists() })
 	}
 }
 
@@ -333,6 +326,9 @@ project(":main") {
 			exclude module: "junit"
 			exclude group: "org.junit.vintage", module: "junit-vintage-engine"
 		}
+		testImplementation("io.kotest:kotest-runner-junit5-jvm:4.0.5")
+		testImplementation("io.kotest:kotest-assertions-core-jvm:4.0.5")
+		testImplementation("io.kotest:kotest-property-jvm:4.0.5")
 	}
 }
 
