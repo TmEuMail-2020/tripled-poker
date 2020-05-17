@@ -1,4 +1,6 @@
-
+rickroll:
+  paths: "/admin"
+  file-extensions: "php"
 
 #
 # infra - graphql
