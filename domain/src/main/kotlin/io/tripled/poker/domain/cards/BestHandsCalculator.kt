@@ -9,6 +9,6 @@ class BestHandsCalculator {
 
     private fun calculateBest(dealtCards: Map<PlayerId, Hand>) = dealtCards
             .toList()
-            .maxBy { it.second.card1.score + it.second.card2.score }!!
+            .maxByOrNull { it.second.card1.score + it.second.card2.score }!!
             .first
 }
