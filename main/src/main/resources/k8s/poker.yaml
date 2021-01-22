@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: poker
   annotations:
-    app.gitlab.com/app: "poker"
+    app.gitlab.com/app: "tripled-poker"
     app.gitlab.com/env: "production"
   labels:
     app: production
