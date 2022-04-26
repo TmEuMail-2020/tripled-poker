@@ -124,8 +124,6 @@ configure(kotlinModules) {
 		implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 
 		implementation("org.jetbrains.kotlin:kotlin-stdlib")
-		implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7")
-		implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 		implementation("org.jetbrains.kotlin:kotlin-reflect")
 
 		// testing facilities
@@ -171,9 +169,6 @@ task coverage(type: JacocoReport, group: "Coverage reports") {
 		xml.enabled = true
 	}
 
-	doFirst {
-		executionData.setFrom files(executionData.findAll { it.exists() })
-	}
 }
 
 task jacocoTestCoverageVerification(type: JacocoCoverageVerification, dependsOn: "coverage") {
